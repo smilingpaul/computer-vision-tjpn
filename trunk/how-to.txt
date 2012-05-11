@@ -1,0 +1,32 @@
+###########################################
+Install lib's from the archive on dropbox
+###########################################
+-- http://dl.dropbox.com/u/55838831/lib.7z
+---- Extract archive to C:\
+
+-- Set the required environment variables
+---- OPENCV_DIR to C:\lib\OpenCV\2.4.0
+---- TBBROOT to C:\lib\TBB\4.0
+---- TBB_BIN_DIR to %TBBROOT%\bin\ia32\vc10
+
+-- Add values to PATH variable
+---- %OPENCV_DIR%\bin
+---- %TBB_BIN_DIR%
+
+
+###########################################
+Install Qt 4.8.1 (prebuilt)
+###########################################
+-- e.g. to C:\lib\Qt\4.8.1
+
+-- Set the required environment variables
+---- QTDIR to C:\lib\Qt\4.8.1
+---- QMAKESPEC to win32-msvc2010
+
+-- Add values to PATH variable
+---- %QTDIR%\bin
+
+
+###########################################
+Build & Pray
+###########################################
