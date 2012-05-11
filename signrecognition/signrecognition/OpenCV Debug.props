@@ -5,10 +5,10 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(OPENCV_DIR)\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OPENCV_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(OPENCV_DIR)\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OPENCV_DIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opencv_calib3d240d.lib;opencv_contrib240d.lib;opencv_core240d.lib;opencv_features2d240d.lib;opencv_flann240d.lib;opencv_gpu240d.lib;opencv_haartraining_engined.lib;opencv_highgui240d.lib;opencv_imgproc240d.lib;opencv_legacy240d.lib;opencv_ml240d.lib;opencv_nonfree240d.lib;opencv_objdetect240d.lib;opencv_photo240d.lib;opencv_stitching240d.lib;opencv_ts240d.lib;opencv_video240d.lib;opencv_videostab240d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
