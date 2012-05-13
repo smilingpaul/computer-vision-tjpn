@@ -41,26 +41,26 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="signrecognition.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\qrc_signrecognition.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_signrecognition.cpp">
+    <ClCompile Include="GeneratedFiles\Debug\moc_smainwindow.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_signrecognition.cpp">
+    <ClCompile Include="GeneratedFiles\Release\moc_smainwindow.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="qglwidgetopencv.cpp">
+    <ClCompile Include="smainwindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_qglwidgetopencv.cpp">
+    <ClCompile Include="GeneratedFiles\Debug\moc_sopencvwidget.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_qglwidgetopencv.cpp">
+    <ClCompile Include="GeneratedFiles\Release\moc_sopencvwidget.cpp">
       <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="sopencvwidget.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -72,16 +72,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="signrecognition.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="signrecognition.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="signrecognition.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="qglwidgetopencv.h">
+    <CustomBuild Include="smainwindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="sopencvwidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
