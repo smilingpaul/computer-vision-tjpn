@@ -7,13 +7,13 @@ class QAction;
 class QMenu;
 class QPlainTextEdit;
 
-class signrecognition : public QMainWindow
+class SMainWindow : public QMainWindow
 {
 	Q_OBJECT;
 
 public:
-	signrecognition(QWidget *parent = 0, Qt::WFlags flags = 0);
-	~signrecognition();
+	SMainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
+	~SMainWindow();
 
 private slots:
     void about();
@@ -29,7 +29,6 @@ private:
 
 	QMenu *helpMenu;
 	QAction *aboutAct;
-	QAction *aboutQtAct;
 };
 
 #endif // SIGNRECOGNITION_H
