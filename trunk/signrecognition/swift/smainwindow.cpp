@@ -9,7 +9,7 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	//Ui::swiftClass::setupUi(this);
 
 	/// \todo implementing the opencv data viewer for qt
-	//opencvWidget = new CQGLWidgetOpenCV;
+	//opencvWidget = new SOpenCVWidget;
 	//setCentralWidget(opencvWidget);
 
 	createActions();

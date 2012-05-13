@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "swift.h"
 #include <QtGui/QApplication>
+#include "smainwindow.h"
 
 int main(int argc, char *argv[])
 {
@@ -20,5 +21,5 @@ int main(int argc, char *argv[])
 	mainWindow.showMaximized();
 #endif
 
-	return swift.exec();
+	return app.exec();
 }
