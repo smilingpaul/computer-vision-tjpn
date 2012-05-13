@@ -41,9 +41,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\qrc_signrecognition.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_smainwindow.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -62,30 +59,33 @@
     <ClCompile Include="sopencvwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\qrc_swift.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_signrecognition.h">
+    <ClInclude Include="GeneratedFiles\ui_swift.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="signrecognition.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="signrecognition.qrc">
-      <Filter>Resource Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="smainwindow.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="sopencvwidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="swift.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="swift.qrc">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="signrecognition.rc" />
+    <ResourceCompile Include="swift.rc" />
   </ItemGroup>
 </Project>

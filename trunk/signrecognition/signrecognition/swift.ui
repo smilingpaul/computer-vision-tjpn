@@ -1,19 +1,19 @@
 <UI version="4.0" >
- <class>signrecognitionClass</class>
- <widget class="QMainWindow" name="signrecognitionClass" >
+ <class>swiftClass</class>
+ <widget class="QMainWindow" name="swiftClass" >
   <property name="objectName" >
-   <string notr="true">signrecognitionClass</string>
+   <string notr="true">swiftClass</string>
   </property>
   <property name="geometry" >
    <rect>
 	<x>0</x>
 	<y>0</y>
-	<width>600</width>
-	<height>400</height>
+	<width>800</width>
+	<height>600</height>
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>signrecognition</string>
+   <string>swift</string>
   </property>
   <widget class="QMenuBar" name="menuBar" />
   <widget class="QToolBar" name="mainToolBar" />
@@ -23,7 +23,7 @@
  <layoutDefault spacing="6" margin="11" />
  <pixmapfunction></pixmapfunction>
  <resources>
-   <include location="signrecognition.qrc"/>
+   <include location="swift.qrc"/>
  </resources>
  <connections/>
 </UI>

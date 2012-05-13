@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
 #ifdef _DEBUG
 	swift.setApplicationName("Swift - DEBUG");
 	window.setWindowTitle("Swift - DEBUG");
+	window.setMinimumSize(800,600);
 	window.show();
 #else // _RELEASE
 	swift.setApplicationName("Swift");
