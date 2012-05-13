@@ -5,7 +5,6 @@
 
 class QAction;
 class QMenu;
-class QPlainTextEdit;
 
 class SMainWindow : public QMainWindow
 {
