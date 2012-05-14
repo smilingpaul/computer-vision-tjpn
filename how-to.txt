@@ -34,3 +34,23 @@ Install Qt AddIn for msvc2010
 ##############################################
 Build & Pray
 ##############################################
+
+
+
+### Addendum - VS2010 Output Verbosity
+Tools
+-> Options
+-> Projects and Solutions
+-> Build and Run
+-> MSBuild Output Verbosity
+
+### Addendum - VS2010 Build Timing
+Tools
+-> Options
+-> Projects and Solutions
+-> VC++ Project Settings
+-> Build Timing
+
+### Addendum - MSBuild Folder
+%LOCALAPPDATA%\Microsoft\MSBuild\v4.0
+%USERPROFILE%\AppData\Local\Microsoft\MSBuild\v4.0

@@ -1,3 +1,6 @@
+/// \file smainwindow.h
+///
+/// 
 #ifndef SMAINWINDOW_H
 #define SMAINWINDOW_H
 
@@ -10,24 +13,34 @@ class SMainWindow : public QMainWindow
 {
 	Q_OBJECT;
 
+signals:
+
+
 public:
 	SMainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
 	~SMainWindow();
 
-private slots:
-    void about();
+public slots:
+
 
 private:
 	void createActions();
 	void createMenus();
 	void createToolBars();
+	void createDockWidgets();
 	void createStatusBar();
 
-	QMenu *fileMenu;
+	QAction *openAct;
 	QAction *exitAct;
-
-	QMenu *helpMenu;
 	QAction *aboutAct;
+
+	QMenu *fileMenu;
+	QMenu *editMenu;
+	QMenu *helpMenu;
+
+private slots:
+	void open();
+	void about();
 };
 
 #endif // SMAINWINDOW_H
