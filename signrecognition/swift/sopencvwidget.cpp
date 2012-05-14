@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "sopencvwidget.h"
 
-/// \class SMainWindow
+/// \class SOpenCVWidget
 /// \brief 
 ///
 /// 

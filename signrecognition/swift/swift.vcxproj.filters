@@ -33,6 +33,18 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Source Files\gui">
+      <UniqueIdentifier>{ff559cb9-e2e3-4f57-bd71-f13cd11189c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\algorithm">
+      <UniqueIdentifier>{5426d539-1479-4941-b399-dee70cfd4e84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\algorithm">
+      <UniqueIdentifier>{5b1be49b-5978-409c-b350-a4831e2aa8eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\gui">
+      <UniqueIdentifier>{6ef74f4d-6ff9-4af5-a6f9-c0d684e945ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -43,9 +55,6 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\qrc_swift.cpp">
       <Filter>Generated Files</Filter>
-    </ClCompile>
-    <ClCompile Include="smainwindow.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_smainwindow.cpp">
       <Filter>Generated Files\Debug</Filter>
@@ -59,8 +68,11 @@
     <ClCompile Include="GeneratedFiles\Release\moc_sopencvwidget.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="smainwindow.cpp">
+      <Filter>Source Files\gui</Filter>
+    </ClCompile>
     <ClCompile Include="sopencvwidget.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\gui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -81,14 +93,14 @@
     <CustomBuild Include="swift.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="smainwindow.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="sopencvwidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="swift_experimental.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="smainwindow.h">
+      <Filter>Header Files\gui</Filter>
+    </CustomBuild>
+    <CustomBuild Include="sopencvwidget.h">
+      <Filter>Header Files\gui</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
