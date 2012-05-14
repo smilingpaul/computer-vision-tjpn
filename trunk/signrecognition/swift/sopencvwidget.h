@@ -1,3 +1,6 @@
+/// \file sopencvwidget.h
+///
+/// 
 #ifndef SOPENCVWIDGET_H
 #define SOPENCVWIDGET_H
 
