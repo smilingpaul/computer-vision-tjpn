@@ -65,6 +65,15 @@
     <ClCompile Include="smainwindow.cpp">
       <Filter>Source Files\gui</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_sopencvwidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_sopencvwidget.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="sopencvwidget.cpp">
+      <Filter>Source Files\gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -88,6 +97,9 @@
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="smainwindow.h">
+      <Filter>Header Files\gui</Filter>
+    </CustomBuild>
+    <CustomBuild Include="sopencvwidget.h">
       <Filter>Header Files\gui</Filter>
     </CustomBuild>
   </ItemGroup>
