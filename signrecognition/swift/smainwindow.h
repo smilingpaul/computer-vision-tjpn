@@ -5,6 +5,7 @@
 #define SMAINWINDOW_H
 
 #include <QtGui/QMainWindow>
+#include "sopencvwidget.h"
 
 class QAction;
 class QMenu;
@@ -37,6 +38,13 @@ private:
 	QMenu *fileMenu;
 	QMenu *editMenu;
 	QMenu *helpMenu;
+
+	QStringList pathsTestImages;
+	QStringList pathsSignImages;
+
+	QStringList filters;
+
+	SOpenCVWidget *opencvWidget;
 
 private slots:
 	void open();

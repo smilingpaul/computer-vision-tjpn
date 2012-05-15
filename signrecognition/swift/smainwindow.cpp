@@ -8,14 +8,20 @@
 SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
 {
-	/// Call for UI Designer generated content.
-	/// At the moment this Project doesn't use the UI Designer because it is easier to code without.
-	//Ui.setupUi(this);
+	/// QStringList of file format filters.
+	/// Ordered by relevance.
+	filters << tr("All Files (*.*)")
+		<< tr("JPEG Files (*.jpeg *.jpg *.jpe)")
+		<< tr("Portable Network Graphics (*.png)")
+		<< tr("TIFF Files (*.tiff *.tif)")
+		<< tr("Windows Bitmaps (*.bmp *.dib)")
+		<< tr("Portable Image Format (*.pbm *.pgm *.ppm)")
+		<< tr("Sun Rasters (*.sr *.ras)");
 
+	/// Creates QActions which represent specific user commands
 	createActions();
 
-
-	/// Header
+	/// Creates the Menu Bar (File, Edit, Help, ...
 	createMenus();
 	
 	/// Outer Interface
@@ -24,13 +30,11 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	/// Inner Interface
 	createDockWidgets();
 
+	/// Central Widget - OpenCV Viewer
+	opencvWidget = new SOpenCVWidget(this);
+	setCentralWidget(opencvWidget);
 
-	/// \todo implementing the opencv data viewer for qt
-	/// Main Window - Central Widget
-	//opencvWidget = new SOpenCVWidget();
-	//setCentralWidget(opencvWidget);
-
-	/// Footer
+	/// Creates the Status Bar at the bottom of the Window
 	createStatusBar();
 }
 
@@ -141,8 +145,14 @@ void SMainWindow::createStatusBar()
 
 void SMainWindow::open()
 {
-	QMessageBox::about(this, tr("OPEN DIALOG"),
-		tr("OPEN DIALOG PLACEHOLDER TEXT"));
+	QStringList pathsTestImages = QFileDialog::getOpenFileNames(
+		this,
+		tr("Open File(s)"),
+		QDir::currentPath().append("/TestData"),
+		filters.join(";;"),
+		&filters[1],
+		nullptr
+	);
 }
 
 
