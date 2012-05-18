@@ -9,7 +9,7 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
 {
 	/// QStringList of file format filters.
-	/// Ordered by relevance.
+	/// Ordered by relevance. Only file formats supported by the OpenCV library.
 	filters << tr("All Files (*.*)")
 		<< tr("JPEG Files (*.jpeg *.jpg *.jpe)")
 		<< tr("Portable Network Graphics (*.png)")
@@ -21,18 +21,14 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	/// Creates QActions which represent specific user commands
 	createActions();
 
-	/// Creates the Menu Bar (File, Edit, Help, ...
+	/// Creates the Menu Bar (File, Edit, Help, ...)
 	createMenus();
 	
 	/// Outer Interface
 	createToolBars();
 
 	/// Inner Interface
-	createDockWidgets();
-
-	/// Central Widget - OpenCV Viewer
-	opencvWidget = new SOpenCVWidget(this);
-	setCentralWidget(opencvWidget);
+	createWidgets();
 
 	/// Creates the Status Bar at the bottom of the Window
 	createStatusBar();
@@ -81,11 +77,13 @@ void SMainWindow::createMenus()
 	/// "File" Menu
 	fileMenu = menuBar()->addMenu(tr("&File"));
 	fileMenu->addAction(openAct);
-	fileMenu->addSeparator();
 	fileMenu->addAction(exitAct);
 
 	/// "Edit" Menu
 	editMenu = menuBar()->addMenu(tr("&Edit"));
+
+	/// "View" Menu
+	viewMenu = menuBar()->addMenu(tr("&View"));
 
 	/// "Help" Menu
 	helpMenu = menuBar()->addMenu(tr("&Help"));
@@ -109,9 +107,74 @@ void SMainWindow::createToolBars()
 ///
 /// \return Nothing
 /// \sa 
-void SMainWindow::createDockWidgets()
+void SMainWindow::createWidgets()
 {
+	/// Central Widget - OpenCV Viewer
+	opencvWidget = new SOpenCVWidget(this);
+	opencvWidget->setObjectName("opencvWidget");
+	this->setCentralWidget(opencvWidget);
 
+	//////////////////////////////////////////////////////////////////////////
+	/// Left Dock Widget
+	dockWidget_alpha_left = new QDockWidget(tr("Picture Manager"),this);
+	dockWidget_alpha_left->setObjectName("dockWidget_alpha_left");
+	dockWidget_alpha_left->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+
+	dockWidgetContents_alpha_left = new QWidget();
+	dockWidgetContents_alpha_left->setObjectName("dockWidgetContents_alpha_left");
+	dockWidget_alpha_left->setWidget(dockWidgetContents_alpha_left);
+	this->addDockWidget(Qt::LeftDockWidgetArea, dockWidget_alpha_left);
+	viewMenu->addAction(dockWidget_alpha_left->toggleViewAction());
+	
+	//////////////////////////////////////////////////////////////////////////
+	/// Right Dock Widget
+	dockWidget_beta_right = new QDockWidget(tr("Controls"),this);
+	dockWidget_beta_right->setObjectName("dockWidget_beta_right");
+	dockWidget_beta_right->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+
+	dockWidgetContents_beta_right = new QWidget();
+	dockWidgetContents_beta_right->setObjectName("dockWidgetContents_beta_right");
+	dockWidget_beta_right->setWidget(dockWidgetContents_beta_right);
+	this->addDockWidget(Qt::RightDockWidgetArea, dockWidget_beta_right);
+	viewMenu->addAction(dockWidget_beta_right->toggleViewAction());
+
+	//////////////////////////////////////////////////////////////////////////
+	/// Grid Layout
+	gridLayout = new QGridLayout(dockWidgetContents_alpha_left);
+	gridLayout->setObjectName("gridLayout");
+	gridLayout->layout()->SetMaximumSize;
+	gridLayout->setSpacing(6);
+	gridLayout->setContentsMargins(0,3,0,0); ///< Left = Base 11 + Padding 4 
+
+	/// Grid Layout - Upper Left
+	label_left = new QLabel(dockWidgetContents_alpha_left);
+	label_left->setObjectName("label_left");
+	label_left->setText(tr("Explore"));
+	label_left->setAlignment(Qt::AlignHCenter);
+	gridLayout->addWidget(label_left, 0, 0, 1, 1);
+	
+	/// Grid Layout - Lower Left
+	declarativeView_left = new QDeclarativeView(dockWidgetContents_alpha_left);
+	declarativeView_left->setSource(QUrl::fromLocalFile("myqmlfile.qml"));
+	declarativeView_left->setObjectName("declarativeView_left");
+	declarativeView_left->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+	gridLayout->addWidget(declarativeView_left, 1, 0, 1, 1);
+
+
+	/// Grid Layout - Upper Right
+	label_right = new QLabel(dockWidgetContents_alpha_left);
+	label_right->setObjectName("label_right");
+	label_right->setText(tr("Train"));
+	label_right->setAlignment(Qt::AlignHCenter);
+	gridLayout->addWidget(label_right, 0, 1, 1, 1);
+
+	/// Grid Layout - Lower Right
+	declarativeView_right = new QDeclarativeView(dockWidgetContents_alpha_left);
+	QUrl test = QUrl::fromLocalFile("myqmlfile.qml");
+	declarativeView_right->setSource(QUrl::fromLocalFile("myqmlfile.qml"));
+	declarativeView_right->setObjectName("declarativeView_right");
+	declarativeView_right->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+	gridLayout->addWidget(declarativeView_right, 1, 1, 1, 1);
 }
 
 /// \brief 
@@ -125,27 +188,15 @@ void SMainWindow::createStatusBar()
 	statusBar()->showMessage(tr("Ready"));
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/// \brief 
+///
+/// 
+///
+/// \return Nothing
+/// \sa 
 void SMainWindow::open()
 {
-	QStringList pathsTestImages = QFileDialog::getOpenFileNames(
+	paths = QFileDialog::getOpenFileNames(
 		this,
 		tr("Open File(s)"),
 		QDir::currentPath().append("/TestData"),

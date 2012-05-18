@@ -5,10 +5,8 @@
 #define SMAINWINDOW_H
 
 #include <QtGui/QMainWindow>
+#include <QtDeclarative/QtDeclarative>
 #include "sopencvwidget.h"
-
-class QAction;
-class QMenu;
 
 class SMainWindow : public QMainWindow
 {
@@ -28,7 +26,7 @@ private:
 	void createActions();
 	void createMenus();
 	void createToolBars();
-	void createDockWidgets();
+	void createWidgets();
 	void createStatusBar();
 
 	QAction *openAct;
@@ -37,14 +35,24 @@ private:
 
 	QMenu *fileMenu;
 	QMenu *editMenu;
+	QMenu *viewMenu;
 	QMenu *helpMenu;
 
-	QStringList pathsTestImages;
-	QStringList pathsSignImages;
-
+	QStringList paths;
 	QStringList filters;
 
 	SOpenCVWidget *opencvWidget;
+
+	QDockWidget *dockWidget_beta_right;
+	QWidget *dockWidgetContents_beta_right;
+	QDockWidget *dockWidget_alpha_left;
+	QWidget *dockWidgetContents_alpha_left;
+	QWidget *gridLayoutWidget;
+	QGridLayout *gridLayout;
+	QDeclarativeView *declarativeView_left;
+	QLabel *label_left;
+	QDeclarativeView *declarativeView_right;
+	QLabel *label_right;
 
 private slots:
 	void open();
