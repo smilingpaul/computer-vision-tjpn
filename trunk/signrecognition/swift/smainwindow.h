@@ -43,16 +43,17 @@ private:
 
 	SOpenCVWidget *opencvWidget;
 
-	QDockWidget *dockWidget_beta_right;
-	QWidget *dockWidgetContents_beta_right;
 	QDockWidget *dockWidget_alpha_left;
 	QWidget *dockWidgetContents_alpha_left;
-	QWidget *gridLayoutWidget;
+
+	QDockWidget *dockWidget_beta_right;
+	QWidget *dockWidgetContents_beta_right;
+	
 	QGridLayout *gridLayout;
-	QDeclarativeView *declarativeView_left;
 	QLabel *label_left;
-	QDeclarativeView *declarativeView_right;
+	QDeclarativeView *declarativeView_left;
 	QLabel *label_right;
+	QDeclarativeView *declarativeView_right;
 
 private slots:
 	void open();
