@@ -160,7 +160,6 @@ void SMainWindow::createWidgets()
 	declarativeView_left->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 	gridLayout->addWidget(declarativeView_left, 1, 0, 1, 1);
 
-
 	/// Grid Layout - Upper Right
 	label_right = new QLabel(dockWidgetContents_alpha_left);
 	label_right->setObjectName("label_right");
@@ -170,7 +169,6 @@ void SMainWindow::createWidgets()
 
 	/// Grid Layout - Lower Right
 	declarativeView_right = new QDeclarativeView(dockWidgetContents_alpha_left);
-	QUrl test = QUrl::fromLocalFile("myqmlfile.qml");
 	declarativeView_right->setSource(QUrl::fromLocalFile("myqmlfile.qml"));
 	declarativeView_right->setObjectName("declarativeView_right");
 	declarativeView_right->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
@@ -196,7 +194,9 @@ void SMainWindow::createStatusBar()
 /// \sa 
 void SMainWindow::open()
 {
-	paths = QFileDialog::getOpenFileNames(
+	/// file open dialog to import images into the sign recognition software.
+	/// it supports a multitude of file formats (see "filters").
+	QStringList input = QFileDialog::getOpenFileNames(
 		this,
 		tr("Open File(s)"),
 		QDir::currentPath().append("/TestData"),
@@ -204,8 +204,38 @@ void SMainWindow::open()
 		&filters[1],
 		nullptr
 	);
-}
 
+	/// would have been enough if we didn't need the exact new paths.
+	/// \code
+	///	paths += input;
+	///	paths.removeDuplicates();
+	/// \endcode
+	/// to avoid recalculation of icons & additional stuff the following
+	/// is the only way to go
+
+	/// wrong user input might cause duplicate file paths in the "input"
+	/// string list. not exactly sure but we better be safe. we got the
+	/// processing power :-D
+	input.removeDuplicates();
+
+	/// remove redundant paths from the new "input" string list.
+	/// redundant are paths which are already elements of the "paths" 
+	/// string list.
+	for ( QStringList::Iterator it = input.begin(); it != input.end(); ++it ) 
+	{
+		if (paths.contains(*it)) ///< pointer-style iterator dereference
+		{
+			it = input.erase(it);
+		}
+	}
+
+	paths += input; ///< add only the new input to the "paths" member
+
+	/// add only the new input to list model
+	/// 
+	
+
+}
 
 void SMainWindow::about()
 {
