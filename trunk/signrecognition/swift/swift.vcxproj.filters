@@ -74,6 +74,18 @@
     <ClCompile Include="sopencvwidget.cpp">
       <Filter>Source Files\gui</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_swiftmodel.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_swiftmodel.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="swiftmodel.cpp">
+      <Filter>Source Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="swiftitem.cpp">
+      <Filter>Source Files\algorithm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -84,6 +96,9 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_swift_experimental.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="swiftitem.h">
+      <Filter>Header Files\algorithm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +116,9 @@
     </CustomBuild>
     <CustomBuild Include="sopencvwidget.h">
       <Filter>Header Files\gui</Filter>
+    </CustomBuild>
+    <CustomBuild Include="swiftmodel.h">
+      <Filter>Header Files\algorithm</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

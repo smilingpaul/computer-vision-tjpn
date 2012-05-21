@@ -16,8 +16,8 @@ int main(int argc, char *argv[])
 	mainWindow.setMinimumSize(800,600);
 	mainWindow.show();
 #else // _RELEASE
-	app.setApplicationName("Swift");
-	mainWindow.setWindowTitle("Swift");
+	app.setApplicationName("Swift - RELEASE");
+	mainWindow.setWindowTitle("Swift - RELEASE");
 	mainWindow.showMaximized();
 #endif
 

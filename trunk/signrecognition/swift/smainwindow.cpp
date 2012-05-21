@@ -10,7 +10,7 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 {
 	/// QStringList of file format filters.
 	/// Ordered by relevance. Only file formats supported by the OpenCV library.
-	filters << tr("All Files (*.*)")
+	m_filters << tr("All Files (*.*)")
 		<< tr("JPEG Files (*.jpeg *.jpg *.jpe)")
 		<< tr("Portable Network Graphics (*.png)")
 		<< tr("TIFF Files (*.tiff *.tif)")
@@ -116,63 +116,63 @@ void SMainWindow::createWidgets()
 
 	//////////////////////////////////////////////////////////////////////////
 	/// Left Dock Widget
-	dockWidget_alpha_left = new QDockWidget(tr("Picture Manager"),this);
-	dockWidget_alpha_left->setObjectName("dockWidget_alpha_left");
-	dockWidget_alpha_left->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+	dockAlpha = new QDockWidget(tr("Picture Manager"),this);
+	dockAlpha->setObjectName("dockAlpha");
+	dockAlpha->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 
-	dockWidgetContents_alpha_left = new QWidget();
-	dockWidgetContents_alpha_left->setObjectName("dockWidgetContents_alpha_left");
-	dockWidget_alpha_left->setWidget(dockWidgetContents_alpha_left);
-	this->addDockWidget(Qt::LeftDockWidgetArea, dockWidget_alpha_left);
-	viewMenu->addAction(dockWidget_alpha_left->toggleViewAction());
+	dockContentsAlpha = new QWidget();
+	dockContentsAlpha->setObjectName("dockContentsAlpha");
+	dockAlpha->setWidget(dockContentsAlpha);
+	this->addDockWidget(Qt::LeftDockWidgetArea, dockAlpha);
+	viewMenu->addAction(dockAlpha->toggleViewAction());
 	
 	//////////////////////////////////////////////////////////////////////////
 	/// Right Dock Widget
-	dockWidget_beta_right = new QDockWidget(tr("Controls"),this);
-	dockWidget_beta_right->setObjectName("dockWidget_beta_right");
-	dockWidget_beta_right->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+	dockBeta = new QDockWidget(tr("Controls"),this);
+	dockBeta->setObjectName("dockBeta");
+	dockBeta->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 
-	dockWidgetContents_beta_right = new QWidget();
-	dockWidgetContents_beta_right->setObjectName("dockWidgetContents_beta_right");
-	dockWidget_beta_right->setWidget(dockWidgetContents_beta_right);
-	this->addDockWidget(Qt::RightDockWidgetArea, dockWidget_beta_right);
-	viewMenu->addAction(dockWidget_beta_right->toggleViewAction());
+	dockContentsBeta = new QWidget();
+	dockContentsBeta->setObjectName("dockContentsBeta");
+	dockBeta->setWidget(dockContentsBeta);
+	this->addDockWidget(Qt::RightDockWidgetArea, dockBeta);
+	viewMenu->addAction(dockBeta->toggleViewAction());
 
 	//////////////////////////////////////////////////////////////////////////
 	/// Grid Layout
-	gridLayout = new QGridLayout(dockWidgetContents_alpha_left);
+	gridLayout = new QGridLayout(dockContentsAlpha);
 	gridLayout->setObjectName("gridLayout");
 	gridLayout->layout()->SetMaximumSize;
 	gridLayout->setSpacing(6);
-	gridLayout->setContentsMargins(0,3,0,0); ///< Left = Base 11 + Padding 4 
+	gridLayout->setContentsMargins(0,3,0,0); ///< 3px from top looks better
 
 	/// Grid Layout - Upper Left
-	label_left = new QLabel(dockWidgetContents_alpha_left);
-	label_left->setObjectName("label_left");
-	label_left->setText(tr("Explore"));
-	label_left->setAlignment(Qt::AlignHCenter);
-	gridLayout->addWidget(label_left, 0, 0, 1, 1);
+	labelExplore = new QLabel(dockContentsAlpha);
+	labelExplore->setObjectName("labelExplore");
+	labelExplore->setText(tr("Explore"));
+	labelExplore->setAlignment(Qt::AlignHCenter);
+	gridLayout->addWidget(labelExplore, 0, 0, 1, 1);
 	
 	/// Grid Layout - Lower Left
-	declarativeView_left = new QDeclarativeView(dockWidgetContents_alpha_left);
-	declarativeView_left->setSource(QUrl::fromLocalFile("myqmlfile.qml"));
-	declarativeView_left->setObjectName("declarativeView_left");
-	declarativeView_left->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-	gridLayout->addWidget(declarativeView_left, 1, 0, 1, 1);
+	declarativeViewExplore = new QDeclarativeView(dockContentsAlpha);
+	declarativeViewExplore->setSource(QUrl::fromLocalFile("myqmlfile.qml"));
+	declarativeViewExplore->setObjectName("declarativeViewExplore");
+	declarativeViewExplore->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+	gridLayout->addWidget(declarativeViewExplore, 1, 0, 1, 1);
 
 	/// Grid Layout - Upper Right
-	label_right = new QLabel(dockWidgetContents_alpha_left);
-	label_right->setObjectName("label_right");
-	label_right->setText(tr("Train"));
-	label_right->setAlignment(Qt::AlignHCenter);
-	gridLayout->addWidget(label_right, 0, 1, 1, 1);
+	labelTrain = new QLabel(dockContentsAlpha);
+	labelTrain->setObjectName("labelTrain");
+	labelTrain->setText(tr("Train"));
+	labelTrain->setAlignment(Qt::AlignHCenter);
+	gridLayout->addWidget(labelTrain, 0, 1, 1, 1);
 
 	/// Grid Layout - Lower Right
-	declarativeView_right = new QDeclarativeView(dockWidgetContents_alpha_left);
-	declarativeView_right->setSource(QUrl::fromLocalFile("myqmlfile.qml"));
-	declarativeView_right->setObjectName("declarativeView_right");
-	declarativeView_right->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-	gridLayout->addWidget(declarativeView_right, 1, 1, 1, 1);
+	declarativeViewTrain = new QDeclarativeView(dockContentsAlpha);
+	declarativeViewTrain->setSource(QUrl::fromLocalFile("myqmlfile.qml"));
+	declarativeViewTrain->setObjectName("declarativeViewTrain");
+	declarativeViewTrain->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+	gridLayout->addWidget(declarativeViewTrain, 1, 1, 1, 1);
 }
 
 /// \brief 
@@ -196,43 +196,40 @@ void SMainWindow::open()
 {
 	/// file open dialog to import images into the sign recognition software.
 	/// it supports a multitude of file formats (see "filters").
-	QStringList input = QFileDialog::getOpenFileNames(
+	m_newPaths = QFileDialog::getOpenFileNames(
 		this,
 		tr("Open File(s)"),
 		QDir::currentPath().append("/TestData"),
-		filters.join(";;"),
-		&filters[1],
+		m_filters.join(";;"),
+		&m_filters[1],
 		nullptr
 	);
 
-	/// would have been enough if we didn't need the exact new paths.
+	/// would have been enough if we didn't needed the exact new paths:
 	/// \code
 	///	paths += input;
 	///	paths.removeDuplicates();
 	/// \endcode
 	/// to avoid recalculation of icons & additional stuff the following
-	/// is the only way to go
+	/// is the only way to go:
 
 	/// wrong user input might cause duplicate file paths in the "input"
 	/// string list. not exactly sure but we better be safe. we got the
 	/// processing power :-D
-	input.removeDuplicates();
+	m_newPaths.removeDuplicates();
 
 	/// remove redundant paths from the new "input" string list.
 	/// redundant are paths which are already elements of the "paths" 
 	/// string list.
-	for ( QStringList::Iterator it = input.begin(); it != input.end(); ++it ) 
+	for ( QStringList::Iterator it = m_newPaths.begin(); it != m_newPaths.end(); ++it ) 
 	{
-		if (paths.contains(*it)) ///< pointer-style iterator dereference
+		if (m_allPaths.contains(*it)) ///< pointer-style iterator dereference
 		{
-			it = input.erase(it);
+			it = m_newPaths.erase(it);
 		}
 	}
 
-	paths += input; ///< add only the new input to the "paths" member
-
-	/// add only the new input to list model
-	/// 
+	m_allPaths += m_newPaths; ///< add the new input to the "paths" member
 	
 
 }

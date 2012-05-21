@@ -5,6 +5,7 @@
 #define SOPENCVWIDGET_H
 
 #include <QGLWidget>
+#include <OpenCV\cv.h>
 
 class SOpenCVWidget : public QGLWidget
 {
