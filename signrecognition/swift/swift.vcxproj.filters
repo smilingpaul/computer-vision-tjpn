@@ -74,6 +74,9 @@
     <ClCompile Include="sopencvwidget.cpp">
       <Filter>Source Files\gui</Filter>
     </ClCompile>
+    <ClCompile Include="mySift.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -84,6 +87,9 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_swift_experimental.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mySift.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
