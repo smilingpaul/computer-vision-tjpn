@@ -19,10 +19,10 @@ SwiftModel::~SwiftModel()
 
 }
 
-void SwiftModel::addImageItem(const SwiftItem &imageItem)
+void SwiftModel::addImageItem(const SwiftItem &swiftItem)
 {
 	beginInsertRows(QModelIndex(),rowCount(),rowCount());
-	m_list << imageItem;
+	m_list << swiftItem;
 	endInsertRows();
 }
 
@@ -34,9 +34,9 @@ QVariant SwiftModel::data(const QModelIndex &index, int role) const {
 	if (index.row() < 0 || index.row() > m_list.count())
 		return QVariant();
 
-	const SwiftItem &imageItem = m_list[index.row()];
+	const SwiftItem &swiftItem = m_list[index.row()];
 	if (role == PathRole)
-		return imageItem.path();
+		return swiftItem.path();
 	//else if (role == SizeRole)
 	//	return image.size();
 	return QVariant();
