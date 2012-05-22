@@ -20,7 +20,7 @@ public:
 	SwiftModel(QObject *parent = 0);
 	~SwiftModel();
 
-	void addImageItem(const SwiftItem &imageItem);
+	void addImageItem(const SwiftItem &swiftItem);
 
 	int rowCount(const QModelIndex & parent = QModelIndex()) const;
 	QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
