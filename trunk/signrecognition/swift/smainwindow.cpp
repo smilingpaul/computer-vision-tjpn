@@ -2,6 +2,7 @@
 #include "smainwindow.h"
 #include "swiftitem.h"
 
+#define	MAX_THREADS			8
 //#include <opencv2/core/core.hpp>
 //#include <opencv2/imgproc/imgproc.hpp>
 //#include <opencv2/highgui/highgui.hpp>
@@ -147,11 +148,11 @@ void SMainWindow::createWidgets()
 	this->setCentralWidget(&mMdiArea);
 	this->mSharedGlWidget.resize(1, 1);
 	//this->mSharedGlWidget.hide();
-	this->newThread();
-	this->newThread();
-	this->newThread();
-	this->newThread();
-	this->newThread();
+
+	for (unsigned int i = 0; i < MAX_THREADS; i++)
+	{
+		this->newThread();
+	}
 
 	// #warning
 	// opencvWidget->showImage(cv::imread("D:\\STUDIUM\\Sem6\\ComputerVision\\svn\\signrecognition\\swift-build\\TestData\\50_distraction_1.jpg"));
@@ -280,8 +281,15 @@ void SMainWindow::open()
 void SMainWindow::newThread()
 {
 	static int windowCount = 1;
-	//if (mMdiArea.subWindowList().count() > 9)
-	//	return;
+
+	if (mMdiArea.subWindowList().count() == MAX_THREADS)
+	{
+		QMessageBox::information(0, "No, no, no...",
+		"Maximum Nr. of open documents reached"
+		"Dont torture your computer!");
+		return;
+	}
+
 	SGLOpenCVWidget *widget = new SGLOpenCVWidget(&mMdiArea, &mSharedGlWidget);
 	mMdiArea.addSubWindow(widget);
 	widget->setWindowTitle("Thread #" + QString::number(windowCount++));
