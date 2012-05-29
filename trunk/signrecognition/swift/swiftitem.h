@@ -21,7 +21,7 @@ public:
 	/// roles
 	QString path() const;
 	QImage thumbnail() const;
-	QImage image() const;
+	QImage image() const; // could be useless. to be evaluated...
 	/// end of roles
 
 	cv::Mat descriptors() const;
@@ -32,9 +32,10 @@ private:
 	QString mPath;
 	QImage mThumbnail;
 	cv::Mat mImage;
+	/// end of roles
+
 	cv::Mat mDescriptors;
 	std::vector<cv::KeyPoint> mKeypoints;
-	/// end of roles
 
 	void generateThumbnail();
 	void detectFeatures();
