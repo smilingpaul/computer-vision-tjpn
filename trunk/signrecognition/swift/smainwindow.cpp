@@ -20,18 +20,7 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	//#warning
 	SwiftItem* mSwiftItem = new SwiftItem("D:\\STUDIUM\\Sem6\\ComputerVision\\svn\\signrecognition\\swift-build\\TestData\\50_distraction_1.jpg");
 
-	/// Settings
 	initialize();
-
-	/// QStringList of file format filters.
-	/// Ordered by relevance. Only file formats supported by the OpenCV library.
-	mFormatFilters << tr("All Files (*.*)")
-		<< tr("JPEG Files (*.jpeg *.jpg *.jpe)")
-		<< tr("Portable Network Graphics (*.png)")
-		<< tr("TIFF Files (*.tiff *.tif)")
-		<< tr("Windows Bitmaps (*.bmp *.dib)")
-		<< tr("Portable Image Format (*.pbm *.pgm *.ppm)")
-		<< tr("Sun Rasters (*.sr *.ras)");
 
 	/// Creates QActions which represent specific user commands
 	createActions();
@@ -56,6 +45,16 @@ SMainWindow::~SMainWindow()
 
 void SMainWindow::initialize()
 {
+	/// QStringList of file format filters.
+	/// Ordered by relevance. Only file formats supported by the OpenCV library.
+	mFormatFilters << tr("All Files (*.*)")
+		<< tr("JPEG Files (*.jpeg *.jpg *.jpe)")
+		<< tr("Portable Network Graphics (*.png)")
+		<< tr("TIFF Files (*.tiff *.tif)")
+		<< tr("Windows Bitmaps (*.bmp *.dib)")
+		<< tr("Portable Image Format (*.pbm *.pgm *.ppm)")
+		<< tr("Sun Rasters (*.sr *.ras)");
+
 	tabSubWindows();
 	mMdiArea.setTabsClosable(true);
 	mMdiArea.setTabsMovable(true);
@@ -199,10 +198,10 @@ void SMainWindow::createWidgets()
 
 	/// Grid Layout - Lower Left
 	declarativeViewExplore = new QDeclarativeView(dockContentsAlpha);
-	//declarativeViewExplore->setAttribute(Qt::WA_OpaquePaintEvent);
-	//declarativeViewExplore->setAttribute(Qt::WA_NoSystemBackground);
-	//declarativeViewExplore->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
-	//declarativeViewExplore->viewport()->setAttribute(Qt::WA_NoSystemBackground);
+	declarativeViewExplore->setAttribute(Qt::WA_OpaquePaintEvent);
+	declarativeViewExplore->setAttribute(Qt::WA_NoSystemBackground);
+	declarativeViewExplore->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
+	declarativeViewExplore->viewport()->setAttribute(Qt::WA_NoSystemBackground);
 
 	declarativeViewExplore->setSource(QUrl::fromLocalFile("myqmlfile.qml"));
 	declarativeViewExplore->setObjectName("declarativeViewExplore");

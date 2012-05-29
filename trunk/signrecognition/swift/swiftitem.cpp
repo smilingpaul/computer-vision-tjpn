@@ -22,6 +22,8 @@ SwiftItem::~SwiftItem()
 {
 }
 
+//////////////////////////////////////////////////////////////////////////
+
 void SwiftItem::generateThumbnail()
 {
 	cv::Mat result;
@@ -33,14 +35,13 @@ void SwiftItem::generateThumbnail()
 
 void SwiftItem::detectFeatures()
 {
-
 }
 
 void SwiftItem::extractDescriptors()
 {
-
 }
 
+//////////////////////////////////////////////////////////////////////////
 
 /// properties
 QString SwiftItem::path() const
@@ -53,9 +54,9 @@ QImage SwiftItem::thumbnail() const
 	return mThumbnail;
 }
 
-cv::Mat SwiftItem::image() const
+QImage SwiftItem::image() const
 {
-	return mImage;
+	return Help::Convert::cvmat2qimage(mImage);
 }
 
 cv::Mat SwiftItem::descriptors() const

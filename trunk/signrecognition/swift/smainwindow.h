@@ -7,6 +7,7 @@
 #include <QtGui/QMainWindow>
 #include <QtDeclarative/QtDeclarative>
 #include "sglopencvwidget.h"
+#include "swiftmodel.h"
 
 class SMainWindow : public QMainWindow
 {
@@ -26,21 +27,30 @@ private:
 	void createWidgets();
 	void createStatusBar();
 
+	//////////////////////////////////////////////////////////////////////////
+
+	// actions
 	QAction *openAct;
 	QAction *exitAct;
 	QAction *aboutAct;
-	/// view (windows)
 	QAction *tabAct;
 	QAction *tileAct;
 
+	// menus
 	QMenu *fileMenu;
 	QMenu *editMenu;
 	QMenu *viewMenu;
 	QMenu *helpMenu;
 
+	// main window
+	QMdiArea mMdiArea;
+	QGLWidget mSharedGlWidget;
+
+	// dock area right
 	QDockWidget *dockAlpha;
 	QWidget *dockContentsAlpha;
 
+	// dock area left
 	QDockWidget *dockBeta;
 	QWidget *dockContentsBeta;
 
@@ -50,10 +60,9 @@ private:
 	QLabel *labelTrain;
 	QDeclarativeView *declarativeViewTrain;
 
-	QMdiArea mMdiArea;
-	QGLWidget mSharedGlWidget;
-
 	//////////////////////////////////////////////////////////////////////////
+
+	SwiftModel mSwiftModel;
 
 	QStringList mAllImagePaths;
 	QStringList mNewImagePaths;

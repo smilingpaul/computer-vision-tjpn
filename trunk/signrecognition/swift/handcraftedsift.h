@@ -24,7 +24,7 @@ public:
 	HandcraftedSIFT(void);
 	virtual ~HandcraftedSIFT(void);
 
-	void sift(int octavesCount = 4, int intervalsCount = 5); ///< suggested default values by david g. lowe
+	void sift(int octavesCount = 4, int intervalsCount = 2); ///< suggested default values by david g. lowe
 	void allocateMemory();
 	void buildScaleSpaces();
 	void detectExtrema();
