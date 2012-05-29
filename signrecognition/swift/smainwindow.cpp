@@ -1,16 +1,30 @@
 #include "stdafx.h"
 #include "smainwindow.h"
+#include "swiftitem.h"
+
+//#include <opencv2/core/core.hpp>
+//#include <opencv2/imgproc/imgproc.hpp>
+//#include <opencv2/highgui/highgui.hpp>
+//#include <opencv2/features2d/features2d.hpp>
 
 /// \class SMainWindow
-/// \brief 
+/// \brief
 ///
-/// 
+///
 SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
+	, mMdiArea(this)
+	, mSharedGlWidget(this)
 {
+	//#warning
+	SwiftItem* mSwiftItem = new SwiftItem("D:\\STUDIUM\\Sem6\\ComputerVision\\svn\\signrecognition\\swift-build\\TestData\\50_distraction_1.jpg");
+
+	/// Settings
+	initialize();
+
 	/// QStringList of file format filters.
 	/// Ordered by relevance. Only file formats supported by the OpenCV library.
-	m_filters << tr("All Files (*.*)")
+	mFormatFilters << tr("All Files (*.*)")
 		<< tr("JPEG Files (*.jpeg *.jpg *.jpe)")
 		<< tr("Portable Network Graphics (*.png)")
 		<< tr("TIFF Files (*.tiff *.tif)")
@@ -23,7 +37,7 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 
 	/// Creates the Menu Bar (File, Edit, Help, ...)
 	createMenus();
-	
+
 	/// Outer Interface
 	createToolBars();
 
@@ -37,15 +51,21 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 /// Destructor of the main window
 SMainWindow::~SMainWindow()
 {
-
 }
 
-/// \brief 
+void SMainWindow::initialize()
+{
+	tabSubWindows();
+	mMdiArea.setTabsClosable(true);
+	mMdiArea.setTabsMovable(true);
+}
+
+/// \brief
 ///
-/// 
+///
 ///
 /// \return Nothing
-/// \sa 
+/// \sa
 void SMainWindow::createActions()
 {
 	/// "Open" Action
@@ -64,14 +84,25 @@ void SMainWindow::createActions()
 	aboutAct = new QAction(tr("&About"), this);
 	aboutAct->setStatusTip(tr("About Swift"));
 	connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
+
+	/// "Tab Windows" Action
+	tabAct = new QAction(tr("Tab &Windows"), this);
+	tabAct->setStatusTip(tr("Tab the windows"));
+	connect(tabAct, SIGNAL(triggered()), this, SLOT(tabSubWindows()));
+
+	/// "Tile Windows" Action
+	tileAct = new QAction(tr("&Tile Windows"), this);
+	tileAct->setStatusTip(tr("Tile the windows"));
+	connect(tileAct, SIGNAL(triggered()), this, SLOT(tileSubWindows()));
+	//connect(tileAct, SIGNAL(triggered()), &mMdiArea, SLOT(tileSubWindows()));
 }
 
-/// \brief 
+/// \brief
 ///
-/// 
+///
 ///
 /// \return Nothing
-/// \sa 
+/// \sa
 void SMainWindow::createMenus()
 {
 	/// "File" Menu
@@ -84,48 +115,60 @@ void SMainWindow::createMenus()
 
 	/// "View" Menu
 	viewMenu = menuBar()->addMenu(tr("&View"));
+	viewMenu->addAction(tabAct);
+	viewMenu->addAction(tileAct);
+	viewMenu->addSeparator();
 
 	/// "Help" Menu
 	helpMenu = menuBar()->addMenu(tr("&Help"));
 	helpMenu->addAction(aboutAct);
 }
 
-/// \brief 
+/// \brief
 ///
-/// 
+///
 ///
 /// \return Nothing
-/// \sa 
+/// \sa
 void SMainWindow::createToolBars()
 {
-
 }
 
-/// \brief 
+/// \brief
 ///
-/// 
+///
 ///
 /// \return Nothing
-/// \sa 
+/// \sa
 void SMainWindow::createWidgets()
 {
 	/// Central Widget - OpenCV Viewer
-	opencvWidget = new SOpenCVWidget(this);
-	opencvWidget->setObjectName("opencvWidget");
-	this->setCentralWidget(opencvWidget);
+	//opencvWidget->setObjectName("opencvWidget");
+	this->setCentralWidget(&mMdiArea);
+	this->mSharedGlWidget.resize(1, 1);
+	//this->mSharedGlWidget.hide();
+	this->newThread();
+	this->newThread();
+	this->newThread();
+	this->newThread();
+	this->newThread();
+
+	// #warning
+	// opencvWidget->showImage(cv::imread("D:\\STUDIUM\\Sem6\\ComputerVision\\svn\\signrecognition\\swift-build\\TestData\\50_distraction_1.jpg"));
 
 	//////////////////////////////////////////////////////////////////////////
 	/// Left Dock Widget
 	dockAlpha = new QDockWidget(tr("Picture Manager"),this);
 	dockAlpha->setObjectName("dockAlpha");
 	dockAlpha->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+	dockAlpha->setFixedWidth(262); ///< 128px + 6px + 128px
 
 	dockContentsAlpha = new QWidget();
 	dockContentsAlpha->setObjectName("dockContentsAlpha");
 	dockAlpha->setWidget(dockContentsAlpha);
 	this->addDockWidget(Qt::LeftDockWidgetArea, dockAlpha);
 	viewMenu->addAction(dockAlpha->toggleViewAction());
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	/// Right Dock Widget
 	dockBeta = new QDockWidget(tr("Controls"),this);
@@ -152,9 +195,14 @@ void SMainWindow::createWidgets()
 	labelExplore->setText(tr("Explore"));
 	labelExplore->setAlignment(Qt::AlignHCenter);
 	gridLayout->addWidget(labelExplore, 0, 0, 1, 1);
-	
+
 	/// Grid Layout - Lower Left
 	declarativeViewExplore = new QDeclarativeView(dockContentsAlpha);
+	//declarativeViewExplore->setAttribute(Qt::WA_OpaquePaintEvent);
+	//declarativeViewExplore->setAttribute(Qt::WA_NoSystemBackground);
+	//declarativeViewExplore->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
+	//declarativeViewExplore->viewport()->setAttribute(Qt::WA_NoSystemBackground);
+
 	declarativeViewExplore->setSource(QUrl::fromLocalFile("myqmlfile.qml"));
 	declarativeViewExplore->setObjectName("declarativeViewExplore");
 	declarativeViewExplore->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
@@ -169,73 +217,98 @@ void SMainWindow::createWidgets()
 
 	/// Grid Layout - Lower Right
 	declarativeViewTrain = new QDeclarativeView(dockContentsAlpha);
+	//declarativeViewTrain->setAttribute(Qt::WA_OpaquePaintEvent);
+	//declarativeViewTrain->setAttribute(Qt::WA_NoSystemBackground);
+	//declarativeViewTrain->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
+	//declarativeViewTrain->viewport()->setAttribute(Qt::WA_NoSystemBackground);
+
 	declarativeViewTrain->setSource(QUrl::fromLocalFile("myqmlfile.qml"));
 	declarativeViewTrain->setObjectName("declarativeViewTrain");
 	declarativeViewTrain->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 	gridLayout->addWidget(declarativeViewTrain, 1, 1, 1, 1);
 }
 
-/// \brief 
+/// \brief
 ///
-/// 
+///
 ///
 /// \return Nothing
-/// \sa 
+/// \sa
 void SMainWindow::createStatusBar()
 {
 	statusBar()->showMessage(tr("Ready"));
 }
 
-/// \brief 
+/// \brief
 ///
-/// 
+///
 ///
 /// \return Nothing
-/// \sa 
+/// \sa
 void SMainWindow::open()
 {
 	/// file open dialog to import images into the sign recognition software.
 	/// it supports a multitude of file formats (see "filters").
-	m_newPaths = QFileDialog::getOpenFileNames(
+	mNewImagePaths = QFileDialog::getOpenFileNames(
 		this,
 		tr("Open File(s)"),
 		QDir::currentPath().append("/TestData"),
-		m_filters.join(";;"),
-		&m_filters[1],
+		mFormatFilters.join(";;"),
+		&mFormatFilters[0],
 		nullptr
 	);
-
-	/// would have been enough if we didn't needed the exact new paths:
-	/// \code
-	///	paths += input;
-	///	paths.removeDuplicates();
-	/// \endcode
-	/// to avoid recalculation of icons & additional stuff the following
-	/// is the only way to go:
 
 	/// wrong user input might cause duplicate file paths in the "input"
 	/// string list. not exactly sure but we better be safe. we got the
 	/// processing power :-D
-	m_newPaths.removeDuplicates();
+	mNewImagePaths.removeDuplicates();
 
 	/// remove redundant paths from the new "input" string list.
-	/// redundant are paths which are already elements of the "paths" 
+	/// redundant are paths which are already elements of the "paths"
 	/// string list.
-	for ( QStringList::Iterator it = m_newPaths.begin(); it != m_newPaths.end(); ++it ) 
+	for ( QStringList::Iterator it = mNewImagePaths.begin(); it != mNewImagePaths.end(); ++it )
 	{
-		if (m_allPaths.contains(*it)) ///< pointer-style iterator dereference
+		if (mAllImagePaths.contains(*it)) ///< pointer-style iterator dereference
 		{
-			it = m_newPaths.erase(it);
+			it = mNewImagePaths.erase(it);
 		}
 	}
 
-	m_allPaths += m_newPaths; ///< add the new input to the "paths" member
-	
+	mAllImagePaths += mNewImagePaths; ///< add the new input to the "paths" member
+}
 
+void SMainWindow::newThread()
+{
+	static int windowCount = 1;
+	//if (mMdiArea.subWindowList().count() > 9)
+	//	return;
+	SGLOpenCVWidget *widget = new SGLOpenCVWidget(&mMdiArea, &mSharedGlWidget);
+	mMdiArea.addSubWindow(widget);
+	widget->setWindowTitle("Thread #" + QString::number(windowCount++));
+	widget->show();
+	widget->startRendering();
+}
+
+void SMainWindow::killThread()
+{
+	delete mMdiArea.activeSubWindow();
 }
 
 void SMainWindow::about()
 {
-	QMessageBox::about(this, tr("About Swift"),
-		tr("This is <b>Swift</b> by Patrick Nierath and Tim B. Jagla."));
+	QMessageBox::about(this, tr("TMP"),
+		tr("TMP"));
+}
+
+/// VIEW
+///
+void SMainWindow::tabSubWindows()
+{
+	mMdiArea.setViewMode(QMdiArea::TabbedView);
+}
+
+void SMainWindow::tileSubWindows()
+{
+	mMdiArea.setViewMode(QMdiArea::SubWindowView);
+	mMdiArea.tileSubWindows();
 }

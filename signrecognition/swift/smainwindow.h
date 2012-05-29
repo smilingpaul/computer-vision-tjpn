@@ -1,12 +1,12 @@
 /// \file smainwindow.h
 ///
-/// 
+///
 #ifndef SMAINWINDOW_H
 #define SMAINWINDOW_H
 
 #include <QtGui/QMainWindow>
 #include <QtDeclarative/QtDeclarative>
-#include "sopencvwidget.h"
+#include "sglopencvwidget.h"
 
 class SMainWindow : public QMainWindow
 {
@@ -18,8 +18,8 @@ public:
 
 public slots:
 
-
 private:
+	void initialize();
 	void createActions();
 	void createMenus();
 	void createToolBars();
@@ -29,6 +29,9 @@ private:
 	QAction *openAct;
 	QAction *exitAct;
 	QAction *aboutAct;
+	/// view (windows)
+	QAction *tabAct;
+	QAction *tileAct;
 
 	QMenu *fileMenu;
 	QMenu *editMenu;
@@ -40,27 +43,33 @@ private:
 
 	QDockWidget *dockBeta;
 	QWidget *dockContentsBeta;
-	
+
 	QGridLayout *gridLayout;
 	QLabel *labelExplore;
 	QDeclarativeView *declarativeViewExplore;
 	QLabel *labelTrain;
 	QDeclarativeView *declarativeViewTrain;
 
-	SOpenCVWidget *opencvWidget;
+	QMdiArea mMdiArea;
+	QGLWidget mSharedGlWidget;
 
 	//////////////////////////////////////////////////////////////////////////
 
-	QStringList m_allPaths;
-	QStringList m_newPaths;
-	QStringList m_filters;
+	QStringList mAllImagePaths;
+	QStringList mNewImagePaths;
+	QStringList mFormatFilters;
 
 private slots:
 	void open();
 	void about();
 
-signals:
+	void newThread();
+	void killThread();
 
+	void tabSubWindows();
+	void tileSubWindows();
+
+signals:
 };
 
 #endif // SMAINWINDOW_H
