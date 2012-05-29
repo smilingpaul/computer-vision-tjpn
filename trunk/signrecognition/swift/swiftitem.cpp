@@ -31,6 +31,17 @@ void SwiftItem::generateThumbnail()
 	//return QImage((const unsigned char*)(dest.data), dest.cols, dest.rows, QImage::Format_RGB888);
 }
 
+void SwiftItem::detectFeatures()
+{
+
+}
+
+void SwiftItem::extractDescriptors()
+{
+
+}
+
+
 /// properties
 QString SwiftItem::path() const
 {
@@ -42,21 +53,17 @@ QImage SwiftItem::thumbnail() const
 	return mThumbnail;
 }
 
-/// static methods
-/// http://permalink.gmane.org/gmane.comp.lib.opencv/37800
-///
-static QImage mat2qimage(const cv::Mat& mat)
+cv::Mat SwiftItem::image() const
 {
-	cv::Mat rgb;
-	cv::cvtColor(mat, rgb, CV_BGR2RGB);
-	return QImage((const unsigned char*)(rgb.data), rgb.cols, rgb.rows, QImage::Format_RGB888);
+	return mImage;
 }
 
-static cv::Mat qimage2mat(const QImage& qimage)
+cv::Mat SwiftItem::descriptors() const
 {
-	cv::Mat mat = cv::Mat(qimage.height(), qimage.width(), CV_8UC4, (uchar*)qimage.bits(), qimage.bytesPerLine());
-	cv::Mat mat2 = cv::Mat(mat.rows, mat.cols, CV_8UC3 );
-	int from_to[] = { 0,0,  1,1,  2,2 };
-	cv::mixChannels( &mat, 1, &mat2, 1, from_to, 3 );
-	return mat2;
+	return mDescriptors;
+}
+
+std::vector<cv::KeyPoint> SwiftItem::keypoints() const
+{
+	return mKeypoints;
 }

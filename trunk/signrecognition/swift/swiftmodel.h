@@ -15,7 +15,10 @@ class SwiftModel : public QAbstractListModel
 public:
 	enum SwiftItemRoles {
 		PathRole = Qt::UserRole + 1,
-		ThumbnailRole
+		ThumbnailRole,
+		ImageRole,
+		DescriptorsRole,
+		KeypointsRole
 	};
 
 	SwiftModel(QObject *parent = 0);
