@@ -25,13 +25,15 @@ public:
 	~SwiftModel();
 
 	// needs to be implemented
+	// return row count for given parent
 	int rowCount(const QModelIndex & parent = QModelIndex()) const;
+	// return data, based on current index and requested role
 	QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
 	// bonus stuff
 	//void addImageItem(const SwiftItem &swiftItem);
 private:
-	QList<SwiftItem> m_list;
+	QList<SwiftItem> mList;
 };
 
 #endif // SWIFTMODEL_H

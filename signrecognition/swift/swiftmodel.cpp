@@ -13,8 +13,8 @@ SwiftModel::SwiftModel(QObject *parent)
 	roles[PathRole] = "path";
 	roles[ThumbnailRole] = "thumbnail";
 	roles[ImageRole] = "image";
-	roles[DescriptorsRole] = "descriptors";
-	roles[KeypointsRole] = "keypoints";
+	//roles[DescriptorsRole] = "descriptors";
+	//roles[KeypointsRole] = "keypoints";
 	setRoleNames(roles);
 }
 
@@ -29,18 +29,50 @@ SwiftModel::~SwiftModel()
 //	endInsertRows();
 //}
 
-int SwiftModel::rowCount(const QModelIndex &parent) const {
-	return m_list.count();
+int SwiftModel::rowCount(const QModelIndex &parent) const
+{
+	return mList.count();
 }
 
-QVariant SwiftModel::data(const QModelIndex &index, int role) const {
-	if (index.row() < 0 || index.row() > m_list.count())
+QVariant SwiftModel::data(const QModelIndex &index, int role) const
+{
+	//if (!index.isValid())
+	//	return QVariant();
+
+	if (index.row() < 0 || index.row() > mList.count())
 		return QVariant();
 
-	const SwiftItem &swiftItem = m_list[index.row()];
-	if (role == PathRole)
-		return swiftItem.path();
+	const SwiftItem &swiftItem = mList[index.row()];
+
+	switch (role)
+	{
+	case Qt::DisplayRole:
+		switch (index.column())
+		{
+		case PathRole:
+			return swiftItem.path();
+		case ThumbnailRole:
+			return swiftItem.thumbnail();
+		case ImageRole:
+			return swiftItem.image();
+		//case DescriptorsRole:
+		//	return swiftItem.descriptors();
+		//case KeypointsRole:
+		//	return swiftItem.keypoints();
+		}
+	//case Qt::DecorationRole:
+	//case Qt::EditRole:
+	//case Qt::ToolTipRole:
+	//case Qt::StatusTipRole:
+	//case Qt::WhatsThisRole:
+	//case Qt::SizeHintRole:
+	//...
+	}
+
+	//if (role == PathRole)
+	//	return swiftItem.path();
 	//else if (role == SizeRole)
 	//	return image.size();
+
 	return QVariant();
 }
