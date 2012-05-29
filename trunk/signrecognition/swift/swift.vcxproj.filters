@@ -45,6 +45,12 @@
     <Filter Include="Header Files\gui">
       <UniqueIdentifier>{6ef74f4d-6ff9-4af5-a6f9-c0d684e945ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\model">
+      <UniqueIdentifier>{8b35332c-463e-4c33-a0cd-474a5cffcdab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\model">
+      <UniqueIdentifier>{82b04cc5-95b7-4400-b6b8-cc792d6a280a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -65,25 +71,37 @@
     <ClCompile Include="smainwindow.cpp">
       <Filter>Source Files\gui</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_sopencvwidget.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_sopencvwidget.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="sopencvwidget.cpp">
-      <Filter>Source Files\gui</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_swiftmodel.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_swiftmodel.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="swiftmodel.cpp">
-      <Filter>Source Files\algorithm</Filter>
+    <ClCompile Include="GeneratedFiles\Debug\moc_sglpainter.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_sglpainter.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_sglopencvwidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_sglopencvwidget.cpp">
+      <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="swiftitem.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="swiftmodel.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="sglopencvwidget.cpp">
+      <Filter>Source Files\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="sglpainter.cpp">
+      <Filter>Source Files\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="handcraftedsift.cpp">
       <Filter>Source Files\algorithm</Filter>
     </ClCompile>
   </ItemGroup>
@@ -98,6 +116,9 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="swiftitem.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="handcraftedsift.h">
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
   </ItemGroup>
@@ -114,14 +135,20 @@
     <CustomBuild Include="smainwindow.h">
       <Filter>Header Files\gui</Filter>
     </CustomBuild>
-    <CustomBuild Include="sopencvwidget.h">
+    <CustomBuild Include="swiftmodel.h">
+      <Filter>Header Files\model</Filter>
+    </CustomBuild>
+    <CustomBuild Include="sglopencvwidget.h">
       <Filter>Header Files\gui</Filter>
     </CustomBuild>
-    <CustomBuild Include="swiftmodel.h">
-      <Filter>Header Files\algorithm</Filter>
+    <CustomBuild Include="sglpainter.h">
+      <Filter>Header Files\gui</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="swift.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="thumbnailview.qml" />
   </ItemGroup>
 </Project>

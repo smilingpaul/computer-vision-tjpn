@@ -2,29 +2,29 @@
 #include "swiftmodel.h"
 
 /// \class SwiftModel
-/// \brief 
+/// \brief
 ///
-/// 
+///
 ///
 SwiftModel::SwiftModel(QObject *parent)
 	: QAbstractListModel(parent)
 {
 	QHash<int,QByteArray> roles;
 	roles[PathRole] = "path";
+	roles[ThumbnailRole] = "thumbnail";
 	setRoleNames(roles);
 }
 
 SwiftModel::~SwiftModel()
 {
-
 }
 
-void SwiftModel::addImageItem(const SwiftItem &swiftItem)
-{
-	beginInsertRows(QModelIndex(),rowCount(),rowCount());
-	m_list << swiftItem;
-	endInsertRows();
-}
+//void SwiftModel::addImageItem(const SwiftItem &swiftItem)
+//{
+//	beginInsertRows(QModelIndex(),rowCount(),rowCount());
+//	m_list << swiftItem;
+//	endInsertRows();
+//}
 
 int SwiftModel::rowCount(const QModelIndex &parent) const {
 	return m_list.count();
