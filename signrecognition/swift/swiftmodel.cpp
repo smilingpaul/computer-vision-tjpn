@@ -12,6 +12,9 @@ SwiftModel::SwiftModel(QObject *parent)
 	QHash<int,QByteArray> roles;
 	roles[PathRole] = "path";
 	roles[ThumbnailRole] = "thumbnail";
+	roles[ImageRole] = "image";
+	roles[DescriptorsRole] = "descriptors";
+	roles[KeypointsRole] = "keypoints";
 	setRoleNames(roles);
 }
 
