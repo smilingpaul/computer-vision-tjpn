@@ -5,6 +5,7 @@
 #ifndef SWIFTMODEL_H
 #define SWIFTMODEL_H
 
+#include <QtGui/QMainWindow>
 #include <QAbstractListModel>
 #include "swiftitem.h"
 
@@ -29,6 +30,8 @@ public:
 	int rowCount(const QModelIndex & parent = QModelIndex()) const;
 	// return data, based on current index and requested role
 	QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+
+	void loadFiles(QStringList newImagePaths);
 
 	// bonus stuff
 	//void addImageItem(const SwiftItem &swiftItem);

@@ -56,7 +56,106 @@ void HandcraftedSIFT::sift(int octavesCount /* = 4 */, int intervalsCount /* = 5
 	//detectExtrema();
 	//assignOrientations();
 	//extractKeypointDescriptors();
+
+	
 }
+
+//CreateInitImg()
+//need to double size and convert colored image in gray image
+cv::Mat HandcraftedSIFT::createInitImg()
+	{
+		cv::Mat grayImage, doubleSizeImage;
+
+		if (m_image.channels() == 3 || m_image.channels() == 4)
+			cvtColor(m_image, grayImage, CV_BGR2GRAY);
+		
+		else m_image.copyTo(grayImage);
+
+	
+		//now blur image and double its size
+     float sig_diff;
+
+        sig_diff = sqrtf( (SIGMA * SIGMA - SIGMA_ANTIALIAS * SIGMA_ANTIALIAS * 4, 0.01f) );	//cv::max() funkioniert nicht->warum?
+        resize(grayImage, doubleSizeImage, cvSize(grayImage.cols*2, grayImage.rows*2), 0, 0, cv::INTER_LINEAR);
+        GaussianBlur(doubleSizeImage, doubleSizeImage, cvSize(doubleSizeImage.cols, doubleSizeImage.rows), sig_diff, sig_diff);
+        return doubleSizeImage;
+
+	}
+
+void HandcraftedSIFT::buildScaleSpaces(const cv::Mat& base, cv::vector<cv::Mat>& m_pyr, int m_octavesCount ) const
+{
+	printf("Generating scale space...\n");
+
+	cv::vector<double> m_sigmas(m_octavesCount + 3);
+	m_pyr.resize(m_octavesCount*(m_octavesCount + 3));
+
+	// precompute Gaussian sigmas using the following formula:
+    //  \sigma_{total}^2 = \sigma_{i}^2 + \sigma_{i-1}^2
+	
+	m_sigmas[0] = sigma;
+	double k = pow(2., 1./ m_octavesCount);
+
+	for ( int i = 1; i < m_octavesCount + 3; i++)
+	{
+		double sig_prev = pow(k, (double)(i-1))*sigma;
+		double sig_total = sig_prev*k;
+		m_sigmas[i] = cv::sqrt(sig_total - sig_prev*sig_prev);
+	}
+
+	for ( int o = 0; o < m_octavesCount + 3; o++)
+	{
+		for ( int i = 0; i < m_octavesCount + 3; i++)
+		{
+			cv::Mat& dest = m_pyr[o*(m_octavesCount + 3) + i];
+			if ( o == 0 && i == 0 )
+				dest = base;
+			//base of new octave is halved image from end of prevoius octave
+			else if ( i == 0 )
+			{
+				const cv::Mat& src = m_pyr[(o-1)*(m_octavesCount + 3) + m_octavesCount];
+				resize(src, dest, cvSize(src.cols/2, src.rows/2), 
+					0, 0, cv::INTER_NEAREST);		//INTER_NEAREST - nearest neighbour interpolation
+			}
+			else
+			{
+				const cv::Mat& src = m_pyr[o*(m_octavesCount + 3) + i-1];
+				GaussianBlur(src, dest, cvSize(), m_sigmas[i], m_sigmas[i]);
+			}
+		}
+	}
+}
+
+
+void HandcraftedSIFT::buildDoGPyramid( const cv::vector<cv::Mat>& gaussPyr, cv::vector<cv::Mat>& dogPyr ) const
+{
+	printf("Generating DoG-Pyramid...\n");
+
+    int nOctaves = (int)gaussPyr.size()/(m_octavesCount + 3);
+    dogPyr.resize( nOctaves*(m_octavesCount + 2) );
+    
+    for( int o = 0; o < nOctaves; o++ )
+    {
+        for( int i = 0; i < m_octavesCount + 2; i++ )
+        {
+            const cv::Mat& src1 = gaussPyr[o*(m_octavesCount + 3) + i];
+            const cv::Mat& src2 = gaussPyr[o*(m_octavesCount + 3) + i + 1];
+            cv::Mat& dest = dogPyr[o*(m_octavesCount + 2) + i];
+            subtract(src2, src1, dest, cv::noArray(), CV_16S);
+        }
+    }
+}
+
+
+// find extrema in DoG
+void HandcraftedSIFT::detectExtrema()
+{
+	printf("Detecting extrema...\n");
+
+
+
+}
+
+
 
 // not needed
 //void HandcraftedSIFT::allocateMemory()
