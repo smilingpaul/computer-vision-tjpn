@@ -12,6 +12,7 @@
 #define DESC_NUM_BINS			8
 #define FVSIZE					128
 #define	FV_THRESHOLD			0.2
+#define SIFT_ORI_HIST_BINS		36;			//name to be changed
 
 
 // #warning
@@ -26,10 +27,12 @@ public:
 	HandcraftedSIFT(void);
 	virtual ~HandcraftedSIFT(void);
 
-	void sift(int octavesCount = 4, int intervalsCount = 2); ///< suggested default values by david g. lowe
+	void sift(int octaves = 4, int octaveLayers = 2); ///< suggested default values by david g. lowe
 	void allocateMemory();
 	void buildScaleSpaces(const cv::Mat& base, cv::vector<cv::Mat>& m_pyr, int m_octavesCount ) const;
 	void buildDoGPyramid( const cv::vector<cv::Mat>& gaussPyr, cv::vector<cv::Mat>& dogPyr ) const;
+	void findScaleSpaceExtrema( const cv::vector<cv::Mat>& gauss_pyr, const cv::vector<cv::Mat>& dog_pyr,
+                                  cv::vector<cv::KeyPoint>& keypoints ) const;
 	void detectExtrema();
 	void assignOrientations();
 	void extractKeypointDescriptors();
@@ -39,8 +42,8 @@ public:
 private:
 	cv::Mat m_image;
 
-	int m_octavesCount;
-	int m_intervalsCount;
+	int m_octaves;
+	int m_octaveLayers;
 	int m_keypointsCount;
 	double m_contrastThreshold;
 	double m_edgeThreshold;
