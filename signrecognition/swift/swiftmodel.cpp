@@ -76,3 +76,9 @@ QVariant SwiftModel::data(const QModelIndex &index, int role) const
 
 	return QVariant();
 }
+
+void loadFiles(QStringList newImagePaths)
+{
+
+}
+

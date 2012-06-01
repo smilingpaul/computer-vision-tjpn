@@ -54,6 +54,7 @@ void SGLPainter::paint()
 	//draw the painter stuff
 	p.translate(mViewportWidth/2 - (mViewportWidth/3)/2, mViewportHeight/2-(mViewportHeight/3)/2);
 	p.fillRect(QRect(0, 0, mViewportWidth/3, mViewportHeight/3), Qt::darkBlue);
+	
 	//end drawing of painter stuff
 
 	p.resetTransform();

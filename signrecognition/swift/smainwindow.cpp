@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "smainwindow.h"
 #include "swiftitem.h"
+#include "swiftmodel.h"
 
-#define	MAX_THREADS			8
+#define	MAX_THREADS 4
 //#include <opencv2/core/core.hpp>
 //#include <opencv2/imgproc/imgproc.hpp>
 //#include <opencv2/highgui/highgui.hpp>
@@ -18,7 +19,7 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	, mSharedGlWidget(this)
 {
 	//#warning
-	SwiftItem* mSwiftItem = new SwiftItem("D:\\STUDIUM\\Sem6\\ComputerVision\\svn\\signrecognition\\swift-build\\TestData\\50_distraction_1.jpg");
+	SwiftItem* mSwiftItem = new SwiftItem("C:\\Users\\Patrickson\\Documents\\Studium\\SS2012\\Computer Vision\\Projekt\\SVN\\signrecognition\\swift-build\\TestData\\50_distraction_1.jpg");
 
 	initialize();
 
@@ -54,6 +55,8 @@ void SMainWindow::initialize()
 		<< tr("Windows Bitmaps (*.bmp *.dib)")
 		<< tr("Portable Image Format (*.pbm *.pgm *.ppm)")
 		<< tr("Sun Rasters (*.sr *.ras)");
+
+	SwiftModel smodel = new SwiftModel(this);
 
 	tabSubWindows();
 	mMdiArea.setTabsClosable(true);
@@ -203,7 +206,7 @@ void SMainWindow::createWidgets()
 	declarativeViewExplore->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
 	declarativeViewExplore->viewport()->setAttribute(Qt::WA_NoSystemBackground);
 
-	declarativeViewExplore->setSource(QUrl::fromLocalFile("myqmlfile.qml"));
+	declarativeViewExplore->setSource(QUrl::fromLocalFile("thumbnailview.qml"));
 	declarativeViewExplore->setObjectName("declarativeViewExplore");
 	declarativeViewExplore->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 	gridLayout->addWidget(declarativeViewExplore, 1, 0, 1, 1);
@@ -222,7 +225,7 @@ void SMainWindow::createWidgets()
 	//declarativeViewTrain->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
 	//declarativeViewTrain->viewport()->setAttribute(Qt::WA_NoSystemBackground);
 
-	declarativeViewTrain->setSource(QUrl::fromLocalFile("myqmlfile.qml"));
+	declarativeViewTrain->setSource(QUrl::fromLocalFile("thumbnailview.qml"));
 	declarativeViewTrain->setObjectName("declarativeViewTrain");
 	declarativeViewTrain->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 	gridLayout->addWidget(declarativeViewTrain, 1, 1, 1, 1);
