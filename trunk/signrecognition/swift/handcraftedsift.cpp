@@ -12,7 +12,7 @@ HandcraftedSIFT::~HandcraftedSIFT(void)
 {
 	unsigned int i, j;
 
-	for( i = 0; i < m_octavesCount; i++ )
+	for( i = 0; i < m_octaveLayers; i++ )
 	{
 		// release all mats in that particular octave
 		for( j = 0; j < m_intervalsCount + 3; j++ )
@@ -48,7 +48,7 @@ HandcraftedSIFT::~HandcraftedSIFT(void)
 void HandcraftedSIFT::sift(int octavesCount /* = 4 */, int intervalsCount /* = 5 */)
 {
 	//not needed
-	//m_octavesCount   = octavesCount;
+	//m_octaveLayers   = octavesCount;
 	//m_intervalsCount = intervalsCount;
 
 	//allocateMemory();
@@ -76,50 +76,50 @@ cv::Mat HandcraftedSIFT::createInitImg()
      float sig_diff;
 
         sig_diff = sqrtf( (SIGMA * SIGMA - SIGMA_ANTIALIAS * SIGMA_ANTIALIAS * 4, 0.01f) );	//cv::max() funkioniert nicht->warum?
-        resize(grayImage, doubleSizeImage, cvSize(grayImage.cols*2, grayImage.rows*2), 0, 0, cv::INTER_LINEAR);
-        GaussianBlur(doubleSizeImage, doubleSizeImage, cvSize(doubleSizeImage.cols, doubleSizeImage.rows), sig_diff, sig_diff);
+        resize(grayImage, doubleSizeImage, cv::Size(grayImage.cols*2, grayImage.rows*2), 0, 0, cv::INTER_LINEAR);
+        GaussianBlur(doubleSizeImage, doubleSizeImage, cv::Size(), sig_diff, sig_diff);
         return doubleSizeImage;
 
 	}
 
-void HandcraftedSIFT::buildScaleSpaces(const cv::Mat& base, cv::vector<cv::Mat>& m_pyr, int m_octavesCount ) const
+void HandcraftedSIFT::buildScaleSpaces(const cv::Mat& base, cv::vector<cv::Mat>& m_pyr, int m_octaveLayers ) const
 {
 	printf("Generating scale space...\n");
 
-	cv::vector<double> m_sigmas(m_octavesCount + 3);
-	m_pyr.resize(m_octavesCount*(m_octavesCount + 3));
+	cv::vector<double> m_sigmas(m_octaveLayers + 3);
+	m_pyr.resize(m_octaveLayers*(m_octaveLayers + 3));
 
 	// precompute Gaussian sigmas using the following formula:
     //  \sigma_{total}^2 = \sigma_{i}^2 + \sigma_{i-1}^2
 	
 	m_sigmas[0] = sigma;
-	double k = pow(2., 1./ m_octavesCount);
+	double k = pow(2., 1./ m_octaveLayers);
 
-	for ( int i = 1; i < m_octavesCount + 3; i++)
+	for ( int i = 1; i < m_octaveLayers + 3; i++)
 	{
 		double sig_prev = pow(k, (double)(i-1))*sigma;
 		double sig_total = sig_prev*k;
 		m_sigmas[i] = cv::sqrt(sig_total - sig_prev*sig_prev);
 	}
 
-	for ( int o = 0; o < m_octavesCount + 3; o++)
+	for ( int o = 0; o < m_octaveLayers + 3; o++)
 	{
-		for ( int i = 0; i < m_octavesCount + 3; i++)
+		for ( int i = 0; i < m_octaveLayers + 3; i++)
 		{
-			cv::Mat& dest = m_pyr[o*(m_octavesCount + 3) + i];
+			cv::Mat& dest = m_pyr[o*(m_octaveLayers + 3) + i];
 			if ( o == 0 && i == 0 )
 				dest = base;
 			//base of new octave is halved image from end of prevoius octave
 			else if ( i == 0 )
 			{
-				const cv::Mat& src = m_pyr[(o-1)*(m_octavesCount + 3) + m_octavesCount];
-				resize(src, dest, cvSize(src.cols/2, src.rows/2), 
+				const cv::Mat& src = m_pyr[(o-1)*(m_octaveLayers + 3) + m_octaveLayers];
+				resize(src, dest, cv::Size(src.cols/2, src.rows/2), 
 					0, 0, cv::INTER_NEAREST);		//INTER_NEAREST - nearest neighbour interpolation
 			}
 			else
 			{
-				const cv::Mat& src = m_pyr[o*(m_octavesCount + 3) + i-1];
-				GaussianBlur(src, dest, cvSize(), m_sigmas[i], m_sigmas[i]);
+				const cv::Mat& src = m_pyr[o*(m_octaveLayers + 3) + i-1];
+				GaussianBlur(src, dest, cv::Size(), m_sigmas[i], m_sigmas[i]);
 			}
 		}
 	}
@@ -130,16 +130,16 @@ void HandcraftedSIFT::buildDoGPyramid( const cv::vector<cv::Mat>& gaussPyr, cv::
 {
 	printf("Generating DoG-Pyramid...\n");
 
-    int nOctaves = (int)gaussPyr.size()/(m_octavesCount + 3);
-    dogPyr.resize( nOctaves*(m_octavesCount + 2) );
+    int nOctaves = (int)gaussPyr.size()/(m_octaveLayers + 3);
+    dogPyr.resize( nOctaves*(m_octaveLayers + 2) );
     
     for( int o = 0; o < nOctaves; o++ )
     {
-        for( int i = 0; i < m_octavesCount + 2; i++ )
+        for( int i = 0; i < m_octaveLayers + 2; i++ )
         {
-            const cv::Mat& src1 = gaussPyr[o*(m_octavesCount + 3) + i];
-            const cv::Mat& src2 = gaussPyr[o*(m_octavesCount + 3) + i + 1];
-            cv::Mat& dest = dogPyr[o*(m_octavesCount + 2) + i];
+            const cv::Mat& src1 = gaussPyr[o*(m_octaveLayers + 3) + i];
+            const cv::Mat& src2 = gaussPyr[o*(m_octaveLayers + 3) + i + 1];
+            cv::Mat& dest = dogPyr[o*(m_octaveLayers + 2) + i];
             subtract(src2, src1, dest, cv::noArray(), CV_16S);
         }
     }
@@ -147,9 +147,16 @@ void HandcraftedSIFT::buildDoGPyramid( const cv::vector<cv::Mat>& gaussPyr, cv::
 
 
 // find extrema in DoG
-void HandcraftedSIFT::detectExtrema()
+void HandcraftedSIFT::findScaleSpaceExtrema(const cv::vector<cv::Mat>& gaussPyr, const cv::vector<cv::Mat>& dogPyr,
+                                  cv::vector<cv::KeyPoint>& keypoints ) const
 {
 	printf("Detecting extrema...\n");
+
+	int nOctaves = (int)gaussPyr.size()/(m_octaveLayers + 3);
+	int treshold = cvFloor(0.5 * CONTRAST_THRESHOLD/m_octaveLayers * 255 * SIFT_FIXPT_SCALE);
+	const int n = SIFT_ORI_HIST_BINS;
+	float hist[n];
+	cv::KeyPoint kpt;
 
 
 
@@ -161,14 +168,14 @@ void HandcraftedSIFT::detectExtrema()
 //void HandcraftedSIFT::allocateMemory()
 //{
 //	//nicht fragmentiert
-//	//m_gaussians = new cv::Mat*[m_octavesCount*(m_intervalsCount + 3)];
+//	//m_gaussians = new cv::Mat*[m_octaveLayers*(m_intervalsCount + 3)];
 //
-//	m_gaussians = new cv::Mat**[m_octavesCount];
-//	m_dogs      = new cv::Mat**[m_octavesCount];
-//	m_extrema   = new cv::Mat**[m_octavesCount];
-//	m_sigmas    = new double*  [m_octavesCount];
+//	m_gaussians = new cv::Mat**[m_octaveLayers];
+//	m_dogs      = new cv::Mat**[m_octaveLayers];
+//	m_extrema   = new cv::Mat**[m_octaveLayers];
+//	m_sigmas    = new double*  [m_octaveLayers];
 //
-//	for( unsigned int i = 0; i < m_octavesCount; i++ )
+//	for( unsigned int i = 0; i < m_octaveLayers; i++ )
 //	{
 //		/// why +3?
 //		m_gaussians[i] = new cv::Mat*[m_intervalsCount + 3];
@@ -237,7 +244,7 @@ void HandcraftedSIFT::detectExtrema()
 //	m_sigmas[0][0] = initSigma * 0.5;
 //
 //	// Now for the actual image generation
-//	for(i=0;i<m_octavesCount;i++)
+//	for(i=0;i<m_octaveLayers;i++)
 //	{
 //		// Reset sigma for each octave
 //		double sigma = initSigma;
@@ -272,7 +279,7 @@ void HandcraftedSIFT::detectExtrema()
 //		}
 //
 //		// If we're not at the last octave
-//		if(i<m_octavesCount-1)
+//		if(i<m_octaveLayers-1)
 //		{
 //			// Reduce size to half
 //			currentSize.width/=2;
@@ -313,7 +320,7 @@ void HandcraftedSIFT::detectExtrema()
 //	curvature_threshold = (CURVATURE_THRESHOLD+1)*(CURVATURE_THRESHOLD+1)/CURVATURE_THRESHOLD;
 //
 //	// Detect extrema in the DoG images
-//	for(i=0;i<m_octavesCount;i++)
+//	for(i=0;i<m_octaveLayers;i++)
 //	{
 //		scale = (int)pow(2.0, (double)i);
 //
@@ -467,11 +474,11 @@ void HandcraftedSIFT::detectExtrema()
 //
 //	// These images hold the magnitude and direction of gradient
 //	// for all blurred out images
-//	IplImage*** magnitude = new IplImage**[m_octavesCount];
-//	IplImage*** orientation = new IplImage**[m_octavesCount];
+//	IplImage*** magnitude = new IplImage**[m_octaveLayers];
+//	IplImage*** orientation = new IplImage**[m_octaveLayers];
 //
 //	// Allocate some memory
-//	for(i=0;i<m_octavesCount;i++)
+//	for(i=0;i<m_octaveLayers;i++)
 //	{
 //		magnitude[i] = new IplImage*[m_intervalsCount];
 //		orientation[i] = new IplImage*[m_intervalsCount];
@@ -482,7 +489,7 @@ void HandcraftedSIFT::detectExtrema()
 //	// again and again that way.
 //
 //	// Iterate through all octaves
-//	for(i=0;i<m_octavesCount;i++)
+//	for(i=0;i<m_octaveLayers;i++)
 //	{
 //		// Iterate through all scales
 //		for(j=1;j<m_intervalsCount+1;j++)
@@ -525,7 +532,7 @@ void HandcraftedSIFT::detectExtrema()
 //	double* hist_orient = new double[NUM_BINS];
 //
 //	// Go through all octaves
-//	for(i=0;i<m_octavesCount;i++)
+//	for(i=0;i<m_octaveLayers;i++)
 //	{
 //		// Store current scale, width and height
 //		unsigned int scale = (unsigned int)pow(2.0, (double)i);
@@ -720,7 +727,7 @@ void HandcraftedSIFT::detectExtrema()
 //	// Finally, we're done with all the magnitude and orientation images.
 //	// Erase them from RAM
 //	assert(m_keypoints.size() == m_keypointsCount);
-//	for(i=0;i<m_octavesCount;i++)
+//	for(i=0;i<m_octaveLayers;i++)
 //	{
 //		for(j=1;j<m_intervalsCount+1;j++)
 //		{
@@ -746,9 +753,9 @@ void HandcraftedSIFT::detectExtrema()
 //
 //	// Interpolated thingy. We're dealing with "inbetween" gradient
 //	// magnitudes and orientations
-//	IplImage*** imgInterpolatedMagnitude = new IplImage**[m_octavesCount];
-//	IplImage*** imgInterpolatedOrientation = new IplImage**[m_octavesCount];
-//	for(i=0;i<m_octavesCount;i++)
+//	IplImage*** imgInterpolatedMagnitude = new IplImage**[m_octaveLayers];
+//	IplImage*** imgInterpolatedOrientation = new IplImage**[m_octaveLayers];
+//	for(i=0;i<m_octaveLayers;i++)
 //	{
 //		imgInterpolatedMagnitude[i] = new IplImage*[m_intervalsCount];
 //		imgInterpolatedOrientation[i] = new IplImage*[m_intervalsCount];
@@ -756,7 +763,7 @@ void HandcraftedSIFT::detectExtrema()
 //
 //	// These two loops calculate the interpolated thingy for all octaves
 //	// and subimages
-//	for(i=0;i<m_octavesCount;i++)
+//	for(i=0;i<m_octaveLayers;i++)
 //	{
 //		for(j=1;j<m_intervalsCount+1;j++)
 //		{
@@ -974,7 +981,7 @@ void HandcraftedSIFT::detectExtrema()
 //	assert(m_keypointDescriptors.size()==m_keypointsCount);
 //
 //	// Get rid of memory we don't need anylonger
-//	for(i=0;i<m_octavesCount;i++)
+//	for(i=0;i<m_octaveLayers;i++)
 //	{
 //		for(j=1;j<m_intervalsCount+1;j++)
 //		{
@@ -1065,7 +1072,7 @@ void HandcraftedSIFT::detectExtrema()
 //// This function shows the sigmas used for various images.
 //void SIFT::ShowAbsSigma()
 //{
-//	for(int i=0;i<m_octavesCount;i++)
+//	for(int i=0;i<m_octaveLayers;i++)
 //	{
 //		for(int j=1;j<m_intervalsCount+4;j++)
 //		{
