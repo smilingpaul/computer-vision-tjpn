@@ -15,19 +15,20 @@ HandcraftedSIFT::~HandcraftedSIFT(void)
 	for( i = 0; i < m_octaveLayers; i++ )
 	{
 		// release all mats in that particular octave
-		for( j = 0; j < m_intervalsCount + 3; j++ )
+		for( j = 0; j < m_octaveLayers + 3; j++ )
 		{
 			~*m_gaussians[i][j];
 		}
 
-		for( j = 0; j < m_intervalsCount + 2; j++ )
+		for( j = 0; j < m_octaveLayers + 2; j++ )
 		{
 			~*m_dogs[i][j];
 		}
 
-		for( j = 0; j < m_intervalsCount; j++ )
+		for( j = 0; j < m_octaveLayers; j++ )		//should maybe changed...
 		{
-			~*m_extrema[i][j];
+			//~*m_extrema[i][j];
+			~*m_extrema[i];
 		}
 
 		// delete the particular octave
@@ -49,7 +50,7 @@ void HandcraftedSIFT::sift(int octavesCount /* = 4 */, int intervalsCount /* = 5
 {
 	//not needed
 	//m_octaveLayers   = octavesCount;
-	//m_intervalsCount = intervalsCount;
+	//m_octaveLayers = intervalsCount;
 
 	//allocateMemory();
 	//buildScaleSpaces();
@@ -146,21 +147,193 @@ void HandcraftedSIFT::buildDoGPyramid( const cv::vector<cv::Mat>& gaussPyr, cv::
 }
 
 
-// find extrema in DoG
+// find extrema in DoG in ONE octave
 void HandcraftedSIFT::findScaleSpaceExtrema(const cv::vector<cv::Mat>& gaussPyr, const cv::vector<cv::Mat>& dogPyr,
                                   cv::vector<cv::KeyPoint>& keypoints ) const
 {
 	printf("Detecting extrema...\n");
 
-	int nOctaves = (int)gaussPyr.size()/(m_octaveLayers + 3);
-	int treshold = cvFloor(0.5 * CONTRAST_THRESHOLD/m_octaveLayers * 255 * SIFT_FIXPT_SCALE);
-	const int n = SIFT_ORI_HIST_BINS;
-	float hist[n];
-	cv::KeyPoint kpt;
+//	int nOctaves = (int)gaussPyr.size()/(m_octaveLayers + 3);
+//	int treshold = cvFloor(0.5 * CONTRAST_THRESHOLD/m_octaveLayers * 255 * SIFT_FIXPT_SCALE);
+//	const int n = SIFT_ORI_HIST_BINS;
+	
+	cv::KeyPoint kpt;				//not used until now
+
+	//looping variables
+	unsigned int xi, yi, oct;		//xi,yi for one octave, oct for going through all octaves
+
+	unsigned int num = 0;			//numeber of detected keypoints
+//	double curvature_threshold = (CURVATURE_THRESHOLD+1)*(CURVATURE_THRESHOLD+1)/CURVATURE_THRESHOLD;
+
+//	cv::Mat *middle, *up, *down;
 
 
 
+	for(oct=1;oct<m_octaves+1;oct++)
+	{
+		//if right then NICE :)
+		const cv::Mat middle = dogPyr[oct];		
+		const cv::Mat up = dogPyr[oct-1];
+		const cv::Mat down = dogPyr[oct+1];
+
+		// Allocate memory and set all points to zero ("not key point")
+		//m_extrema[i][j-1] = cvCreateImage(cvGetSize(m_dogList[i][0]), 8, 1);
+		m_extrema[oct] = cv::Mat.create(dogPyr.size(), 8, CV_8UC3);			//really not sure about that stuff
+
+		//for one image of an octave
+		for(xi=1;xi<dogPyr[oct].cols-1;xi++)		//check if .rows/.cols really give a (int)value back
+			{
+				for(yi=1;yi<dogPyr[oct].rows-1;yi++)
+				{
+					// true if a keypoint is a maxima/minima
+					// but needs to be tested for contrast/edge thingy
+					bool justSet = false;
+					const double* currentPixel = middle.ptr<double>(yi, xi);
+					//double currentPixel = cvGetReal2D(middle, yi, xi);		//to be changed and used below
+
+					// Check for a maximum
+					
+					if (currentPixel > middle.ptr<double>( yi-1, xi  )		&&
+						currentPixel > middle.ptr<double>( yi+1, xi  )		&&
+						currentPixel > middle.ptr<double>( yi  , xi-1)		&&
+						currentPixel > middle.ptr<double>( yi  , xi+1)		&&
+						currentPixel > middle.ptr<double>( yi-1, xi-1)		&&
+						currentPixel > middle.ptr<double>( yi-1, xi+1)		&&
+						currentPixel > middle.ptr<double>( yi+1, xi+1)		&&
+						currentPixel > middle.ptr<double>( yi+1, xi-1)		&&
+						currentPixel > up.ptr<double>( yi	, xi  )		&&
+						currentPixel > up.ptr<double>( yi-1	, xi  )		&&
+						currentPixel > up.ptr<double>( yi+1	, xi  )		&&
+						currentPixel > up.ptr<double>( yi	, xi-1)		&&
+						currentPixel > up.ptr<double>( yi	, xi+1)		&&
+						currentPixel > up.ptr<double>( yi-1	, xi-1)		&&
+						currentPixel > up.ptr<double>( yi-1	, xi+1)		&&
+						currentPixel > up.ptr<double>( yi+1	, xi-1)		&&
+						currentPixel > up.ptr<double>( yi+1	, xi+1)		&&
+						currentPixel > down.ptr<double>( yi   , xi   )		&&
+						currentPixel > down.ptr<double>( yi-1 , xi   )		&&
+						currentPixel > down.ptr<double>( yi+1 , xi   )		&&
+						currentPixel > down.ptr<double>( yi   , xi-1 )		&&
+						currentPixel > down.ptr<double>( yi   , xi+1 )		&&
+						currentPixel > down.ptr<double>( yi-1 , xi-1 )		&&
+						currentPixel > down.ptr<double>( yi-1 , xi+1 )		&&
+						currentPixel > down.ptr<double>( yi+1 , xi-1 )		&&
+						currentPixel > down.ptr<double>( yi+1 , xi+1 )		)
+					{
+						m_extrema[oct][yi, xi] = 255;
+						//cvSetReal2D(m_extrema[i][j-1], yi, xi, 255);
+						num++;
+						justSet = true;
+					}
+
+					else if (currentPixel < middle.ptr<double>( yi-1, xi  )		&&
+						currentPixel < middle.ptr<double>( yi+1, xi  )		&&
+						currentPixel < middle.ptr<double>( yi  , xi-1)		&&
+						currentPixel < middle.ptr<double>( yi  , xi+1)		&&
+						currentPixel < middle.ptr<double>( yi-1, xi-1)		&&
+						currentPixel < middle.ptr<double>( yi-1, xi+1)		&&
+						currentPixel < middle.ptr<double>( yi+1, xi+1)		&&
+						currentPixel < middle.ptr<double>( yi+1, xi-1)		&&
+						currentPixel < up.ptr<double>( yi	, xi  )		&&
+						currentPixel < up.ptr<double>( yi-1	, xi  )		&&
+						currentPixel < up.ptr<double>( yi+1	, xi  )		&&
+						currentPixel < up.ptr<double>( yi	, xi-1)		&&
+						currentPixel < up.ptr<double>( yi	, xi+1)		&&
+						currentPixel < up.ptr<double>( yi-1	, xi-1)		&&
+						currentPixel < up.ptr<double>( yi-1	, xi+1)		&&
+						currentPixel < up.ptr<double>( yi+1	, xi-1)		&&
+						currentPixel < up.ptr<double>( yi+1	, xi+1)		&&
+						currentPixel < down.ptr<double>( yi   , xi   )		&&
+						currentPixel < down.ptr<double>( yi-1 , xi   )		&&
+						currentPixel < down.ptr<double>( yi+1 , xi   )		&&
+						currentPixel < down.ptr<double>( yi   , xi-1 )		&&
+						currentPixel < down.ptr<double>( yi   , xi+1 )		&&
+						currentPixel < down.ptr<double>( yi-1 , xi-1 )		&&
+						currentPixel < down.ptr<double>( yi-1 , xi+1 )		&&
+						currentPixel < down.ptr<double>( yi+1 , xi-1 )		&&
+						currentPixel < down.ptr<double>( yi+1 , xi+1 )		)
+					{
+						m_extrema[oct][yi, xi] = 255;
+						//cvSetReal2D(m_extrema[i][j-1], yi, xi, 255);
+						num++;
+						justSet = true;
+					}
+		}
+	}
 }
+
+
+
+						//if (currentPixel > cvGetReal2D(middle, yi-1, xi  )	&&
+                        //currentPixel > cvGetReal2D(middle, yi+1, xi  )  &&
+                        //currentPixel > cvGetReal2D(middle, yi  , xi-1)  &&
+                        /*currentPixel > cvGetReal2D(middle, yi  , xi+1)  &&
+                        currentPixel > cvGetReal2D(middle, yi-1, xi-1)	&&
+                        currentPixel > cvGetReal2D(middle, yi-1, xi+1)	&&
+                        currentPixel > cvGetReal2D(middle, yi+1, xi+1)	&&
+                        currentPixel > cvGetReal2D(middle, yi+1, xi-1)	&&*/
+                        /*currentPixel > cvGetReal2D(up, yi  , xi  )      &&
+                        currentPixel > cvGetReal2D(up, yi-1, xi  )      &&
+                        currentPixel > cvGetReal2D(up, yi+1, xi  )      &&
+                        currentPixel > cvGetReal2D(up, yi  , xi-1)      &&
+                        currentPixel > cvGetReal2D(up, yi  , xi+1)      &&
+                        currentPixel > cvGetReal2D(up, yi-1, xi-1)		&&
+                        currentPixel > cvGetReal2D(up, yi-1, xi+1)		&&
+                        currentPixel > cvGetReal2D(up, yi+1, xi+1)		&&
+                        currentPixel > cvGetReal2D(up, yi+1, xi-1)		&&*/
+                       /* currentPixel > cvGetReal2D(down, yi  , xi  )    &&
+                        currentPixel > cvGetReal2D(down, yi-1, xi  )    &&
+                        currentPixel > cvGetReal2D(down, yi+1, xi  )    &&
+                        currentPixel > cvGetReal2D(down, yi  , xi-1)    &&
+                        currentPixel > cvGetReal2D(down, yi  , xi+1)    &&
+                        currentPixel > cvGetReal2D(down, yi-1, xi-1)	&&
+                        currentPixel > cvGetReal2D(down, yi-1, xi+1)	&&
+                        currentPixel > cvGetReal2D(down, yi+1, xi+1)	&&
+                        currentPixel > cvGetReal2D(down, yi+1, xi-1)   )*/
+					//{
+					//	cvSetReal2D(m_extrema[i][j-1], yi, xi, 255);
+					//	num++;
+					//	justSet = true;
+					//}
+					//// Check if it's a minimum
+					//else if (currentPixel < cvGetReal2D(middle, yi-1, xi  )	&&
+     //                   currentPixel < cvGetReal2D(middle, yi+1, xi  )  &&
+     //                   currentPixel < cvGetReal2D(middle, yi  , xi-1)  &&
+     //                   currentPixel < cvGetReal2D(middle, yi  , xi+1)  &&
+     //                   currentPixel < cvGetReal2D(middle, yi-1, xi-1)	&&
+     //                   currentPixel < cvGetReal2D(middle, yi-1, xi+1)	&&
+     //                   currentPixel < cvGetReal2D(middle, yi+1, xi+1)	&&
+     //                   currentPixel < cvGetReal2D(middle, yi+1, xi-1)	&&
+     //                   currentPixel < cvGetReal2D(up, yi  , xi  )      &&
+     //                   currentPixel < cvGetReal2D(up, yi-1, xi  )      &&
+     //                   currentPixel < cvGetReal2D(up, yi+1, xi  )      &&
+     //                   currentPixel < cvGetReal2D(up, yi  , xi-1)      &&
+     //                   currentPixel < cvGetReal2D(up, yi  , xi+1)      &&
+     //                   currentPixel < cvGetReal2D(up, yi-1, xi-1)		&&
+     //                   currentPixel < cvGetReal2D(up, yi-1, xi+1)		&&
+     //                   currentPixel < cvGetReal2D(up, yi+1, xi+1)		&&
+     //                   currentPixel < cvGetReal2D(up, yi+1, xi-1)		&&
+     //                   currentPixel < cvGetReal2D(down, yi  , xi  )    &&
+     //                   currentPixel < cvGetReal2D(down, yi-1, xi  )    &&
+     //                   currentPixel < cvGetReal2D(down, yi+1, xi  )    &&
+     //                   currentPixel < cvGetReal2D(down, yi  , xi-1)    &&
+     //                   currentPixel < cvGetReal2D(down, yi  , xi+1)    &&
+     //                   currentPixel < cvGetReal2D(down, yi-1, xi-1)	&&
+     //                   currentPixel < cvGetReal2D(down, yi-1, xi+1)	&&
+     //                   currentPixel < cvGetReal2D(down, yi+1, xi+1)	&&
+     //                   currentPixel < cvGetReal2D(down, yi+1, xi-1)   )
+					//{
+					//	cvSetReal2D(m_extrema[i][j-1], yi, xi, 255);
+					//	num++;
+					//	justSet = true;
+					//}
+//}
+
+
+
+
+
+
 
 
 
@@ -168,7 +341,7 @@ void HandcraftedSIFT::findScaleSpaceExtrema(const cv::vector<cv::Mat>& gaussPyr,
 //void HandcraftedSIFT::allocateMemory()
 //{
 //	//nicht fragmentiert
-//	//m_gaussians = new cv::Mat*[m_octaveLayers*(m_intervalsCount + 3)];
+//	//m_gaussians = new cv::Mat*[m_octaveLayers*(m_octaveLayers + 3)];
 //
 //	m_gaussians = new cv::Mat**[m_octaveLayers];
 //	m_dogs      = new cv::Mat**[m_octaveLayers];
@@ -178,13 +351,13 @@ void HandcraftedSIFT::findScaleSpaceExtrema(const cv::vector<cv::Mat>& gaussPyr,
 //	for( unsigned int i = 0; i < m_octaveLayers; i++ )
 //	{
 //		/// why +3?
-//		m_gaussians[i] = new cv::Mat*[m_intervalsCount + 3];
+//		m_gaussians[i] = new cv::Mat*[m_octaveLayers + 3];
 //		/// why +2?
-//		m_dogs[i]      = new cv::Mat*[m_intervalsCount + 2];
+//		m_dogs[i]      = new cv::Mat*[m_octaveLayers + 2];
 //		/// why +0?
-//		m_extrema[i]   = new cv::Mat*[m_intervalsCount];
+//		m_extrema[i]   = new cv::Mat*[m_octaveLayers];
 //		/// why +3?
-//		m_sigmas[i]    = new double  [m_intervalsCount + 3];
+//		m_sigmas[i]    = new double  [m_octaveLayers + 3];
 //	}
 //}
 
@@ -250,14 +423,14 @@ void HandcraftedSIFT::findScaleSpaceExtrema(const cv::vector<cv::Mat>& gaussPyr,
 //		double sigma = initSigma;
 //		CvSize currentSize = cvGetSize(m_gaussians[i][0]);
 //
-//		for(j=1;j<m_intervalsCount+3;j++)
+//		for(j=1;j<m_octaveLayers+3;j++)
 //		{
 //			// Allocate memory
 //			m_gaussians[i][j] = cvCreateImage(currentSize, 32, 1);
 //
 //			// Calculate a sigma to blur the current image to get the next one
-//			double sigma_f = sqrt(pow(2.0,2.0/m_intervalsCount)-1) * sigma;
-//            sigma = pow(2.0,1.0/m_intervalsCount) * sigma;
+//			double sigma_f = sqrt(pow(2.0,2.0/m_octaveLayers)-1) * sigma;
+//            sigma = pow(2.0,1.0/m_octaveLayers) * sigma;
 //
 //			// Store sigma values (to be used later on)
 //			m_sigmas[i][j] = sigma * 0.5 * pow(2.0f, (float)i);
@@ -289,7 +462,7 @@ void HandcraftedSIFT::findScaleSpaceExtrema(const cv::vector<cv::Mat>& gaussPyr,
 //			m_gaussians[i+1][0] = cvCreateImage(currentSize, 32, 1);
 //			cvPyrDown(m_gaussians[i][0], m_gaussians[i+1][0]);
 //			//resize(m_gaussians[i][0], m_gaussians[i+1][0], m_gaussians[i+1][0].size(), 0, 0, INTER_LINEAR);
-//			m_sigmas[i+1][0] = m_sigmas[i][m_intervalsCount];
+//			m_sigmas[i+1][0] = m_sigmas[i][m_octaveLayers];
 //
 //			// Store the image
 //			/*char* filename = new char[200];
@@ -324,7 +497,7 @@ void HandcraftedSIFT::findScaleSpaceExtrema(const cv::vector<cv::Mat>& gaussPyr,
 //	{
 //		scale = (int)pow(2.0, (double)i);
 //
-//		for(j=1;j<m_intervalsCount+1;j++)
+//		for(j=1;j<m_octaveLayers+1;j++)
 //		{
 //			// Allocate memory and set all points to zero ("not key point")
 //			m_extrema[i][j-1] = cvCreateImage(cvGetSize(m_dogs[i][0]), 8, 1);
@@ -480,8 +653,8 @@ void HandcraftedSIFT::findScaleSpaceExtrema(const cv::vector<cv::Mat>& gaussPyr,
 //	// Allocate some memory
 //	for(i=0;i<m_octaveLayers;i++)
 //	{
-//		magnitude[i] = new IplImage*[m_intervalsCount];
-//		orientation[i] = new IplImage*[m_intervalsCount];
+//		magnitude[i] = new IplImage*[m_octaveLayers];
+//		orientation[i] = new IplImage*[m_octaveLayers];
 //	}
 //
 //	// These two loops are to calculate the magnitude and orientation of gradients
@@ -492,7 +665,7 @@ void HandcraftedSIFT::findScaleSpaceExtrema(const cv::vector<cv::Mat>& gaussPyr,
 //	for(i=0;i<m_octaveLayers;i++)
 //	{
 //		// Iterate through all scales
-//		for(j=1;j<m_intervalsCount+1;j++)
+//		for(j=1;j<m_octaveLayers+1;j++)
 //		{
 //			magnitude[i][j-1] = cvCreateImage(cvGetSize(m_gaussians[i][j]), 32, 1);
 //			orientation[i][j-1] = cvCreateImage(cvGetSize(m_gaussians[i][j]), 32, 1);
@@ -540,7 +713,7 @@ void HandcraftedSIFT::findScaleSpaceExtrema(const cv::vector<cv::Mat>& gaussPyr,
 //		unsigned int height= m_gaussians[i][0]->height;
 //
 //		// Go through all intervals in the current scale
-//		for(j=1;j<m_intervalsCount+1;j++)
+//		for(j=1;j<m_octaveLayers+1;j++)
 //		{
 //			double abs_sigma = m_sigmas[i][j];
 //
@@ -711,7 +884,7 @@ void HandcraftedSIFT::findScaleSpaceExtrema(const cv::vector<cv::Mat>& gaussPyr,
 //						}
 //
 //						// Save this keypoint into the list
-//						m_keypoints.push_back(Keypoint(xi*scale/2, yi*scale/2, mag, orien, i*m_intervalsCount+j-1));
+//						m_keypoints.push_back(Keypoint(xi*scale/2, yi*scale/2, mag, orien, i*m_octaveLayers+j-1));
 //					}
 //				}
 //			}
@@ -729,7 +902,7 @@ void HandcraftedSIFT::findScaleSpaceExtrema(const cv::vector<cv::Mat>& gaussPyr,
 //	assert(m_keypoints.size() == m_keypointsCount);
 //	for(i=0;i<m_octaveLayers;i++)
 //	{
-//		for(j=1;j<m_intervalsCount+1;j++)
+//		for(j=1;j<m_octaveLayers+1;j++)
 //		{
 //			cvReleaseImage(&magnitude[i][j-1]);
 //			cvReleaseImage(&orientation[i][j-1]);
@@ -757,15 +930,15 @@ void HandcraftedSIFT::findScaleSpaceExtrema(const cv::vector<cv::Mat>& gaussPyr,
 //	IplImage*** imgInterpolatedOrientation = new IplImage**[m_octaveLayers];
 //	for(i=0;i<m_octaveLayers;i++)
 //	{
-//		imgInterpolatedMagnitude[i] = new IplImage*[m_intervalsCount];
-//		imgInterpolatedOrientation[i] = new IplImage*[m_intervalsCount];
+//		imgInterpolatedMagnitude[i] = new IplImage*[m_octaveLayers];
+//		imgInterpolatedOrientation[i] = new IplImage*[m_octaveLayers];
 //	}
 //
 //	// These two loops calculate the interpolated thingy for all octaves
 //	// and subimages
 //	for(i=0;i<m_octaveLayers;i++)
 //	{
-//		for(j=1;j<m_intervalsCount+1;j++)
+//		for(j=1;j<m_octaveLayers+1;j++)
 //		{
 //			unsigned int width = m_gaussians[i][j]->width;
 //			unsigned int height =m_gaussians[i][j]->height;
@@ -850,11 +1023,11 @@ void HandcraftedSIFT::findScaleSpaceExtrema(const cv::vector<cv::Mat>& gaussPyr,
 //		float descxi = kpxi;
 //		float descyi = kpyi;
 //
-//		unsigned int ii = (unsigned int)(kpxi*2) / (unsigned int)(pow(2.0, (double)scale/m_intervalsCount));
-//		unsigned int jj = (unsigned int)(kpyi*2) / (unsigned int)(pow(2.0, (double)scale/m_intervalsCount));
+//		unsigned int ii = (unsigned int)(kpxi*2) / (unsigned int)(pow(2.0, (double)scale/m_octaveLayers));
+//		unsigned int jj = (unsigned int)(kpyi*2) / (unsigned int)(pow(2.0, (double)scale/m_octaveLayers));
 //
-//		unsigned int width = m_gaussians[scale/m_intervalsCount][0]->width;
-//		unsigned int height = m_gaussians[scale/m_intervalsCount][0]->height;
+//		unsigned int width = m_gaussians[scale/m_octaveLayers][0]->width;
+//		unsigned int height = m_gaussians[scale/m_octaveLayers][0]->height;
 //
 //		vector<double> orien = m_keypoints[ikp].orien;
 //		vector<double> mag = m_keypoints[ikp].mag;
@@ -883,7 +1056,7 @@ void HandcraftedSIFT::findScaleSpaceExtrema(const cv::vector<cv::Mat>& gaussPyr,
 //				if(ii+i+1<hfsz || ii+i+1>width+hfsz || jj+j+1<hfsz || jj+j+1>height+hfsz)
 //                    cvSetReal2D(weight, j, i, 0);
 //				else
-//					cvSetReal2D(weight, j, i, cvGetReal2D(G, j, i)*cvGetReal2D(imgInterpolatedMagnitude[scale/m_intervalsCount][scale%m_intervalsCount], jj+j+1-hfsz, ii+i+1-hfsz));
+//					cvSetReal2D(weight, j, i, cvGetReal2D(G, j, i)*cvGetReal2D(imgInterpolatedMagnitude[scale/m_octaveLayers][scale%m_octaveLayers], jj+j+1-hfsz, ii+i+1-hfsz));
 //			}
 //		}
 //
@@ -915,7 +1088,7 @@ void HandcraftedSIFT::findScaleSpaceExtrema(const cv::vector<cv::Mat>& gaussPyr,
 //							continue;
 //
 //						// This is where rotation invariance is done
-//						double sample_orien = cvGetReal2D(imgInterpolatedOrientation[scale/m_intervalsCount][scale%m_intervalsCount], t, k);
+//						double sample_orien = cvGetReal2D(imgInterpolatedOrientation[scale/m_octaveLayers][scale%m_octaveLayers], t, k);
 //						sample_orien -= main_orien;
 //
 //						while(sample_orien<0)
@@ -983,7 +1156,7 @@ void HandcraftedSIFT::findScaleSpaceExtrema(const cv::vector<cv::Mat>& gaussPyr,
 //	// Get rid of memory we don't need anylonger
 //	for(i=0;i<m_octaveLayers;i++)
 //	{
-//		for(j=1;j<m_intervalsCount+1;j++)
+//		for(j=1;j<m_octaveLayers+1;j++)
 //		{
 //			cvReleaseImage(&imgInterpolatedMagnitude[i][j-1]);
 //			cvReleaseImage(&imgInterpolatedOrientation[i][j-1]);
@@ -1074,7 +1247,7 @@ void HandcraftedSIFT::findScaleSpaceExtrema(const cv::vector<cv::Mat>& gaussPyr,
 //{
 //	for(int i=0;i<m_octaveLayers;i++)
 //	{
-//		for(int j=1;j<m_intervalsCount+4;j++)
+//		for(int j=1;j<m_octaveLayers+4;j++)
 //		{
 //			printf("%f\t", m_sigmas[i][j-1]);
 //		}
