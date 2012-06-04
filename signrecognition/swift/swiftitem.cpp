@@ -1,6 +1,9 @@
 #include "StdAfx.h"
 #include "swiftitem.h"
 
+
+static const int THUMBNAIL_WIDTH = 128; ///< default nthumbnail width
+
 /// \class SwiftItem
 /// \brief
 ///
@@ -9,13 +12,17 @@
 SwiftItem::SwiftItem(const QString &path)
 	: mPath(path)
 {
-	mImage = cv::imread(path.toStdString());
+	std::string stdpath = path.toStdString();
+
+	mImage = cv::imread(stdpath);
 
 	generateThumbnail();
+	///  http://www.informit.com/articles/article.aspx?p=1405557&seqNum=2
 
+	///
 	// #warning
-	cv::namedWindow("DEBUG - Input Image");
-	cv::imshow("DEBUG - Input Image",mImage);
+	cv::namedWindow("DEBUG - "+stdpath);
+	cv::imshow("DEBUG - "+stdpath,mImage);
 }
 
 SwiftItem::~SwiftItem()
@@ -26,11 +33,15 @@ SwiftItem::~SwiftItem()
 
 void SwiftItem::generateThumbnail()
 {
-	cv::Mat result;
+	double rows = ((double)mImage.rows / (double)mImage.cols) * THUMBNAIL_WIDTH;
+	
+	
+	cv::Mat result(cvRound(rows),THUMBNAIL_WIDTH,CV_8UC4);
 
-	//cv::Mat dest;
-	//cv::cvtColor(mThumbnail, dest, CV_BGR2RGB);
-	//return QImage((const unsigned char*)(dest.data), dest.cols, dest.rows, QImage::Format_RGB888);
+	// explicitly specify dsize=dst.size(); fx and fy will be computed from that.
+	cv::resize(mImage, result, result.size(), 0, 0, cv::INTER_LINEAR);
+
+	mThumbnail = Help::Convert::cvmat2qimage(result);
 }
 
 void SwiftItem::detectFeatures()
@@ -58,6 +69,8 @@ QImage SwiftItem::image() const
 {
 	return Help::Convert::cvmat2qimage(mImage);
 }
+
+//////////////////////////////////////////////////////////////////////////
 
 cv::Mat SwiftItem::descriptors() const
 {

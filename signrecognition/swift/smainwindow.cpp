@@ -19,7 +19,7 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	, mSharedGlWidget(this)
 {
 	//#warning
-	SwiftItem* mSwiftItem = new SwiftItem("C:\\Users\\Patrickson\\Documents\\Studium\\SS2012\\Computer Vision\\Projekt\\SVN\\signrecognition\\swift-build\\TestData\\50_distraction_1.jpg");
+	SwiftItem* mSwiftItem = new SwiftItem("D:\\STUDIUM\\Sem6\\ComputerVision\\svn\\signrecognition\\swift-build\\TestData\\50_distraction_1.jpg");
 
 	initialize();
 
@@ -56,7 +56,7 @@ void SMainWindow::initialize()
 		<< tr("Portable Image Format (*.pbm *.pgm *.ppm)")
 		<< tr("Sun Rasters (*.sr *.ras)");
 
-	SwiftModel smodel = new SwiftModel(this);
+	SwiftModel mSwiftModel = new SwiftModel(this);
 
 	tabSubWindows();
 	mMdiArea.setTabsClosable(true);
@@ -145,8 +145,7 @@ void SMainWindow::createToolBars()
 /// \sa
 void SMainWindow::createWidgets()
 {
-	/// Central Widget - OpenCV Viewer
-	//opencvWidget->setObjectName("opencvWidget");
+	/// Central Widget - Multi Document Interface Area
 	this->setCentralWidget(&mMdiArea);
 	this->mSharedGlWidget.resize(1, 1);
 	//this->mSharedGlWidget.hide();
@@ -155,9 +154,6 @@ void SMainWindow::createWidgets()
 	{
 		this->newThread();
 	}
-
-	// #warning
-	// opencvWidget->showImage(cv::imread("D:\\STUDIUM\\Sem6\\ComputerVision\\svn\\signrecognition\\swift-build\\TestData\\50_distraction_1.jpg"));
 
 	//////////////////////////////////////////////////////////////////////////
 	/// Left Dock Widget
@@ -277,6 +273,7 @@ void SMainWindow::open()
 		}
 	}
 
+	mSwiftModel.loadFiles(mNewImagePaths); ///< load all new and non duplicate images
 	mAllImagePaths += mNewImagePaths; ///< add the new input to the "paths" member
 }
 
@@ -311,7 +308,6 @@ void SMainWindow::about()
 }
 
 /// VIEW
-///
 void SMainWindow::tabSubWindows()
 {
 	mMdiArea.setViewMode(QMdiArea::TabbedView);

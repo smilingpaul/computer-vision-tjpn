@@ -5,11 +5,36 @@ namespace Help
 {
 	/// static utility methods
 	/// http://permalink.gmane.org/gmane.comp.lib.opencv/37800
+	/// cv::Mat bgr
+	/// QImage rgb
 	QImage Convert::cvmat2qimage(const cv::Mat& cvmat)
 	{
-		cv::Mat bgr;
-		cv::cvtColor(cvmat, bgr, CV_BGR2RGB);
-		return QImage((const unsigned char*)(bgr.data), bgr.cols, bgr.rows, QImage::Format_RGB888);
+		int c = cvmat.channels();
+		cv::Mat qtmat;
+		QImage::Format format; 
+
+		std::vector<cv::Mat> channels; ///< bgr(a)
+		std::vector<cv::Mat> neworder; ///< rgb(a)
+
+		cv::split(cvmat,channels);
+
+		switch (c)
+		{
+		case 3:
+			cv::cvtColor(cvmat, qtmat, CV_BGR2RGB);
+			format = QImage::Format_RGB888;
+			break;
+		case 4:
+			neworder[0] = channels[2]; ///< insert r
+			neworder[1] = channels[1]; ///< insert g
+			neworder[2] = channels[0]; ///< insert b
+			neworder[3] = channels[3]; ///< insert a
+			cv::merge(channels,qtmat);
+			format = QImage::Format_ARGB32;
+			break;
+		}
+		
+		return QImage((const unsigned char*)(qtmat.data), qtmat.cols, qtmat.rows, format);
 	}
 
 	cv::Mat Convert::qimage2cvmat(const QImage& qimage)
@@ -20,19 +45,6 @@ namespace Help
 		cv::mixChannels( &mat, 1, &mat2, 1, from_to, 3 );
 		return mat2;
 	}
-
-	//// TODO
-	//QMatrix Convert::mat2qmatrix(const cv::Mat& mat)
-	//{
-	//	QMatrix qmatrix;
-	//	return qmatrix;
-	//}
-
-	//cv::Mat Convert::qmatrix2mat(const QMatrix& qmatrix)
-	//{
-	//	cv::Mat mat;
-	//	return mat;
-	//}
 
 	//std::vector<KeyPoint> Convert::qvector2stdvector(const QVector<KeyPoint>& qvector)
 	//{
