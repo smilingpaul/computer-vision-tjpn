@@ -58,5 +58,5 @@ void SGLPainter::paint()
 	//end drawing of painter stuff
 
 	p.resetTransform();
-	p.end();
+	//p.end();
 }

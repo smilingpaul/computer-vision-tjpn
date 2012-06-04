@@ -9,10 +9,10 @@
 class SandboxSIFT
 {
 public:
-	SandboxSIFT(int _nfeatures, int _nOctaveLayers, double _contrastThreshold, double _edgeThreshold, double _sigma);
+	SandboxSIFT(int _nfeatures = 0, int _nOctaveLayers = 3, double _contrastThreshold = 0.04, double _edgeThreshold = 10, double _sigma = 1.6);
 	void SandboxSIFT::operator()(cv::InputArray _image, cv::InputArray _mask, cv::vector<cv::KeyPoint>& _keypoints, cv::OutputArray _descriptors, bool _useProvidedKeypoints) const;
 	~SandboxSIFT();
-
+	
 	//static cv::Mat createInitialImage( const cv::Mat& img, bool doubleImageSize, float sigma );
 	void SandboxSIFT::buildGaussianPyramid( const cv::Mat& base, cv::vector<cv::Mat>& pyr, int nOctaves ) const;
 	void SandboxSIFT::buildDoGPyramid( const cv::vector<cv::Mat>& gpyr, cv::vector<cv::Mat>& dogpyr ) const;
