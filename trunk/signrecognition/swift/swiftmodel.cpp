@@ -10,13 +10,14 @@ SwiftModel::SwiftModel(QObject *parent)
 	: QAbstractListModel(parent)
 {
 	mSift = cv::SIFT();
-	mMatcher = cv::FlannBasedMatcher(new cv::flann::AutotunedIndexParams(), new cv::flann::SearchParams());
+	mMatcher = cv::FlannBasedMatcher(new cv::flann::CompositeIndexParams(), new cv::flann::SearchParams());
 	mDetector = cv::SiftFeatureDetector(mSift);
 	mExtractor = cv::SiftDescriptorExtractor(mSift);
 
 	QHash<int,QByteArray> roles;
 	roles[PathRole] = "path";
 	roles[ThumbnailRole] = "thumbnail";
+	roles[TrainRole] = "train";
 	setRoleNames(roles);
 
 	//roles[ImageRole] = "image";
@@ -53,6 +54,8 @@ QVariant SwiftModel::data(const QModelIndex &index, int role) const
 		return swiftItem.path();
 	case ThumbnailRole:
 		return swiftItem.thumbnail();
+	case TrainRole:
+		return swiftItem.train();
 	//case Qt::DecorationRole:
 	//case Qt::EditRole:
 	//case Qt::ToolTipRole:
@@ -75,20 +78,38 @@ void SwiftModel::loadFiles(QStringList newImagePaths)
 	}
 }
 
+//void SwiftItem::trainDB()
+//{
+//	std::vector<cv::Mat> train;
+//	train.push_back(mDescriptors);
+//	mMatcher.add(train);
+//	//mMatcher.train();
+//}
+
+void SwiftModel::trainFiles()
+{
+	std::vector<cv::Mat> train;
+	for (unsigned int i = 0; mList.size(); i++)
+	{
+		if (mList[i].train())
+			train.push_back(mList[i].descriptors());
+	}
+	mMatcher.add(train);
+	mMatcher.train();
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 //QModelIndex SwiftModel::parent(const QModelIndex &child) const
 //{
 //	return child;
 //}
-//
 
-//
 //int SwiftModel::columnCount(const QModelIndex &parent) const
 //{
 //	return 0;
 //}
-//
+
 //bool SwiftModel::hasChildren(const QModelIndex &parent) const
 //{
 //	return true;
