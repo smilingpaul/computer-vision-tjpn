@@ -17,7 +17,6 @@ class SwiftItem
 {
 public:
 	SwiftItem(const QString &path
-		, cv::SIFT &sift
 		, cv::SiftFeatureDetector &detector
 		, cv::SiftDescriptorExtractor &extractor
 		, cv::FlannBasedMatcher &matcher);
@@ -34,14 +33,13 @@ public:
 
 	void detectFeatures();
 	void extractDescriptors();
-	void trainDB();
+	//void trainDB();
 	void queryDB();
 
 private:
 	QString mPath;
 	QImage mThumbnail;
 	cv::Mat mImage;
-	std::vector<cv::Mat> mTrain;
 
 	cv::SIFT mSift;
 	cv::SiftFeatureDetector mDetector;
@@ -50,21 +48,9 @@ private:
 
 	cv::vector<cv::KeyPoint> mKeypoints;
 	cv::Mat mDescriptors;
-	cv::vector<cv::DMatch> matches; ///< vector of descriptor indices and db image index
+	cv::vector<cv::DMatch> matches; ///< vector of descriptor indices and the corresponding db image indices
 
 	void generateThumbnail();
-	
-
-	
-	
-	
-	
-	
-	
-	
-
-
-
 };
 
 #endif // MODEL_H

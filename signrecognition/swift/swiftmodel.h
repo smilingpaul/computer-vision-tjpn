@@ -41,6 +41,7 @@ private:
 	cv::SiftFeatureDetector mDetector;
 	cv::SiftDescriptorExtractor mExtractor;
 	cv::FlannBasedMatcher mMatcher;
+
 	//QModelIndex parent(const QModelIndex &child) const;
 	//int columnCount(const QModelIndex &parent) const;
 	//bool hasChildren(const QModelIndex &parent) const;

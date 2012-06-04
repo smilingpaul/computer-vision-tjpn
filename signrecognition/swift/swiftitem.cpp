@@ -9,12 +9,10 @@ static const int THUMBNAIL_WIDTH = 128; ///< default thumbnail width
 ///
 ///
 SwiftItem::SwiftItem(const QString &path
-	, cv::SIFT &sift
 	, cv::SiftFeatureDetector &detector
 	, cv::SiftDescriptorExtractor &extractor
 	, cv::FlannBasedMatcher &matcher)
 	: mPath(path)
-	, mSift(sift)
 	, mDetector(detector)
 	, mExtractor(extractor)
 	, mMatcher(matcher)
@@ -38,8 +36,7 @@ SwiftItem::~SwiftItem()
 void SwiftItem::generateThumbnail()
 {
 	double rows = ((double)mImage.rows / (double)mImage.cols) * THUMBNAIL_WIDTH;
-	
-	
+
 	cv::Mat result(cvRound(rows),THUMBNAIL_WIDTH,CV_8UC4);
 
 	// explicitly specify dsize=dst.size(); fx and fy will be computed from that.
@@ -48,15 +45,13 @@ void SwiftItem::generateThumbnail()
 	mThumbnail = Help::Convert::cvmat2qimage(result);
 }
 
-
-
-
-void SwiftItem::trainDB()
-{
-	mTrain.push_back(mDescriptors);
-	mMatcher.add(mTrain);
-	mMatcher.train();
-}
+//void SwiftItem::trainDB()
+//{
+//	std::vector<cv::Mat> train;
+//	train.push_back(mDescriptors);
+//	mMatcher.add(train);
+//	//mMatcher.train();
+//}
 
 void SwiftItem::queryDB()
 {
