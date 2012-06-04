@@ -8,6 +8,7 @@
 #include <QtCore/QtCore>
 #include <QtGui/QMainWindow>
 #include <QAbstractListModel>
+
 #include "swiftitem.h"
 
 class SwiftModel : public QAbstractListModel
@@ -29,15 +30,17 @@ public:
 	// return data, based on current index and requested role
 	QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
-	void loadFiles(QStringList newImagePaths);
+	//////////////////////////////////////////////////////////////////////////
 
-	// bonus stuff
-	//void addImageItem(const SwiftItem &swiftItem);
-	//
+	void loadFiles(QStringList newImagePaths);
 
 private:
 	QList<SwiftItem> mList;
 
+	cv::SIFT mSift;
+	cv::SiftFeatureDetector mDetector;
+	cv::SiftDescriptorExtractor mExtractor;
+	cv::FlannBasedMatcher mMatcher;
 	//QModelIndex parent(const QModelIndex &child) const;
 	//int columnCount(const QModelIndex &parent) const;
 	//bool hasChildren(const QModelIndex &parent) const;

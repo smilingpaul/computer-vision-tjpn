@@ -3,6 +3,11 @@
 #include <QtGui/QApplication>
 #include "smainwindow.h"
 
+/*
+http://stackoverflow.com/questions/5461148/sift-implementation-with-opencv-2-2
+http://www.copypastecode.com/71973/
+http://stackoverflow.com/questions/5695034/how-to-use-flann-based-matcher-or-generally-flann-in-opencv
+*/
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);

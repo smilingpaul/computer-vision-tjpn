@@ -10,6 +10,7 @@ SwiftModel::SwiftModel(QObject *parent)
 	: QAbstractListModel(parent)
 {
 	QHash<int,QByteArray> roles;
+
 	roles[PathRole] = "path";
 	roles[ThumbnailRole] = "thumbnail";
 	//roles[ImageRole] = "image";
@@ -70,8 +71,17 @@ void SwiftModel::loadFiles(QStringList newImagePaths)
 {
 	for (unsigned int i = 0; i < newImagePaths.size(); i++)
 	{
-		mList.append(SwiftItem(newImagePaths[i]));
+		mList.append(SwiftItem(newImagePaths[i],mSift,mDetector,mExtractor,mMatcher));
 	}
+
+	for (unsigned int j = 0; j < mList.size(); j++)
+	{
+		mList[j].detectFeatures();
+		mList[j].extractDescriptors();
+		mList[j].trainDB();
+	}
+
+
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -19,7 +19,7 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	, mSharedGlWidget(this)
 {
 	//#warning
-	SwiftItem* mSwiftItem = new SwiftItem("D:\\STUDIUM\\Sem6\\ComputerVision\\svn\\signrecognition\\swift-build\\TestData\\50_distraction_1.jpg");
+	//SwiftItem* mSwiftItem = new SwiftItem("D:\\STUDIUM\\Sem6\\ComputerVision\\svn\\signrecognition\\swift-build\\TestData\\50_distraction_1.jpg");
 
 	initialize();
 

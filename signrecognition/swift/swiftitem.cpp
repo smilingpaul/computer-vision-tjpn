@@ -1,25 +1,29 @@
 #include "StdAfx.h"
 #include "swiftitem.h"
 
-
-static const int THUMBNAIL_WIDTH = 128; ///< default nthumbnail width
+static const int THUMBNAIL_WIDTH = 128; ///< default thumbnail width
 
 /// \class SwiftItem
 /// \brief
 ///
 ///
 ///
-SwiftItem::SwiftItem(const QString &path)
+SwiftItem::SwiftItem(const QString &path
+	, cv::SIFT &sift
+	, cv::SiftFeatureDetector &detector
+	, cv::SiftDescriptorExtractor &extractor
+	, cv::FlannBasedMatcher &matcher)
 	: mPath(path)
+	, mSift(sift)
+	, mDetector(detector)
+	, mExtractor(extractor)
+	, mMatcher(matcher)
 {
 	std::string stdpath = path.toStdString();
-
 	mImage = cv::imread(stdpath);
 
 	generateThumbnail();
-	///  http://www.informit.com/articles/article.aspx?p=1405557&seqNum=2
 
-	///
 	// #warning
 	cv::namedWindow("DEBUG - "+stdpath);
 	cv::imshow("DEBUG - "+stdpath,mImage);
@@ -44,12 +48,29 @@ void SwiftItem::generateThumbnail()
 	mThumbnail = Help::Convert::cvmat2qimage(result);
 }
 
+
+
+
+void SwiftItem::trainDB()
+{
+	mTrain.push_back(mDescriptors);
+	mMatcher.add(mTrain);
+	mMatcher.train();
+}
+
+void SwiftItem::queryDB()
+{
+	mMatcher.match(mDescriptors,matches);
+}
+
 void SwiftItem::detectFeatures()
 {
+	mDetector.detect(mImage,mKeypoints);
 }
 
 void SwiftItem::extractDescriptors()
 {
+	mExtractor.compute(mImage,mKeypoints,mDescriptors);
 }
 
 //////////////////////////////////////////////////////////////////////////
