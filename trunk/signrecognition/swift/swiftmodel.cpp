@@ -12,7 +12,7 @@ SwiftModel::SwiftModel(QObject *parent)
 	QHash<int,QByteArray> roles;
 	roles[PathRole] = "path";
 	roles[ThumbnailRole] = "thumbnail";
-	roles[ImageRole] = "image";
+	//roles[ImageRole] = "image";
 	//roles[DescriptorsRole] = "descriptors";
 	//roles[KeypointsRole] = "keypoints";
 	setRoleNames(roles);
@@ -29,6 +29,8 @@ SwiftModel::~SwiftModel()
 //	endInsertRows();
 //}
 
+//////////////////////////////////////////////////////////////////////////
+
 int SwiftModel::rowCount(const QModelIndex &parent) const
 {
 	return mList.count();
@@ -36,10 +38,10 @@ int SwiftModel::rowCount(const QModelIndex &parent) const
 
 QVariant SwiftModel::data(const QModelIndex &index, int role) const
 {
-	//if (!index.isValid())
-	//	return QVariant();
+	if (!index.isValid())
+		return QVariant();
 
-	if (index.row() < 0 || index.row() > mList.count())
+	if (index.row() < 0 || index.row() > mList.size())
 		return QVariant();
 
 	const SwiftItem &swiftItem = mList[index.row()];
@@ -47,19 +49,11 @@ QVariant SwiftModel::data(const QModelIndex &index, int role) const
 	switch (role)
 	{
 	case Qt::DisplayRole:
-		switch (index.column())
-		{
-		case PathRole:
-			return swiftItem.path();
-		case ThumbnailRole:
-			return swiftItem.thumbnail();
-		case ImageRole:
-			return swiftItem.image();
-		//case DescriptorsRole:
-		//	return swiftItem.descriptors();
-		//case KeypointsRole:
-		//	return swiftItem.keypoints();
-		}
+		return swiftItem.thumbnail();
+	case PathRole:
+		return swiftItem.path();
+	case ThumbnailRole:
+		return swiftItem.thumbnail();
 	//case Qt::DecorationRole:
 	//case Qt::EditRole:
 	//case Qt::ToolTipRole:
@@ -69,16 +63,32 @@ QVariant SwiftModel::data(const QModelIndex &index, int role) const
 	//...
 	}
 
-	//if (role == PathRole)
-	//	return swiftItem.path();
-	//else if (role == SizeRole)
-	//	return image.size();
-
 	return QVariant();
 }
 
-void loadFiles(QStringList newImagePaths)
+void SwiftModel::loadFiles(QStringList newImagePaths)
 {
-
+	for (unsigned int i = 0; i < newImagePaths.size(); i++)
+	{
+		mList.append(SwiftItem(newImagePaths[i]));
+	}
 }
 
+//////////////////////////////////////////////////////////////////////////
+
+//QModelIndex SwiftModel::parent(const QModelIndex &child) const
+//{
+//	return child;
+//}
+//
+
+//
+//int SwiftModel::columnCount(const QModelIndex &parent) const
+//{
+//	return 0;
+//}
+//
+//bool SwiftModel::hasChildren(const QModelIndex &parent) const
+//{
+//	return true;
+//}

@@ -5,6 +5,7 @@
 #ifndef SWIFTMODEL_H
 #define SWIFTMODEL_H
 
+#include <QtCore/QtCore>
 #include <QtGui/QMainWindow>
 #include <QAbstractListModel>
 #include "swiftitem.h"
@@ -16,10 +17,7 @@ class SwiftModel : public QAbstractListModel
 public:
 	enum SwiftItemRoles {
 		PathRole = Qt::UserRole + 1,
-		ThumbnailRole,
-		ImageRole,
-		DescriptorsRole,
-		KeypointsRole
+		ThumbnailRole
 	};
 
 	SwiftModel(QObject *parent = 0);
@@ -35,8 +33,14 @@ public:
 
 	// bonus stuff
 	//void addImageItem(const SwiftItem &swiftItem);
+	//
+
 private:
 	QList<SwiftItem> mList;
+
+	//QModelIndex parent(const QModelIndex &child) const;
+	//int columnCount(const QModelIndex &parent) const;
+	//bool hasChildren(const QModelIndex &parent) const;
 };
 
 #endif // SWIFTMODEL_H

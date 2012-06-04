@@ -101,11 +101,11 @@
     <ClCompile Include="sglpainter.cpp">
       <Filter>Source Files\gui</Filter>
     </ClCompile>
-    <ClCompile Include="handcraftedsift.cpp">
-      <Filter>Source Files\algorithm</Filter>
-    </ClCompile>
     <ClCompile Include="help.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sandboxsift.cpp">
+      <Filter>Source Files\algorithm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -121,11 +121,11 @@
     <ClInclude Include="swiftitem.h">
       <Filter>Header Files\model</Filter>
     </ClInclude>
-    <ClInclude Include="handcraftedsift.h">
-      <Filter>Header Files\algorithm</Filter>
-    </ClInclude>
     <ClInclude Include="help.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sandboxsift.h">
+      <Filter>Header Files\algorithm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -14,8 +14,6 @@ namespace Help
 	public:
 		static QImage cvmat2qimage(const cv::Mat& cvmat);
 		static cv::Mat qimage2cvmat(const QImage& qimage);
-		//static QMatrix cvmat2qmatrix(const cv::Mat& cvmat);
-		//static cv::Mat qmatrix2cvmat(const QMatrix& qmatrix);
 		//static std::vector<KeyPoint> qvector2stdvector(const QVector<KeyPoint>& qvector);
 		//static QVector<KeyPoint> stdvector2qvector(const std::vector<KeyPoint>& stdvector);
 	};
