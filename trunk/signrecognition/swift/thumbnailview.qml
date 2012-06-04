@@ -4,7 +4,7 @@ import QtQuick 1.0
      width: 100; height: 100
      anchors.fill: parent
 
-     model: SwiftModel
+     model: mSwiftModel
      delegate: Rectangle {
          height: 25
          width: 100

@@ -9,32 +9,30 @@
 SwiftModel::SwiftModel(QObject *parent)
 	: QAbstractListModel(parent)
 {
-	QHash<int,QByteArray> roles;
+	mSift = cv::SIFT();
+	mMatcher = cv::FlannBasedMatcher(new cv::flann::AutotunedIndexParams(), new cv::flann::SearchParams());
+	mDetector = cv::SiftFeatureDetector(mSift);
+	mExtractor = cv::SiftDescriptorExtractor(mSift);
 
+	QHash<int,QByteArray> roles;
 	roles[PathRole] = "path";
 	roles[ThumbnailRole] = "thumbnail";
+	setRoleNames(roles);
+
 	//roles[ImageRole] = "image";
 	//roles[DescriptorsRole] = "descriptors";
 	//roles[KeypointsRole] = "keypoints";
-	setRoleNames(roles);
 }
 
 SwiftModel::~SwiftModel()
 {
 }
 
-//void SwiftModel::addImageItem(const SwiftItem &swiftItem)
-//{
-//	beginInsertRows(QModelIndex(),rowCount(),rowCount());
-//	m_list << swiftItem;
-//	endInsertRows();
-//}
-
 //////////////////////////////////////////////////////////////////////////
 
 int SwiftModel::rowCount(const QModelIndex &parent) const
 {
-	return mList.count();
+	return mList.size();
 }
 
 QVariant SwiftModel::data(const QModelIndex &index, int role) const
@@ -71,17 +69,10 @@ void SwiftModel::loadFiles(QStringList newImagePaths)
 {
 	for (unsigned int i = 0; i < newImagePaths.size(); i++)
 	{
-		mList.append(SwiftItem(newImagePaths[i],mSift,mDetector,mExtractor,mMatcher));
+		mList.append(SwiftItem(newImagePaths[i],mDetector,mExtractor,mMatcher));
+		mList[i].detectFeatures();
+		mList[i].extractDescriptors();
 	}
-
-	for (unsigned int j = 0; j < mList.size(); j++)
-	{
-		mList[j].detectFeatures();
-		mList[j].extractDescriptors();
-		mList[j].trainDB();
-	}
-
-
 }
 
 //////////////////////////////////////////////////////////////////////////
