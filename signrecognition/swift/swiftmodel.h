@@ -18,7 +18,8 @@ class SwiftModel : public QAbstractListModel
 public:
 	enum SwiftItemRoles {
 		PathRole = Qt::UserRole + 1,
-		ThumbnailRole
+		ThumbnailRole,
+		TrainRole
 	};
 
 	SwiftModel(QObject *parent = 0);
@@ -33,6 +34,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 
 	void loadFiles(QStringList newImagePaths);
+	void trainFiles();
 
 private:
 	QList<SwiftItem> mList;
@@ -40,11 +42,14 @@ private:
 	cv::SIFT mSift;
 	cv::SiftFeatureDetector mDetector;
 	cv::SiftDescriptorExtractor mExtractor;
+
 	cv::FlannBasedMatcher mMatcher;
 
 	//QModelIndex parent(const QModelIndex &child) const;
 	//int columnCount(const QModelIndex &parent) const;
 	//bool hasChildren(const QModelIndex &parent) const;
+
+public slots:
 };
 
 #endif // SWIFTMODEL_H

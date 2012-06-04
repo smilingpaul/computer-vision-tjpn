@@ -16,6 +16,7 @@ SwiftItem::SwiftItem(const QString &path
 	, mDetector(detector)
 	, mExtractor(extractor)
 	, mMatcher(matcher)
+	, mTrain(false)
 {
 	std::string stdpath = path.toStdString();
 	mImage = cv::imread(stdpath);
@@ -45,14 +46,6 @@ void SwiftItem::generateThumbnail()
 	mThumbnail = Help::Convert::cvmat2qimage(result);
 }
 
-//void SwiftItem::trainDB()
-//{
-//	std::vector<cv::Mat> train;
-//	train.push_back(mDescriptors);
-//	mMatcher.add(train);
-//	//mMatcher.train();
-//}
-
 void SwiftItem::queryDB()
 {
 	mMatcher.match(mDescriptors,matches);
@@ -79,6 +72,11 @@ QString SwiftItem::path() const
 QImage SwiftItem::thumbnail() const
 {
 	return mThumbnail;
+}
+
+bool SwiftItem::train() const
+{
+	return mTrain;
 }
 
 QImage SwiftItem::image() const

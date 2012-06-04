@@ -25,21 +25,23 @@ public:
 	// roles
 	QString path() const;
 	QImage thumbnail() const;
-	QImage image() const;
+	bool train() const;
 	// end of roles
+
+	QImage image() const;
 
 	cv::Mat descriptors() const;
 	std::vector<cv::KeyPoint> keypoints() const;
 
 	void detectFeatures();
 	void extractDescriptors();
-	//void trainDB();
 	void queryDB();
 
 private:
 	QString mPath;
 	QImage mThumbnail;
 	cv::Mat mImage;
+	bool mTrain;
 
 	cv::SIFT mSift;
 	cv::SiftFeatureDetector mDetector;
