@@ -1,4 +1,5 @@
 <RCC>
-    <qresource prefix="swift">
+    <qresource prefix="/swift">
+        <file>thumbnailview.qml</file>
     </qresource>
 </RCC>

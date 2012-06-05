@@ -38,8 +38,8 @@ int SwiftModel::rowCount(const QModelIndex &parent) const
 
 QVariant SwiftModel::data(const QModelIndex &index, int role) const
 {
-	if (!index.isValid())
-		return QVariant();
+	//if (!index.isValid())
+	//	return QVariant();
 
 	if (index.row() < 0 || index.row() > mList.size())
 		return QVariant();

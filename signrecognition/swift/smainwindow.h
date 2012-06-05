@@ -6,6 +6,7 @@
 
 #include <QtGui/QMainWindow>
 #include <QtDeclarative/QtDeclarative>
+#include <QtDeclarative/QDeclarativeContext>
 #include "sglopencvwidget.h"
 #include "swiftmodel.h"
 
