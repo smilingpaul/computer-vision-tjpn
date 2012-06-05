@@ -8,7 +8,7 @@
 #include <QtCore/QtCore>
 #include <QtGui/QMainWindow>
 #include <QAbstractListModel>
-
+#include <opencv2/features2d/features2d.hpp>
 #include "swiftitem.h"
 
 class SwiftModel : public QAbstractListModel
@@ -35,7 +35,7 @@ public:
 
 	void loadFiles(QStringList newImagePaths);
 	void trainFiles();
-
+	void queryFiles();
 private:
 	QList<SwiftItem> mList;
 

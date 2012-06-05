@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "swiftitem.h"
 
+
 static const int THUMBNAIL_WIDTH = 128; ///< default thumbnail width
 
 /// \class SwiftItem
@@ -8,6 +9,9 @@ static const int THUMBNAIL_WIDTH = 128; ///< default thumbnail width
 ///
 ///
 ///
+SwiftItem::SwiftItem()
+{}
+
 SwiftItem::SwiftItem(const QString &path
 	, cv::SiftFeatureDetector &detector
 	, cv::SiftDescriptorExtractor &extractor
@@ -23,9 +27,9 @@ SwiftItem::SwiftItem(const QString &path
 
 	generateThumbnail();
 
-	// #warning
-	cv::namedWindow("DEBUG - "+stdpath);
-	cv::imshow("DEBUG - "+stdpath,mImage);
+	//#warning
+	//cv::namedWindow("DEBUG - "+stdpath);
+	//cv::imshow("DEBUG - "+stdpath,mImage);
 }
 
 SwiftItem::~SwiftItem()
@@ -46,9 +50,10 @@ void SwiftItem::generateThumbnail()
 	mThumbnail = Help::Convert::cvmat2qimage(result);
 }
 
-void SwiftItem::queryDB()
+void SwiftItem::queryDB(cv::Mat& train)
 {
-	mMatcher.match(mDescriptors,matches);
+	mMatcher.match(mDescriptors,train,mMatches);
+
 }
 
 void SwiftItem::detectFeatures()
@@ -94,4 +99,14 @@ cv::Mat SwiftItem::descriptors() const
 std::vector<cv::KeyPoint> SwiftItem::keypoints() const
 {
 	return mKeypoints;
+}
+
+std::vector<cv::DMatch> SwiftItem::matches() const
+{
+	return mMatches;
+}
+
+cv::Mat SwiftItem::cvmat() const
+{
+	return mImage;
 }
