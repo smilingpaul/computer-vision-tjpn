@@ -199,10 +199,9 @@ void SMainWindow::createWidgets()
 	declarativeViewExplore->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
 	declarativeViewExplore->viewport()->setAttribute(Qt::WA_NoSystemBackground);
 
-	QDeclarativeContext *exploreContext = declarativeViewExplore->rootContext();
-	exploreContext->setContextProperty("SwiftModel", &mSwiftModel);
-
+	declarativeViewExplore->rootContext()->setContextProperty("swiftModel",&mSwiftModel);
 	declarativeViewExplore->setSource(QUrl::fromLocalFile("thumbnailview.qml"));
+
 	declarativeViewExplore->setObjectName("declarativeViewExplore");
 	declarativeViewExplore->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 	gridLayout->addWidget(declarativeViewExplore, 1, 0, 1, 1);
@@ -216,15 +215,14 @@ void SMainWindow::createWidgets()
 
 	/// Grid Layout - Lower Right
 	declarativeViewTrain = new QDeclarativeView(dockContentsAlpha);
-	//declarativeViewTrain->setAttribute(Qt::WA_OpaquePaintEvent);
-	//declarativeViewTrain->setAttribute(Qt::WA_NoSystemBackground);
-	//declarativeViewTrain->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
-	//declarativeViewTrain->viewport()->setAttribute(Qt::WA_NoSystemBackground);
+	declarativeViewTrain->setAttribute(Qt::WA_OpaquePaintEvent);
+	declarativeViewTrain->setAttribute(Qt::WA_NoSystemBackground);
+	declarativeViewTrain->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
+	declarativeViewTrain->viewport()->setAttribute(Qt::WA_NoSystemBackground);
 
-	QDeclarativeContext *trainContext = declarativeViewTrain->rootContext();
-	trainContext->setContextProperty("SwiftModel", &mSwiftModel);
-
+	declarativeViewTrain->rootContext()->setContextProperty("swiftModel",&mSwiftModel);
 	declarativeViewTrain->setSource(QUrl::fromLocalFile("thumbnailview.qml"));
+
 	declarativeViewTrain->setObjectName("declarativeViewTrain");
 	declarativeViewTrain->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 	gridLayout->addWidget(declarativeViewTrain, 1, 1, 1, 1);

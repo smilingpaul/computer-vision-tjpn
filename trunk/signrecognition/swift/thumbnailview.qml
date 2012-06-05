@@ -1,14 +1,20 @@
 import QtQuick 1.0
 
- ListView {
-     width: 100; height: 100
-     anchors.fill: parent
+Flickable {
+	id: swiftFlickable
 
-     model: mSwiftModel
-     delegate: Rectangle {
-         height: 25
-         width: 100
-         color: model.modelData.color
-         Text { text: name }
-     }
- }
+	anchors.fill: parent
+
+	Image { 
+		id: thumbnail
+		source: swiftFlickable.swiftView.model.thumbnail();
+		anchors.fill: parent
+	}
+
+	ListView {
+		id: swiftView
+		anchors.fill: parent
+		model: swiftModel
+		delegate: swiftDelegate
+	}
+}

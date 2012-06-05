@@ -10,12 +10,14 @@
 #include <opencv2/imgproc/imgproc.hpp> //resize & interpolation methods
 #include <opencv2/highgui/highgui.hpp> //debug
 #include <opencv2/nonfree/nonfree.hpp>
+#include <opencv2/features2d/features2d.hpp>
 #include "sandboxsift.h"
 #include "help.h"
 
 class SwiftItem
 {
 public:
+	SwiftItem();
 	SwiftItem(const QString &path
 		, cv::SiftFeatureDetector &detector
 		, cv::SiftDescriptorExtractor &extractor
@@ -29,13 +31,16 @@ public:
 	// end of roles
 
 	QImage image() const;
+	cv::Mat cvmat() const;
 
 	cv::Mat descriptors() const;
 	std::vector<cv::KeyPoint> keypoints() const;
+	std::vector<cv::DMatch> SwiftItem::matches() const;
+
 
 	void detectFeatures();
 	void extractDescriptors();
-	void queryDB();
+	void queryDB(cv::Mat& train);
 
 private:
 	QString mPath;
@@ -50,7 +55,7 @@ private:
 
 	cv::vector<cv::KeyPoint> mKeypoints;
 	cv::Mat mDescriptors;
-	cv::vector<cv::DMatch> matches; ///< vector of descriptor indices and the corresponding db image indices
+	std::vector<cv::DMatch> mMatches; ///< vector of descriptor indices and the corresponding db image indices
 
 	void generateThumbnail();
 };
