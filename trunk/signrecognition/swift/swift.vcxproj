@@ -89,7 +89,7 @@
       <AdditionalDependencies>qtmain.lib;QtCore4.lib;QtGui4.lib;QtOpenGL4.lib;opengl32.lib;glu32.lib;QtDeclarative4.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(SolutionDir)swift-build\$(TargetName)$(TargetExt)"</Command>
+      <Command>copy "$(TargetPath)" "$(SolutionDir)swift-build\$(TargetName)_RELEASE$(TargetExt)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
