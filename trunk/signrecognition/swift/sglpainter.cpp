@@ -2,7 +2,7 @@
 #include "sglpainter.h"
 
 SGLPainter::SGLPainter(QGLWidget *widget)
-	: mGlPainterWidget(widget)
+	: mPainter(widget)
 	, mActive(true)
 {
 }
@@ -13,7 +13,7 @@ SGLPainter::~SGLPainter()
 
 void SGLPainter::start()
 {
-	mGlPainterWidget->makeCurrent();
+	mPainter->makeCurrent();
 	startTimer(20);
 }
 
@@ -48,15 +48,14 @@ void SGLPainter::timerEvent(QTimerEvent *event)
 
 void SGLPainter::paint()
 {
-	QPainter p(mGlPainterWidget);
+	QPainter p(mPainter); // p.begin() is called in the constructor
 	p.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
 	//draw the painter stuff
 	p.translate(mViewportWidth/2 - (mViewportWidth/3)/2, mViewportHeight/2-(mViewportHeight/3)/2);
 	p.fillRect(QRect(0, 0, mViewportWidth/3, mViewportHeight/3), Qt::darkBlue);
-	
 	//end drawing of painter stuff
 
 	p.resetTransform();
-	//p.end();
+	p.end();
 }

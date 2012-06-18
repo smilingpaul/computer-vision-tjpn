@@ -36,9 +36,10 @@ protected:
 private:
 	SGLPainter mGlPainter;
 	QThread mGlThread;
+	QImage mGlFrame; /// Qt image to be rendered
+
 	//bool mSceneChanged; /// Indicates when OpenGL view is to be redrawn
 
-	QImage mGlFrame; /// Qt image to be rendered
 	//cv::Mat mOrigImage; /// original OpenCV image to be shown
 
 	//QColor mBgColor; /// Background color

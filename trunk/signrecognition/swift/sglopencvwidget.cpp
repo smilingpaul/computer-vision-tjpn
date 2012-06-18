@@ -21,12 +21,11 @@ SGLOpenCVWidget::SGLOpenCVWidget(QWidget *parent, QGLWidget *shared)
 
 	//mPosX = 0;
 	//mPosY = 0;
-
 }
 
 SGLOpenCVWidget::~SGLOpenCVWidget()
 {
-	makeCurrent();
+	//makeCurrent();
 	stopRendering();
 }
 

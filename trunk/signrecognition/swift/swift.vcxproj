@@ -105,12 +105,6 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_swiftmodel.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\qrc_swift.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_sglopencvwidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -126,6 +120,7 @@
     <ClCompile Include="help.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="sandboxsift.cpp" />
+    <ClCompile Include="settings.cpp" />
     <ClCompile Include="sglopencvwidget.cpp" />
     <ClCompile Include="sglpainter.cpp" />
     <ClCompile Include="smainwindow.cpp" />
@@ -160,6 +155,7 @@
     </CustomBuild>
     <ClInclude Include="help.h" />
     <ClInclude Include="sandboxsift.h" />
+    <ClInclude Include="settings.h" />
     <ClInclude Include="swiftitem.h" />
     <CustomBuild Include="swiftmodel.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -227,7 +223,8 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <None Include="thumbnailview.qml" />
+    <None Include="Main.qml" />
+    <None Include="ScrollBar.qml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
