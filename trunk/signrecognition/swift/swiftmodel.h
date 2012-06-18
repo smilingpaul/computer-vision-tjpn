@@ -7,11 +7,12 @@
 
 #include <QtCore/QtCore>
 #include <QtGui/QMainWindow>
-#include <QAbstractListModel>
+#include <QtCore/QAbstractListModel>
+#include <QtDeclarative/QDeclarativeImageProvider>
 #include <opencv2/features2d/features2d.hpp>
 #include "swiftitem.h"
 
-class SwiftModel : public QAbstractListModel
+class SwiftModel : public QAbstractListModel, public QDeclarativeImageProvider
 {
 	Q_OBJECT
 
@@ -31,6 +32,7 @@ public:
 	// return data, based on current index and requested role
 	QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
+	QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize);
 	//////////////////////////////////////////////////////////////////////////
 
 	void loadFiles(QStringList newImagePaths);

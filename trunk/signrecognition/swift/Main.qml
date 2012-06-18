@@ -12,11 +12,11 @@ Rectangle {
          contentWidth: myImage1.width; contentHeight: myImage1.height
 		 flickableDirection: Flickable.VerticalFlick
 
-         Image {
-             id: myImage1
-             source: "test.jpg"
-             asynchronous: true
-         }
+	          Image {
+	             id: myImage1
+	             source: "test.jpg"
+	            asynchronous: true
+	        }
 
          // Only show the scrollbars when the view is moving.
          states: State {

@@ -30,9 +30,16 @@ public:
 	QImage qimage() const;
 	cv::Mat cvmat() const;
 
-	cv::Mat descriptors() const;
-	std::vector<cv::KeyPoint> keypoints() const;
-	std::vector<cv::DMatch> matches() const;
+	//////////////////////////////////////////////////////////////////////////
+	/// getters
+	cv::Mat getDescriptors() const;
+	std::vector<cv::KeyPoint> getKeypoints() const;
+	//std::vector<cv::DMatch> getMatches() const;
+	/// setters
+	void setDescriptors(cv::Mat &descriptors);
+	void setKeypoints(std::vector<cv::KeyPoint> &keypoints);
+	//void setMatches(std::vector<cv::DMatch> &matches);
+	//////////////////////////////////////////////////////////////////////////
 
 	void detectFeatures(cv::FeatureDetector& mDetector);
 	void extractDescriptors(cv::DescriptorExtractor& mExtractor);

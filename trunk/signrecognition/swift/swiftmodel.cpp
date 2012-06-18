@@ -8,6 +8,7 @@
 ///
 SwiftModel::SwiftModel(QObject *parent)
 	: QAbstractListModel(parent)
+	, QDeclarativeImageProvider(Image)
 {
 	//mSift = cv::SIFT();
 	//mMatcher = cv::FlannBasedMatcher(new cv::flann::CompositeIndexParams(), new cv::flann::SearchParams());
@@ -31,11 +32,29 @@ SwiftModel::~SwiftModel()
 
 //////////////////////////////////////////////////////////////////////////
 
+//#warning WRONG!!! PLACEHOLDER!
+QImage SwiftModel::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
+{
+	//would be possible in a QMap...
+	//QString key = QString("image://model/%1").arg(id);
+	//QModelIndex index = mList[key];
+
+	//if (!index.isValid())
+	//	return QImage();
+
+	//temp
+	const SwiftItem &swiftItem = mList[0];
+
+	//return swiftItem.thumbnail();
+	return QImage();
+}
+
 int SwiftModel::rowCount(const QModelIndex &parent) const
 {
 	return mList.size();
 }
 
+//#warning THUMBNAIL ROLE IMPOSSIBLE - QDeclarativeImageProvider is the solution
 QVariant SwiftModel::data(const QModelIndex &index, int role) const
 {
 	//if (!index.isValid())
@@ -56,6 +75,8 @@ QVariant SwiftModel::data(const QModelIndex &index, int role) const
 		return swiftItem.thumbnail();
 	case TrainRole:
 		return swiftItem.train();
+	default:
+		return QVariant();
 	//case Qt::DecorationRole:
 	//case Qt::EditRole:
 	//case Qt::ToolTipRole:
@@ -64,12 +85,15 @@ QVariant SwiftModel::data(const QModelIndex &index, int role) const
 	//case Qt::SizeHintRole:
 	//...
 	}
-
-	return QVariant();
 }
 
 void SwiftModel::loadFiles(QStringList newImagePaths)
 {
+	for (unsigned int j = 0; j < newImagePaths.size(); j++)
+	{
+		mList.append(SwiftItem(newImagePaths[j]));
+	}
+
 	////#warning hardcode
 	////////////////////////////////////////////////////////////////////////////
 
