@@ -156,7 +156,7 @@ void SMainWindow::createWidgets()
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-	/// Left Dock Widget
+	/// Dock Widget Alpha
 	dockAlpha = new QDockWidget(tr("Picture Manager"),this);
 	dockAlpha->setObjectName("dockAlpha");
 	dockAlpha->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -169,7 +169,7 @@ void SMainWindow::createWidgets()
 	viewMenu->addAction(dockAlpha->toggleViewAction());
 
 	//////////////////////////////////////////////////////////////////////////
-	/// Right Dock Widget
+	/// Dock Widget Beta
 	dockBeta = new QDockWidget(tr("Controls"),this);
 	dockBeta->setObjectName("dockBeta");
 	dockBeta->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -181,21 +181,20 @@ void SMainWindow::createWidgets()
 	viewMenu->addAction(dockBeta->toggleViewAction());
 
 	//////////////////////////////////////////////////////////////////////////
-	/// Grid Layout
+	/// Dock Alpha Grid Layout
 	gridLayout = new QGridLayout(dockContentsAlpha);
 	gridLayout->setObjectName("gridLayout");
 	gridLayout->layout()->SetMaximumSize;
 	gridLayout->setSpacing(6);
 	gridLayout->setContentsMargins(0,3,0,0); ///< 3px from top looks better
 
-	/// Grid Layout - Upper Left
+	/// Label "Explore"
 	labelExplore = new QLabel(dockContentsAlpha);
 	labelExplore->setObjectName("labelExplore");
 	labelExplore->setText(tr("Explore"));
 	labelExplore->setAlignment(Qt::AlignHCenter);
-	gridLayout->addWidget(labelExplore, 0, 0, 1, 1);
 
-	/// Grid Layout - Lower Left
+	/// Declarative View "Explore"
 	declarativeViewExplore = new QDeclarativeView(dockContentsAlpha);
 	//declarativeViewExplore->setAttribute(Qt::WA_OpaquePaintEvent);
 	//declarativeViewExplore->setAttribute(Qt::WA_NoSystemBackground);
@@ -204,19 +203,16 @@ void SMainWindow::createWidgets()
 	declarativeViewExplore->setResizeMode(QDeclarativeView::SizeRootObjectToView);
 	declarativeViewExplore->rootContext()->setContextProperty("swiftModel",&mSwiftModel);
 	declarativeViewExplore->setSource(QUrl::fromLocalFile("Main.qml"));
-
 	declarativeViewExplore->setObjectName("declarativeViewExplore");
 	declarativeViewExplore->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-	gridLayout->addWidget(declarativeViewExplore, 1, 0, 1, 1);
 
-	/// Grid Layout - Upper Right
+	/// Label "Train"
 	labelTrain = new QLabel(dockContentsAlpha);
 	labelTrain->setObjectName("labelTrain");
 	labelTrain->setText(tr("Train"));
 	labelTrain->setAlignment(Qt::AlignHCenter);
-	gridLayout->addWidget(labelTrain, 0, 1, 1, 1);
 
-	/// Grid Layout - Lower Right
+	/// Declarative View "Train"
 	declarativeViewTrain = new QDeclarativeView(dockContentsAlpha);
 	//declarativeViewTrain->setAttribute(Qt::WA_OpaquePaintEvent);
 	//declarativeViewTrain->setAttribute(Qt::WA_NoSystemBackground);
@@ -225,10 +221,13 @@ void SMainWindow::createWidgets()
 	declarativeViewTrain->setResizeMode(QDeclarativeView::SizeRootObjectToView);
 	declarativeViewTrain->rootContext()->setContextProperty("swiftModel",&mSwiftModel);
 	declarativeViewTrain->setSource(QUrl::fromLocalFile("Main.qml"));
-
 	declarativeViewTrain->setObjectName("declarativeViewTrain");
 	declarativeViewTrain->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-	gridLayout->addWidget(declarativeViewTrain, 1, 1, 1, 1);
+
+	gridLayout->addWidget(labelExplore, 0, 0, 1, 1); ///< Upper Left
+	gridLayout->addWidget(declarativeViewExplore, 1, 0, 1, 1); ///< Lower Left
+	gridLayout->addWidget(labelTrain, 0, 1, 1, 1); ///< Upper Right
+	gridLayout->addWidget(declarativeViewTrain, 1, 1, 1, 1); ///< Lower Right
 }
 
 /// \brief
