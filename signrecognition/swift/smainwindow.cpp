@@ -1,13 +1,8 @@
 #include "stdafx.h"
 #include "smainwindow.h"
-#include "swiftitem.h"
 #include "swiftmodel.h"
 
 #define	MAX_THREADS 4
-//#include <opencv2/core/core.hpp>
-//#include <opencv2/imgproc/imgproc.hpp>
-//#include <opencv2/highgui/highgui.hpp>
-//#include <opencv2/features2d/features2d.hpp>
 
 /// \class SMainWindow
 /// \brief
@@ -55,6 +50,15 @@ void SMainWindow::initialize()
 
 	SwiftModel mSwiftModel = new SwiftModel(this);
 
+	//train
+	mAllImagePaths << "..\\swift-build\\TestData\\signs\\black_danger.png"
+		<< "..\\swift-build\\TestData\\signs\\black_stop.png"
+		<< "..\\swift-build\\TestData\\signs\\black_yield.png";
+	//query
+	mAllImagePaths << "..\\swift-build\\TestData\\danger_quantity_1.jpg";
+
+	mSwiftModel.loadFiles(mAllImagePaths);
+
 	tabSubWindows();
 	mMdiArea.setTabsClosable(true);
 	mMdiArea.setTabsMovable(true);
@@ -94,7 +98,6 @@ void SMainWindow::createActions()
 	tileAct = new QAction(tr("&Tile Windows"), this);
 	tileAct->setStatusTip(tr("Tile the windows"));
 	connect(tileAct, SIGNAL(triggered()), this, SLOT(tileSubWindows()));
-	//connect(tileAct, SIGNAL(triggered()), &mMdiArea, SLOT(tileSubWindows()));
 }
 
 /// \brief
@@ -194,13 +197,13 @@ void SMainWindow::createWidgets()
 
 	/// Grid Layout - Lower Left
 	declarativeViewExplore = new QDeclarativeView(dockContentsAlpha);
-	declarativeViewExplore->setAttribute(Qt::WA_OpaquePaintEvent);
-	declarativeViewExplore->setAttribute(Qt::WA_NoSystemBackground);
-	declarativeViewExplore->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
-	declarativeViewExplore->viewport()->setAttribute(Qt::WA_NoSystemBackground);
-
+	//declarativeViewExplore->setAttribute(Qt::WA_OpaquePaintEvent);
+	//declarativeViewExplore->setAttribute(Qt::WA_NoSystemBackground);
+	//declarativeViewExplore->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
+	//declarativeViewExplore->viewport()->setAttribute(Qt::WA_NoSystemBackground);
+	declarativeViewExplore->setResizeMode(QDeclarativeView::SizeRootObjectToView);
 	declarativeViewExplore->rootContext()->setContextProperty("swiftModel",&mSwiftModel);
-	declarativeViewExplore->setSource(QUrl::fromLocalFile("thumbnailview.qml"));
+	declarativeViewExplore->setSource(QUrl::fromLocalFile("Main.qml"));
 
 	declarativeViewExplore->setObjectName("declarativeViewExplore");
 	declarativeViewExplore->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
@@ -215,13 +218,13 @@ void SMainWindow::createWidgets()
 
 	/// Grid Layout - Lower Right
 	declarativeViewTrain = new QDeclarativeView(dockContentsAlpha);
-	declarativeViewTrain->setAttribute(Qt::WA_OpaquePaintEvent);
-	declarativeViewTrain->setAttribute(Qt::WA_NoSystemBackground);
-	declarativeViewTrain->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
-	declarativeViewTrain->viewport()->setAttribute(Qt::WA_NoSystemBackground);
-
+	//declarativeViewTrain->setAttribute(Qt::WA_OpaquePaintEvent);
+	//declarativeViewTrain->setAttribute(Qt::WA_NoSystemBackground);
+	//declarativeViewTrain->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
+	//declarativeViewTrain->viewport()->setAttribute(Qt::WA_NoSystemBackground);
+	declarativeViewTrain->setResizeMode(QDeclarativeView::SizeRootObjectToView);
 	declarativeViewTrain->rootContext()->setContextProperty("swiftModel",&mSwiftModel);
-	declarativeViewTrain->setSource(QUrl::fromLocalFile("thumbnailview.qml"));
+	declarativeViewTrain->setSource(QUrl::fromLocalFile("Main.qml"));
 
 	declarativeViewTrain->setObjectName("declarativeViewTrain");
 	declarativeViewTrain->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
@@ -311,11 +314,15 @@ void SMainWindow::about()
 /// VIEW
 void SMainWindow::tabSubWindows()
 {
+	//mMdiArea.hide();
 	mMdiArea.setViewMode(QMdiArea::TabbedView);
+	//mMdiArea.show();
 }
 
 void SMainWindow::tileSubWindows()
 {
+	//mMdiArea.hide();
 	mMdiArea.setViewMode(QMdiArea::SubWindowView);
 	mMdiArea.tileSubWindows();
+	//mMdiArea.show();
 }

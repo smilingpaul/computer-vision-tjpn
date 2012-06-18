@@ -18,10 +18,7 @@ class SwiftItem
 {
 public:
 	SwiftItem();
-	SwiftItem(const QString &path
-		, cv::SiftFeatureDetector &detector
-		, cv::SiftDescriptorExtractor &extractor
-		, cv::FlannBasedMatcher &matcher);
+	SwiftItem(const QString &path);
 	~SwiftItem();
 
 	// roles
@@ -30,17 +27,16 @@ public:
 	bool train() const;
 	// end of roles
 
-	QImage image() const;
+	QImage qimage() const;
 	cv::Mat cvmat() const;
 
 	cv::Mat descriptors() const;
 	std::vector<cv::KeyPoint> keypoints() const;
-	std::vector<cv::DMatch> SwiftItem::matches() const;
+	std::vector<cv::DMatch> matches() const;
 
-
-	void detectFeatures();
-	void extractDescriptors();
-	void queryDB(cv::Mat& train);
+	void detectFeatures(cv::FeatureDetector& mDetector);
+	void extractDescriptors(cv::DescriptorExtractor& mExtractor);
+	void queryDB(cv::DescriptorMatcher& mMatcher,std::vector<cv::Mat>& masks);
 
 private:
 	QString mPath;
@@ -48,10 +44,10 @@ private:
 	cv::Mat mImage;
 	bool mTrain;
 
-	cv::SIFT mSift;
-	cv::SiftFeatureDetector mDetector;
-	cv::SiftDescriptorExtractor mExtractor;
-	cv::FlannBasedMatcher mMatcher;
+	//cv::SIFT mSift;
+	//cv::SiftFeatureDetector mDetector;
+	//cv::SiftDescriptorExtractor mExtractor;
+	//cv::FlannBasedMatcher mMatcher;
 
 	cv::vector<cv::KeyPoint> mKeypoints;
 	cv::Mat mDescriptors;

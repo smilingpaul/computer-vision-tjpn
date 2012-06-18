@@ -39,11 +39,9 @@ public:
 private:
 	QList<SwiftItem> mList;
 
-	cv::SIFT mSift;
-	cv::SiftFeatureDetector mDetector;
-	cv::SiftDescriptorExtractor mExtractor;
-
-	cv::FlannBasedMatcher mMatcher;
+	cv::FeatureDetector* mDetector;
+	cv::DescriptorExtractor* mExtractor;
+	cv::DescriptorMatcher* mMatcher;
 
 	//QModelIndex parent(const QModelIndex &child) const;
 	//int columnCount(const QModelIndex &parent) const;

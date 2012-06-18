@@ -23,7 +23,7 @@ public slots:
 
 private:
 	QMutex mMutex;
-	QGLWidget *mGlPainterWidget;
+	QGLWidget *mPainter;
 	bool mActive;
 	int mViewportWidth;
 	int mViewportHeight;
