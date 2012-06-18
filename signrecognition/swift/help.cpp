@@ -18,6 +18,7 @@ namespace Help
 		switch (cvmat.channels())
 		{
 		case 3:
+			/// source - http://permalink.gmane.org/gmane.comp.lib.opencv/37800
 			cv::cvtColor(cvmat, qtstylemat, CV_BGR2RGB);
 			format = QImage::Format_RGB888;
 			break;
@@ -34,7 +35,7 @@ namespace Help
 		return QImage((const unsigned char*)(qtstylemat.data), qtstylemat.cols, qtstylemat.rows, format);
 	}
 
-	/// http://permalink.gmane.org/gmane.comp.lib.opencv/37800
+	/// source - http://permalink.gmane.org/gmane.comp.lib.opencv/37800
 	/// from QImage (a)rgb
 	/// to cv::Mat bgr(a)
 	cv::Mat Convert::qimage2cvmat(const QImage& qimage)
@@ -46,6 +47,7 @@ namespace Help
 		return cvmat;
 	}
 
+	//source - http://code.google.com/p/rtabmap/source/browse/branches/audio/ros-pkg/rtabmap/src/ImageViewQt.cpp?spec=svn514&r=514
 	//QImage cvtCvMat2QImage(const cv::Mat & image)
 	//{
 	//	QImage qtemp;
@@ -69,6 +71,7 @@ namespace Help
 	//	return qtemp;
 	//}
 
+	//source - http://code.google.com/p/rtabmap/source/browse/branches/audio/ros-pkg/rtabmap/src/ImageViewQt.cpp?spec=svn514&r=514
 	//cv::Mat cvtQImage2CvMat(const QImage & image)
 	//{
 	//	cv::Mat cvImage;
