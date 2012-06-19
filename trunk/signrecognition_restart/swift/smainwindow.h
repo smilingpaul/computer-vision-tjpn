@@ -24,19 +24,47 @@ public slots:
 
 
 private:
+	void initialize();
 	void createActions();
 	void createMenus();
 	void createToolBars();
-	void createDockWidgets();
+	void createWidgets();
 	void createStatusBar();
+
+	QStringList mFormatFilters;
+	QStringList mAllImagePaths;
+	QStringList mNewImagePaths;
+
+
+
+
+
+
+	//////////////////////////////////////////////////////////////////////////
+	// QActions
 
 	QAction *openAct;
 	QAction *exitAct;
 	QAction *aboutAct;
 
+	//////////////////////////////////////////////////////////////////////////
+	// QMenus
+
 	QMenu *fileMenu;
 	QMenu *editMenu;
+	QMenu *viewMenu;
 	QMenu *helpMenu;
+
+	//////////////////////////////////////////////////////////////////////////
+	// QWidgets
+	
+	// dock area alpha
+	QDockWidget *dockAlpha;
+	QWidget *dockContentsAlpha;
+
+	// dock area beta
+	QDockWidget *dockBeta;
+	QWidget *dockContentsBeta;
 
 private slots:
 	void open();
