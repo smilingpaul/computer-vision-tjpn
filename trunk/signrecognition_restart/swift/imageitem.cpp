@@ -33,6 +33,11 @@ void ImageItem::calculateDescriptors(cv::DescriptorExtractor &extractor)
 	extractor.compute(mMat,mKeypoints,mDescriptors);
 }
 
+void ImageItem::match(cv::GenericDescriptorMatcher &matcher, QList<ImageItem> &list)
+{
+
+}
+
 void ImageItem::match(cv::GenericDescriptorMatcher &matcher, ImageItem &item)
 {
 
