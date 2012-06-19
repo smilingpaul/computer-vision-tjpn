@@ -120,7 +120,7 @@ void SMainWindow::createWidgets()
 	dockAlpha = new QDockWidget(tr("Dock Alpha"),this);
 	dockAlpha->setObjectName("dockAlpha");
 	dockAlpha->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-	dockAlpha->setFixedWidth(262); ///< 128px + 6px + 128px
+	//dockAlpha->setFixedWidth(262); ///< 128px + 6px + 128px
 
 	dockContentsAlpha = new QWidget();
 	dockContentsAlpha->setObjectName("dockContentsAlpha");
