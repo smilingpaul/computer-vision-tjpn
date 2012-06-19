@@ -93,6 +93,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="featureprovider.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_smainwindow.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -111,6 +112,7 @@
     <ClCompile Include="GeneratedFiles\Release\moc_sopencvwidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="imageitem.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="smainwindow.cpp" />
     <ClCompile Include="sopencvwidget.cpp" />
@@ -120,6 +122,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="featureprovider.h" />
     <ClInclude Include="GeneratedFiles\ui_swift.h" />
     <CustomBuild Include="sopencvwidget.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -142,6 +145,7 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp" "-fStdAfx.h" "-f../../smainwindow.h"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_OPENGL_LIB -DQT_DECLARATIVE_LIB "-I." "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtOpenGL" "-I$(QTDIR)\include\QtDeclarative" "-I." "-I$(OPENCV_DIR)\include" "-I$(TBBROOT)\include" "-I." "-I." "-I."</Command>
     </CustomBuild>
     <ClInclude Include="GeneratedFiles\ui_swift_experimental.h" />
+    <ClInclude Include="imageitem.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
