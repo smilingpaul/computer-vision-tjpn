@@ -37,12 +37,12 @@ public:
 	void assignOrientations();
 	void extractKeypointDescriptors();
 
-	cv::Mat createInitImg();
+	cv::Mat createInitImg(cv::Mat& m_image);
 
 private:
-	cv::Mat m_image;
+	cv::Mat m_image;			//source image
 
-	int oct;
+	int oct;					//looping variable
 	int m_octaves;
 	int m_octaveLayers;
 	int m_keypointsCount;
@@ -50,15 +50,15 @@ private:
 	double m_edgeThreshold;
 	double sigma;
 
-	cv::Mat*** m_gaussians; ///< array to hold all the octaves and intervals
-	cv::Mat*** m_dogs;      ///< array to hold the "difference of gaussian" images between the intervals of each octave
-	//think following line wrong:
+	//cv::Mat*** m_pyr; ///< array to hold all the octaves and intervals
+	//cv::Mat*** m_dogs;      ///< array to hold the "difference of gaussian" images between the intervals of each octave
+	
 	//cv::Mat*** m_extrema;   ///< array to hold binary images with extrema information (true or false)
-	//has to be:
 	cv::Mat** m_extrema;
 	double**   m_sigmas;    ///< array to hold the sigma used to blur a particular image
 
-	cv::vector<cv::Mat> m_pyr;
+	cv::vector<cv::Mat>** dogPyr;
+	cv::vector<cv::Mat>** m_pyr;		///<vector to hold gaussian images
 	//vector<cv::KeyPoint>   m_keypoints;           ///< vector to hold every calculated keypoint
 	//vector<cv::Desc> m_keypointDescriptors; ///< vector to hold every keypoints descriptor
 

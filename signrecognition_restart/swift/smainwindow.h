@@ -22,9 +22,13 @@ public:
 	~SMainWindow();
 
 	//QList<ImageItem> mExploreList;
-
+	//lists for images to explore and the train images (signs)
 	QList<ImageItem> mExploreItems;
 	QList<ImageItem> mTrainItems;
+
+	cv::FeatureDetector* mDetector;
+	cv::DescriptorExtractor* mExtractor;
+	cv::DescriptorMatcher* mMatcher;
 
 
 public slots:
@@ -37,6 +41,12 @@ private:
 	void createToolBars();
 	void createWidgets();
 	void createStatusBar();
+
+	void loadExploreItems();
+	void loadTrainItems();
+	//void trainItems(QList<ImageItem> &list, cv::DescriptorMatcher &matcher);
+	void trainItems();
+	
 
 	QStringList mFormatFilters;
 	QStringList mAllImagePaths;

@@ -33,12 +33,21 @@ void ImageItem::calculateDescriptors(cv::DescriptorExtractor &extractor)
 	extractor.compute(mMat,mKeypoints,mDescriptors);
 }
 
-void ImageItem::match(cv::GenericDescriptorMatcher &matcher, QList<ImageItem> &list)
+void ImageItem::match(cv::DescriptorMatcher &matcher, QList<ImageItem> &list)
 {
 
 }
 
-void ImageItem::match(cv::GenericDescriptorMatcher &matcher, ImageItem &item)
+void ImageItem::match(cv::DescriptorMatcher &matcher, ImageItem &item)
 {
 
+}
+
+void ImageItem::train(cv::DescriptorMatcher &matcher)
+{
+	std::vector<cv::Mat> train;
+	train.push_back(mDescriptors);
+
+	matcher.add(train);
+	matcher.train();
 }
