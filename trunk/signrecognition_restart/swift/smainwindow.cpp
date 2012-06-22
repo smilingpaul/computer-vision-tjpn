@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "smainwindow.h"
-
+#include "imageitem.h"
 /// \class SMainWindow
 /// \brief 
 ///
@@ -26,8 +26,56 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	createStatusBar();
 
 
+	loadExploreItems();
+
+	loadTrainItems();
+
+	cv::SIFT sift = cv::SIFT();
+	mMatcher = new cv::FlannBasedMatcher(new cv::flann::CompositeIndexParams(), new cv::flann::SearchParams());
+	mDetector = new cv::SiftFeatureDetector(sift);
+	mExtractor = new cv::SiftDescriptorExtractor(sift);
+
+	for (int k = 0; k < mExploreItems.size(); k++)
+	{
+		mExploreItems[k].precalculation(*mDetector, *mExtractor);
+	}
+
+	for (int i = 0; i < mTrainItems.size(); i++)
+	{
+		mTrainItems[i].precalculation(*mDetector, *mExtractor);
+	}
+
+
+	trainItems();
+
+	//Matching descriptor vectors using FLANN matcher
+	std::vector<cv::DMatch> matches;
+	//mMatcher->match(mDescriptors(mExploreItems), mDescriptors(mTrainItems), matches);
+	
 
 }
+
+void SMainWindow::loadExploreItems()
+{
+	mExploreItems.append(ImageItem(QString("..\\swift-build\\TestData\\special_1.jpg")));		
+}
+
+void SMainWindow::loadTrainItems()
+{
+	mTrainItems.append(ImageItem(QString("..\\swift-build\\TestData\\signs\\black_30.png")));
+	mTrainItems.append(ImageItem(QString("..\\swift-build\\TestData\\signs\\black_stop.png")));
+	mTrainItems.append(ImageItem(QString("..\\swift-build\\TestData\\signs\\black_yield.png")));
+	mTrainItems.append(ImageItem(QString("..\\swift-build\\TestData\\signs\\transp_danger.jpg")));
+}
+
+void SMainWindow::trainItems()
+{
+	for (unsigned int i = 0; i < mTrainItems.size(); i++)
+	{
+		mTrainItems[i].train(*mMatcher);
+	}
+}
+
 
 void SMainWindow::initialize()
 {

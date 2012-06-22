@@ -16,9 +16,12 @@ public:
 	~ImageItem();
 
 	void precalculation(cv::FeatureDetector &detector, cv::DescriptorExtractor &extractor);
-	void match(cv::GenericDescriptorMatcher &matcher, QList<ImageItem> &list);
-	void match(cv::GenericDescriptorMatcher &matcher, ImageItem &item);
 
+	void train(cv::DescriptorMatcher &matcher);
+	
+	void match(cv::DescriptorMatcher &matcher, QList<ImageItem> &list);
+	void match(cv::DescriptorMatcher &matcher, ImageItem &item);
+	
 
 private:
 	QString mPath;
