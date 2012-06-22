@@ -5,6 +5,7 @@
 #define SMAINWINDOW_H
 
 #include <QtGui/QMainWindow>
+#include "imageitem.h"
 
 class QAction;
 class QMenu;
@@ -19,6 +20,12 @@ signals:
 public:
 	SMainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
 	~SMainWindow();
+
+	//QList<ImageItem> mExploreList;
+
+	QList<ImageItem> mExploreItems;
+	QList<ImageItem> mTrainItems;
+
 
 public slots:
 

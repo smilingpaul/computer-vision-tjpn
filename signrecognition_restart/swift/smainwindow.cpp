@@ -24,6 +24,9 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 
 	/// Creates the Status Bar at the bottom of the Window
 	createStatusBar();
+
+
+
 }
 
 void SMainWindow::initialize()
@@ -191,6 +194,8 @@ void SMainWindow::open()
 
 	//////////////////////////////////////////////////////////////////////////
 	// LOADING OF THE FILES
+
+
 
 	mAllImagePaths += mNewImagePaths; ///< add the new input to the "paths" member
 }
