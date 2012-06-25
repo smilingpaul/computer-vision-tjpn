@@ -6,131 +6,146 @@
 //mDetector = cv::SiftFeatureDetector(mSift);
 //mExtractor = cv::SiftDescriptorExtractor(mSift);
 
-
 FeatureProvider::FeatureProvider()
 {
-
-	//mConfigurationMap.insert("SIFT",);
 }
 
 FeatureProvider::~FeatureProvider()
 {
+}
 
+void FeatureProvider::initialize()
+{
+	mDetectorList
+		<< "ORB"
+		<< "SURF"
+		<< "SIFT"
+		<< "DENSE"
+		<< "FAST"
+		<< "GFTT"
+		<< "MSER"
+		<< "STAR";
+
+	mExtractorList
+		<< "ORB"
+		<< "SURF"
+		<< "SIFT"
+		<< "BRIEF";
+
+	setDefault();
+	setCurrent(0,0);
 }
 
 cv::FeatureDetector* FeatureProvider::provideDetector()
-{	
+{
 	cv::FeatureDetector *detector = nullptr;
 
-	switch (mCurrentDetector)
+	switch (mDetectorList.indexOf(mCurrentDetector))
 	{
-	case 1: ///< (1) ORB Detector
+	case 0: ///< (0) ORB Detector
 
 		detector = new cv::OrbFeatureDetector(
-			  int _nfeatures = 500
-			, float _scaleFactor = 1.2f
-			, int _nlevels = 8
-			, int _edgeThreshold = 31
-			, int _firstLevel = 0
-			, int _WTA_K=2
-			, int _scoreType=0
-			, int _patchSize=31
+			  value<int>("nfeatures")
+			, value<float>("scaleFactor")
+			, value<int>("nlevels")
+			, value<int>("edgeThreshold")
+			, value<int>("firstLevel")
+			, value<int>("WTA_K")
+			, value<int>("scoreType")
+			, value<int>("patchSize")
 		);
 
 		break;
 
-	case 2: ///< (2) SURF Detector
+	case 1: ///< (1) SURF Detector
 
 		detector = new cv::SurfFeatureDetector(
-			  double _hessianThreshold
-			, int _nOctaves=4
-			, int _nOctaveLayers=2
-			, bool _extended = true
-			, bool _upright = false
+			  value<double>("hessianThreshold")
+			, value<int>("nOctaves")
+			, value<int>("nOctaveLayers")
+			, value<bool>("extended")
+			, value<bool>("upright")
 		);
 
 		break;
 
-	case 3: ///< (3) SIFT Detector
+	case 2: ///< (2) SIFT Detector
 
 		detector = new cv::SiftFeatureDetector(
-			  int _nfeatures=0
-			, int _nOctaveLayers=3
-			, double _contrastThreshold=0.04
-			, double _edgeThreshold=10
-			, double _sigma=1.6
+			  value<int>("nfeatures")
+			, value<int>("nOctaveLayers")
+			, value<double>("contrastThreshold")
+			, value<double>("edgeThreshold")
+			, value<double>("sigma")
 		);
 
 		break;
 
-	case 4: ///< (4) DENSE Detector
+	case 3: ///< (3) DENSE Detector
 
 		detector = new cv::DenseFeatureDetector(
-			  float _initFeatureScale=1.f
-			, int _featureScaleLevels=1
-			, float _featureScaleMul=0.1f
-			, int _initXyStep=6
-			, int _initImgBound=0
-			, bool _varyXyStepWithScale=true
-			, bool _varyImgBoundWithScale=false
+			  value<float>("initFeatureScale")
+			, value<int>("featureScaleLevels")
+			, value<float>("featureScaleMul")
+			, value<int>("initXyStep")
+			, value<int>("initImgBound")
+			, value<bool>("varyXyStepWithScale")
+			, value<bool>("varyImgBoundWithScale")
 		);
-		
+
 		break;
 
-	case 5: ///< (5) FAST Detector
+	case 4: ///< (4) FAST Detector
 
 		detector = new cv::FastFeatureDetector(
-			  int _threshold=10
-			, bool nonmaxSuppression=true
+			  value<int>("threshold")
+			, value<bool>("nonmaxSuppression")
 		);
 
 		break;
 
-	case 6: ///< (6) GFTT Detector
+	case 5: ///< (5) GFTT Detector
 
 		detector = new cv::GFTTDetector(
-			  int _maxCorners=1000
-			, double _qualityLevel=0.01
-			, double _minDistance=1
-			, int _blockSize=3
-			, bool _useHarrisDetector=false
-			, double _k=0.04 
+			  value<int>("maxCorners")
+			, value<double>("qualityLevel")
+			, value<double>("minDistance")
+			, value<int>("blockSize")
+			, value<bool>("useHarrisDetector")
+			, value<double>("_k")
 		);
 
 		break;
 
-	case 7: ///< (7) MSER Detector
+	case 6: ///< (6) MSER Detector
 
 		detector = new cv::MserFeatureDetector(
-			  int _delta=5
-			, int _min_area=60
-			, int _max_area=14400
-			, double _max_variation=0.25
-			, double _min_diversity=.2
-			, int _max_evolution=200
-			, double _area_threshold=1.01
-			, double _min_margin=0.003
-			, int _edge_blur_size=5
+			  value<int>("delta")
+			, value<int>("min_area")
+			, value<int>("max_area")
+			, value<double>("max_variation")
+			, value<double>("min_diversity")
+			, value<int>("max_evolution")
+			, value<double>("area_threshold")
+			, value<double>("min_margin")
+			, value<int>("edge_blur_size")
 		);
 
 		break;
 
-	case 8: ///< (8) STAR Detector
+	case 7: ///< (7) STAR Detector
 
 		detector = new cv::StarFeatureDetector(
-			  int _maxSize=45
-			, int _responseThreshold=30
-			, int _lineThresholdProjected=10
-			, int _lineThresholdBinarized=8
-			, int _suppressNonmaxSize=5
+			  value<int>("maxSize")
+			, value<int>("responseThreshold")
+			, value<int>("lineThresholdProjected")
+			, value<int>("lineThresholdBinarized")
+			, value<int>("suppressNonmaxSize")
 		);
 
 		break;
-
 	}
 
-
-	
 	//// BONUS!!!
 	//cv::PyramidAdaptedFeatureDetector( const Ptr<FeatureDetector>& detector, int maxLevel=2 );
 	//
@@ -143,49 +158,175 @@ cv::FeatureDetector* FeatureProvider::provideDetector()
 
 cv::DescriptorExtractor* FeatureProvider::provideExtractor()
 {
-	/// (1) ORB
-	//cv::OrbDescriptorExtractor(int nfeatures = 500, float scaleFactor = 1.2f, int nlevels = 8, int edgeThreshold = 31,
-	//	int firstLevel = 0, int WTA_K=2, int scoreType=0, int patchSize=31 );
+	cv::DescriptorExtractor *extractor = nullptr;
 
+	switch (mExtractorList.indexOf(mCurrentDetector))
+	{
+	case 0: ///< (0) ORB Extractor
 
-	/// (2) SURF
-	//cv::SurfDescriptorExtractor(double _hessianThreshold,
-	//int _nOctaves=4, int _nOctaveLayers=2,
-	//bool _extended=true, bool _upright=false);
+		extractor = new cv::OrbFeatureDetector(
+			  value<int>("nfeatures")
+			, value<float>("scaleFactor")
+			, value<int>("nlevels")
+			, value<int>("edgeThreshold")
+			, value<int>("firstLevel")
+			, value<int>("WTA_K")
+			, value<int>("scoreType")
+			, value<int>("patchSize")
+			);
 
-	/// (3) SIFT
-	//cv::SiftDescriptorExtractor( int _nfeatures=0, int _nOctaveLayers=3,
-	//	double _contrastThreshold=0.04, double _edgeThreshold=10,
-	//	double _sigma=1.6);
+		break;
 
+	case 1: ///< (1) SURF Extractor
 
-	/// (4) BRIEF
-	//cv::BriefDescriptorExtractor( int bytes = 32 )
+		extractor = new cv::SurfFeatureDetector(
+			  value<double>("hessianThreshold")
+			, value<int>("nOctaves")
+			, value<int>("nOctaveLayers")
+			, value<bool>("extended")
+			, value<bool>("upright")
+			);
 
+		break;
 
+	case 2: ///< (2) SIFT Extractor
 
+		extractor = new cv::SiftFeatureDetector(
+			  value<int>("nfeatures")
+			, value<int>("nOctaveLayers")
+			, value<double>("contrastThreshold")
+			, value<double>("edgeThreshold")
+			, value<double>("sigma")
+			);
 
+		break;
 
+	case 3: ///< (3) BRIEF Extractor
 
+		extractor = new cv::BriefDescriptorExtractor(
+			  value<int>("bytes")
+			);
 
-
-
-
-
-
-
-
-
-
-
+		break;
+	}
 
 	//// BONUS!!!!
 	//cv::BOWImgDescriptorExtractor( const Ptr<DescriptorExtractor>& dextractor,
 	//	const Ptr<DescriptorMatcher>& dmatcher );
 
+	return extractor;
 }
 
 //cv::DescriptorMatcher* FeatureProvider::provideMatcher()
 //{
 //
 //}
+//}
+//}
+//}
+
+template<typename T> void FeatureProvider::insert(QString key, T input)
+{
+	mConfiguration.insert(key,QVariant(input));
+}
+
+template<typename T> T FeatureProvider::value(QString key)
+{
+	return mConfiguration[mCurrentPrefix+"_"+key].value<T>();
+}
+
+void FeatureProvider::setDefault()
+{
+	mConfigurationDefault.clear();
+
+	mConfigurationDefault.insert("ORB_nfeatures",QVariant(int(500)));
+	mConfigurationDefault.insert("ORB_scaleFactor",QVariant(float(1.2)));
+	mConfigurationDefault.insert("ORB_nlevels",QVariant(int(8)));
+	mConfigurationDefault.insert("ORB_edgeThreshold",QVariant(int(31)));
+	mConfigurationDefault.insert("ORB_firstLevel",QVariant(int(0)));
+	mConfigurationDefault.insert("ORB_WTA_K",QVariant(int(2)));
+	mConfigurationDefault.insert("ORB_scoreType",QVariant(int(0)));
+	mConfigurationDefault.insert("ORB_patchSize",QVariant(int(31)));
+
+	mConfigurationDefault.insert("SURF_hessianThreshold",QVariant(double(600)));
+	mConfigurationDefault.insert("SURF_nOctaves",QVariant(int(4)));
+	mConfigurationDefault.insert("SURF_nOctaveLayers",QVariant(int(2)));
+	mConfigurationDefault.insert("SURF_extended",QVariant(bool(true)));
+	mConfigurationDefault.insert("SURF_upright",QVariant(bool(false)));
+
+	mConfigurationDefault.insert("SIFT_nfeatures",QVariant(int(0)));
+	mConfigurationDefault.insert("SIFT_nOctaveLayers",QVariant(int(3)));
+	mConfigurationDefault.insert("SIFT_contrastThreshold",QVariant(double(0.04)));
+	mConfigurationDefault.insert("SIFT_edgeThreshold",QVariant(double(10)));
+	mConfigurationDefault.insert("SIFT_sigma",QVariant(double(1.6)));
+
+	mConfigurationDefault.insert("DENSE_initFeatureScale",QVariant(float(1)));
+	mConfigurationDefault.insert("DENSE_featureScaleLevels",QVariant(int(1)));
+	mConfigurationDefault.insert("DENSE_featureScaleMul",QVariant(float(0.1)));
+	mConfigurationDefault.insert("DENSE_initXyStep",QVariant(int(6)));
+	mConfigurationDefault.insert("DENSE_initImgBound",QVariant(int(0)));
+	mConfigurationDefault.insert("DENSE_varyXyStepWithScale",QVariant(bool(true)));
+	mConfigurationDefault.insert("DENSE_varyImgBoundWithScale",QVariant(bool(false)));
+
+	mConfigurationDefault.insert("FAST_threshold",QVariant(int(10)));
+	mConfigurationDefault.insert("FAST_nonmaxSuppression",QVariant(bool(true)));
+
+	mConfigurationDefault.insert("GFTT_maxCorners",QVariant(int(1000)));
+	mConfigurationDefault.insert("GFTT_qualityLevel",QVariant(double(0.01)));
+	mConfigurationDefault.insert("GFTT_minDistance",QVariant(double(1)));
+	mConfigurationDefault.insert("GFTT_blockSize",QVariant(int(3)));
+	mConfigurationDefault.insert("GFTT_useHarrisDetector",QVariant(bool(false)));
+	mConfigurationDefault.insert("GFTT_k",QVariant(double(0.04)));
+
+	mConfigurationDefault.insert("MSER_delta",QVariant(int(5)));
+	mConfigurationDefault.insert("MSER_min_area",QVariant(int(60)));
+	mConfigurationDefault.insert("MSER_max_area",QVariant(int(14400)));
+	mConfigurationDefault.insert("MSER_max_variation",QVariant(double(0.25)));
+	mConfigurationDefault.insert("MSER_min_diversity",QVariant(double(0.2)));
+	mConfigurationDefault.insert("MSER_max_evolution",QVariant(int(200)));
+	mConfigurationDefault.insert("MSER_area_threshold",QVariant(double(1.01)));
+	mConfigurationDefault.insert("MSER_min_margin",QVariant(double(0.03)));
+	mConfigurationDefault.insert("MSER_edge_blur_size",QVariant(int(5)));
+
+	mConfigurationDefault.insert("STAR_maxSize",QVariant(int(45)));
+	mConfigurationDefault.insert("STAR_responseThreshold",QVariant(int(30)));
+	mConfigurationDefault.insert("STAR_lineThresholdProjected",QVariant(int(10)));
+	mConfigurationDefault.insert("STAR_lineThresholdBinarized",QVariant(int(8)));
+	mConfigurationDefault.insert("STAR_suppressNonmaxSize",QVariant(int(5)));
+
+	mConfigurationDefault.insert("BRIEF_bytes",QVariant(int(32)));
+
+	mConfiguration.clear();
+
+	mConfiguration = QMap<QString, QVariant>(mConfigurationDefault);
+}
+
+void FeatureProvider::setCurrent(int detector, int extractor)
+{
+	if (detector > -1 && detector < mDetectorList.size())
+	{
+		mCurrentDetector = mDetectorList[detector];
+		mCurrentPrefix = mCurrentDetector;
+	}
+
+	if (extractor > -1 && extractor < mExtractorList.size())
+	{
+		mCurrentExtractor = mExtractorList[extractor];
+		mCurrentPrefix = mCurrentDetector;
+	}
+}
+
+void FeatureProvider::setCurrent(QString detector, QString extractor)
+{
+	if (!detector.isEmpty() && mDetectorList.contains(detector))
+	{
+		mCurrentDetector = detector;
+		mCurrentPrefix = mCurrentDetector;
+	}
+
+	if (!extractor.isEmpty() && mExtractorList.contains(extractor))
+	{
+		mCurrentExtractor = extractor;
+		mCurrentPrefix = mCurrentDetector;
+	}
+}

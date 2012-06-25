@@ -10,46 +10,32 @@ public:
 	FeatureProvider();
 	~FeatureProvider();
 
-	enum Detectors {
-		ORB_D = 1
-		, SURF_D
-		, SIFT_D
-		, DENSE_D
-		, FAST_D
-		, GFTT_D
-		, MSER_D
-		, STAR_D
-	};
-
-	enum Extractors {
-		ORB_E = 1
-		, SURF_E
-		, SIFT_E
-		, BRIEF_E
-	};
-
+	QStringList mDetectorList;
+	QStringList mExtractorList;
 
 	cv::FeatureDetector* provideDetector();
 	cv::DescriptorExtractor* provideExtractor();
-	
-	
-	
+
 	//// BONUS
 	//cv::DescriptorMatcher* provideMatcher();
 
+	void setDefault();
+	void setCurrent(int detector = -1, int extractor = -1);
+	void setCurrent(QString detector = QString(), QString extractor = QString());
 
+	template<typename T> void insert(QString key, T input);
+	template<typename T> T value(QString key);
 
 private:
+	void initialize();
 
 	//bool mConfigurationChanged;
-	QMap<QString, QVariant> mConfigurationMap;
+	QMap<QString, QVariant> mConfiguration;
+	QMap<QString, QVariant> mConfigurationDefault;
 
-	enum Detectors mCurrentDetector;
-	enum Extractors mCurrentExtractor;
-
-
-	void insert();
-	
+	QString mCurrentDetector;
+	QString mCurrentExtractor;
+	QString mCurrentPrefix;
 };
 
 #endif // FEATUREPROVIDER_H
