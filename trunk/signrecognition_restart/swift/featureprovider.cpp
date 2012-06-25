@@ -1,13 +1,9 @@
 #include "StdAfx.h"
 #include "featureprovider.h"
 
-//mSift = cv::SIFT();
-//mMatcher = cv::FlannBasedMatcher(new cv::flann::CompositeIndexParams(), new cv::flann::SearchParams());
-//mDetector = cv::SiftFeatureDetector(mSift);
-//mExtractor = cv::SiftDescriptorExtractor(mSift);
-
 FeatureProvider::FeatureProvider()
 {
+	initialize();
 }
 
 FeatureProvider::~FeatureProvider()
@@ -32,20 +28,27 @@ void FeatureProvider::initialize()
 		<< "SIFT"
 		<< "BRIEF";
 
-	setDefault();
+	defaults();
+
 	setCurrent(0,0);
+
+	mDetector = provideDetector();
+	mExtractor = provideExtractor();
 }
 
 cv::FeatureDetector* FeatureProvider::provideDetector()
 {
-	cv::FeatureDetector *detector = nullptr;
+	if (!mCurrentDetectorChanged)
+		return mDetector;
 
-	switch (mDetectorList.indexOf(mCurrentDetector))
+	mDetector = nullptr;
+
+	switch (mCurrentDetectorIndex)
 	{
 	case 0: ///< (0) ORB Detector
 
-		detector = new cv::OrbFeatureDetector(
-			  value<int>("nfeatures")
+		mDetector = new cv::OrbFeatureDetector(
+			value<int>("ORB","nfeatures")
 			, value<float>("scaleFactor")
 			, value<int>("nlevels")
 			, value<int>("edgeThreshold")
@@ -59,8 +62,8 @@ cv::FeatureDetector* FeatureProvider::provideDetector()
 
 	case 1: ///< (1) SURF Detector
 
-		detector = new cv::SurfFeatureDetector(
-			  value<double>("hessianThreshold")
+		mDetector = new cv::SurfFeatureDetector(
+			value<double>("SURF","hessianThreshold")
 			, value<int>("nOctaves")
 			, value<int>("nOctaveLayers")
 			, value<bool>("extended")
@@ -71,8 +74,8 @@ cv::FeatureDetector* FeatureProvider::provideDetector()
 
 	case 2: ///< (2) SIFT Detector
 
-		detector = new cv::SiftFeatureDetector(
-			  value<int>("nfeatures")
+		mDetector = new cv::SiftFeatureDetector(
+			value<int>("SIFT","nfeatures")
 			, value<int>("nOctaveLayers")
 			, value<double>("contrastThreshold")
 			, value<double>("edgeThreshold")
@@ -83,8 +86,8 @@ cv::FeatureDetector* FeatureProvider::provideDetector()
 
 	case 3: ///< (3) DENSE Detector
 
-		detector = new cv::DenseFeatureDetector(
-			  value<float>("initFeatureScale")
+		mDetector = new cv::DenseFeatureDetector(
+			value<float>("DENSE","initFeatureScale")
 			, value<int>("featureScaleLevels")
 			, value<float>("featureScaleMul")
 			, value<int>("initXyStep")
@@ -97,8 +100,8 @@ cv::FeatureDetector* FeatureProvider::provideDetector()
 
 	case 4: ///< (4) FAST Detector
 
-		detector = new cv::FastFeatureDetector(
-			  value<int>("threshold")
+		mDetector = new cv::FastFeatureDetector(
+			value<int>("FAST","threshold")
 			, value<bool>("nonmaxSuppression")
 		);
 
@@ -106,21 +109,21 @@ cv::FeatureDetector* FeatureProvider::provideDetector()
 
 	case 5: ///< (5) GFTT Detector
 
-		detector = new cv::GFTTDetector(
-			  value<int>("maxCorners")
+		mDetector = new cv::GFTTDetector(
+			value<int>("GFTT","maxCorners")
 			, value<double>("qualityLevel")
 			, value<double>("minDistance")
 			, value<int>("blockSize")
 			, value<bool>("useHarrisDetector")
-			, value<double>("_k")
+			, value<double>("k")
 		);
 
 		break;
 
 	case 6: ///< (6) MSER Detector
 
-		detector = new cv::MserFeatureDetector(
-			  value<int>("delta")
+		mDetector = new cv::MserFeatureDetector(
+			value<int>("MSER","delta")
 			, value<int>("min_area")
 			, value<int>("max_area")
 			, value<double>("max_variation")
@@ -135,8 +138,8 @@ cv::FeatureDetector* FeatureProvider::provideDetector()
 
 	case 7: ///< (7) STAR Detector
 
-		detector = new cv::StarFeatureDetector(
-			  value<int>("maxSize")
+		mDetector = new cv::StarFeatureDetector(
+			value<int>("STAR","maxSize")
 			, value<int>("responseThreshold")
 			, value<int>("lineThresholdProjected")
 			, value<int>("lineThresholdBinarized")
@@ -146,6 +149,8 @@ cv::FeatureDetector* FeatureProvider::provideDetector()
 		break;
 	}
 
+	mCurrentDetectorChanged = false;
+
 	//// BONUS!!!
 	//cv::PyramidAdaptedFeatureDetector( const Ptr<FeatureDetector>& detector, int maxLevel=2 );
 	//
@@ -153,19 +158,22 @@ cv::FeatureDetector* FeatureProvider::provideDetector()
 	//	int maxTotalKeypoints=1000,
 	//	int gridRows=4, int gridCols=4 );
 
-	return detector;
+	return mDetector;
 }
 
 cv::DescriptorExtractor* FeatureProvider::provideExtractor()
 {
-	cv::DescriptorExtractor *extractor = nullptr;
+	if (!mCurrentExtractorChanged)
+		return mExtractor;
 
-	switch (mExtractorList.indexOf(mCurrentDetector))
+	mExtractor = nullptr;
+
+	switch (mCurrentExtractorIndex)
 	{
 	case 0: ///< (0) ORB Extractor
 
-		extractor = new cv::OrbFeatureDetector(
-			  value<int>("nfeatures")
+		mExtractor = new cv::OrbFeatureDetector(
+			value<int>("ORB","nfeatures")
 			, value<float>("scaleFactor")
 			, value<int>("nlevels")
 			, value<int>("edgeThreshold")
@@ -179,8 +187,8 @@ cv::DescriptorExtractor* FeatureProvider::provideExtractor()
 
 	case 1: ///< (1) SURF Extractor
 
-		extractor = new cv::SurfFeatureDetector(
-			  value<double>("hessianThreshold")
+		mExtractor = new cv::SurfFeatureDetector(
+			value<double>("SURF","hessianThreshold")
 			, value<int>("nOctaves")
 			, value<int>("nOctaveLayers")
 			, value<bool>("extended")
@@ -191,8 +199,8 @@ cv::DescriptorExtractor* FeatureProvider::provideExtractor()
 
 	case 2: ///< (2) SIFT Extractor
 
-		extractor = new cv::SiftFeatureDetector(
-			  value<int>("nfeatures")
+		mExtractor = new cv::SiftFeatureDetector(
+			value<int>("SIFT","nfeatures")
 			, value<int>("nOctaveLayers")
 			, value<double>("contrastThreshold")
 			, value<double>("edgeThreshold")
@@ -203,23 +211,25 @@ cv::DescriptorExtractor* FeatureProvider::provideExtractor()
 
 	case 3: ///< (3) BRIEF Extractor
 
-		extractor = new cv::BriefDescriptorExtractor(
-			  value<int>("bytes")
+		mExtractor = new cv::BriefDescriptorExtractor(
+			value<int>("BRIEF","bytes")
 			);
 
 		break;
 	}
 
+	mCurrentExtractorChanged = false;
+
 	//// BONUS!!!!
 	//cv::BOWImgDescriptorExtractor( const Ptr<DescriptorExtractor>& dextractor,
 	//	const Ptr<DescriptorMatcher>& dmatcher );
 
-	return extractor;
+	return mExtractor;
 }
 
 //cv::DescriptorMatcher* FeatureProvider::provideMatcher()
 //{
-//
+////mMatcher = cv::FlannBasedMatcher(new cv::flann::CompositeIndexParams(), new cv::flann::SearchParams());
 //}
 //}
 //}
@@ -227,78 +237,107 @@ cv::DescriptorExtractor* FeatureProvider::provideExtractor()
 
 template<typename T> void FeatureProvider::insert(QString key, T input)
 {
-	mConfiguration.insert(key,QVariant(input));
+	mConfiguration.insert(mPrefix + ":" + key, QVariant::fromValue<T>(input));
+	mConfigurationType.insert(mPrefix + ":" + key, QString(typeid(input).name()));
+}
+
+template<typename T> void FeatureProvider::insert(QString prefix, QString key, T input)
+{
+	if (mDetectorList.contains(prefix) || mExtractorList.contains(prefix))
+		mPrefix = prefix;
+
+	insert<T>(key,input);
+}
+
+QVariant FeatureProvider::value(QString key)
+{
+	return mConfiguration[mPrefix + ":" + key].value<QVariant>();
+}
+
+QVariant FeatureProvider::value(QString prefix, QString key)
+{
+	if (mDetectorList.contains(prefix) || mExtractorList.contains(prefix))
+		mPrefix = prefix;
+
+	return value(key);
 }
 
 template<typename T> T FeatureProvider::value(QString key)
 {
-	return mConfiguration[mCurrentPrefix+"_"+key].value<T>();
+	return mConfiguration[mPrefix + ":" + key].value<T>();
 }
 
-void FeatureProvider::setDefault()
+template<typename T> T FeatureProvider::value(QString prefix, QString key)
 {
-	mConfigurationDefault.clear();
+	if (mDetectorList.contains(prefix) || mExtractorList.contains(prefix))
+		mPrefix = prefix;
 
-	mConfigurationDefault.insert("ORB_nfeatures",QVariant(int(500)));
-	mConfigurationDefault.insert("ORB_scaleFactor",QVariant(float(1.2)));
-	mConfigurationDefault.insert("ORB_nlevels",QVariant(int(8)));
-	mConfigurationDefault.insert("ORB_edgeThreshold",QVariant(int(31)));
-	mConfigurationDefault.insert("ORB_firstLevel",QVariant(int(0)));
-	mConfigurationDefault.insert("ORB_WTA_K",QVariant(int(2)));
-	mConfigurationDefault.insert("ORB_scoreType",QVariant(int(0)));
-	mConfigurationDefault.insert("ORB_patchSize",QVariant(int(31)));
+	return value<T>(key);
+}
 
-	mConfigurationDefault.insert("SURF_hessianThreshold",QVariant(double(600)));
-	mConfigurationDefault.insert("SURF_nOctaves",QVariant(int(4)));
-	mConfigurationDefault.insert("SURF_nOctaveLayers",QVariant(int(2)));
-	mConfigurationDefault.insert("SURF_extended",QVariant(bool(true)));
-	mConfigurationDefault.insert("SURF_upright",QVariant(bool(false)));
+void FeatureProvider::defaults()
+{
+	insert<int>("ORB","nfeatures",500);
+	insert<float>("scaleFactor",1.2);
+	insert<int>("nlevels",8);
+	insert<int>("edgeThreshold",31);
+	insert<int>("firstLevel",0);
+	insert<int>("WTA_K",2);
+	insert<int>("scoreType",0);
+	insert<int>("patchSize",31);
 
-	mConfigurationDefault.insert("SIFT_nfeatures",QVariant(int(0)));
-	mConfigurationDefault.insert("SIFT_nOctaveLayers",QVariant(int(3)));
-	mConfigurationDefault.insert("SIFT_contrastThreshold",QVariant(double(0.04)));
-	mConfigurationDefault.insert("SIFT_edgeThreshold",QVariant(double(10)));
-	mConfigurationDefault.insert("SIFT_sigma",QVariant(double(1.6)));
+	insert<double>("SURF","hessianThreshold",600);
+	insert<int>("nOctaves",4);
+	insert<int>("nOctaveLayers",2);
+	insert<bool>("extended",true);
+	insert<bool>("upright",false);
 
-	mConfigurationDefault.insert("DENSE_initFeatureScale",QVariant(float(1)));
-	mConfigurationDefault.insert("DENSE_featureScaleLevels",QVariant(int(1)));
-	mConfigurationDefault.insert("DENSE_featureScaleMul",QVariant(float(0.1)));
-	mConfigurationDefault.insert("DENSE_initXyStep",QVariant(int(6)));
-	mConfigurationDefault.insert("DENSE_initImgBound",QVariant(int(0)));
-	mConfigurationDefault.insert("DENSE_varyXyStepWithScale",QVariant(bool(true)));
-	mConfigurationDefault.insert("DENSE_varyImgBoundWithScale",QVariant(bool(false)));
+	insert<int>("SIFT","nfeatures",0);
+	insert<int>("nOctaveLayers",3);
+	insert<double>("contrastThreshold",0.04);
+	insert<double>("edgeThreshold",10);
+	insert<double>("sigma",1.6);
 
-	mConfigurationDefault.insert("FAST_threshold",QVariant(int(10)));
-	mConfigurationDefault.insert("FAST_nonmaxSuppression",QVariant(bool(true)));
+	insert<float>("DENSE","initFeatureScale",1);
+	insert<int>("featureScaleLevels",1);
+	insert<float>("featureScaleMul",0.1);
+	insert<int>("initXyStep",6);
+	insert<int>("initImgBound",0);
+	insert<bool>("varyXyStepWithScale",true);
+	insert<bool>("varyImgBoundWithScale",false);
 
-	mConfigurationDefault.insert("GFTT_maxCorners",QVariant(int(1000)));
-	mConfigurationDefault.insert("GFTT_qualityLevel",QVariant(double(0.01)));
-	mConfigurationDefault.insert("GFTT_minDistance",QVariant(double(1)));
-	mConfigurationDefault.insert("GFTT_blockSize",QVariant(int(3)));
-	mConfigurationDefault.insert("GFTT_useHarrisDetector",QVariant(bool(false)));
-	mConfigurationDefault.insert("GFTT_k",QVariant(double(0.04)));
+	insert<int>("FAST","threshold",10);
+	insert<bool>("nonmaxSuppression",true);
 
-	mConfigurationDefault.insert("MSER_delta",QVariant(int(5)));
-	mConfigurationDefault.insert("MSER_min_area",QVariant(int(60)));
-	mConfigurationDefault.insert("MSER_max_area",QVariant(int(14400)));
-	mConfigurationDefault.insert("MSER_max_variation",QVariant(double(0.25)));
-	mConfigurationDefault.insert("MSER_min_diversity",QVariant(double(0.2)));
-	mConfigurationDefault.insert("MSER_max_evolution",QVariant(int(200)));
-	mConfigurationDefault.insert("MSER_area_threshold",QVariant(double(1.01)));
-	mConfigurationDefault.insert("MSER_min_margin",QVariant(double(0.03)));
-	mConfigurationDefault.insert("MSER_edge_blur_size",QVariant(int(5)));
+	insert<int>("GFTT","maxCorners",1000);
+	insert<double>("qualityLevel",0.01);
+	insert<double>("minDistance",1);
+	insert<int>("blockSize",3);
+	insert<bool>("useHarrisDetector",false);
+	insert<double>("k",0.04);
 
-	mConfigurationDefault.insert("STAR_maxSize",QVariant(int(45)));
-	mConfigurationDefault.insert("STAR_responseThreshold",QVariant(int(30)));
-	mConfigurationDefault.insert("STAR_lineThresholdProjected",QVariant(int(10)));
-	mConfigurationDefault.insert("STAR_lineThresholdBinarized",QVariant(int(8)));
-	mConfigurationDefault.insert("STAR_suppressNonmaxSize",QVariant(int(5)));
+	insert<int>("MSER","delta",5);
+	insert<int>("min_area",60);
+	insert<int>("max_area",14400);
+	insert<double>("max_variation",0.25);
+	insert<double>("min_diversity",0.2);
+	insert<int>("max_evolution",200);
+	insert<double>("area_threshold",1.01);
+	insert<double>("min_margin",0.03);
+	insert<int>("edge_blur_size",5);
 
-	mConfigurationDefault.insert("BRIEF_bytes",QVariant(int(32)));
+	insert<int>("STAR","maxSize",45);
+	insert<int>("responseThreshold",30);
+	insert<int>("lineThresholdProjected",10);
+	insert<int>("lineThresholdBinarized",8);
+	insert<int>("suppressNonmaxSize",5);
 
-	mConfiguration.clear();
+	insert<int>("BRIEF","bytes",32);
 
-	mConfiguration = QMap<QString, QVariant>(mConfigurationDefault);
+	//////////////////////////////////////////////////////////////////////////
+
+	mCurrentDetectorChanged = true;
+	mCurrentExtractorChanged = true;
 }
 
 void FeatureProvider::setCurrent(int detector, int extractor)
@@ -306,27 +345,34 @@ void FeatureProvider::setCurrent(int detector, int extractor)
 	if (detector > -1 && detector < mDetectorList.size())
 	{
 		mCurrentDetector = mDetectorList[detector];
-		mCurrentPrefix = mCurrentDetector;
+		mCurrentDetectorIndex = detector;
+		mPrefix = mCurrentDetector;
+		mCurrentDetectorChanged = true;
 	}
 
 	if (extractor > -1 && extractor < mExtractorList.size())
 	{
 		mCurrentExtractor = mExtractorList[extractor];
-		mCurrentPrefix = mCurrentDetector;
+		mCurrentExtractorIndex = extractor;
+		mPrefix = mCurrentExtractor;
+		mCurrentExtractorChanged = true;
 	}
 }
 
 void FeatureProvider::setCurrent(QString detector, QString extractor)
 {
-	if (!detector.isEmpty() && mDetectorList.contains(detector))
-	{
-		mCurrentDetector = detector;
-		mCurrentPrefix = mCurrentDetector;
-	}
+	int d = mDetectorList.indexOf(detector);
+	int e = mExtractorList.indexOf(extractor);
 
-	if (!extractor.isEmpty() && mExtractorList.contains(extractor))
-	{
-		mCurrentExtractor = extractor;
-		mCurrentPrefix = mCurrentDetector;
-	}
+	if (d == -1 && e == -1)
+		return;
+
+	setCurrent(d,e);
 }
+
+//////////////////////////////////////////////////////////////////////////
+
+QString FeatureProvider::getCurrentDetector() { return mCurrentDetector; }
+QString FeatureProvider::getCurrentExtractor() { return mCurrentExtractor; }
+int FeatureProvider::getCurrentDetectorIndex() { return mCurrentDetectorIndex; }
+int FeatureProvider::getCurrentExtractorIndex() { return mCurrentExtractorIndex; }
