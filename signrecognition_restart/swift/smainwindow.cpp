@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "smainwindow.h"
-#include "imageitem.h"
+
 /// \class SMainWindow
-/// \brief 
+/// \brief
 ///
-/// 
+///
 SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
 {
@@ -25,6 +25,7 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	/// Creates the Status Bar at the bottom of the Window
 	createStatusBar();
 
+	provider = FeatureProvider();
 
 	loadExploreItems();
 
@@ -45,19 +46,16 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 		mTrainItems[i].precalculation(*mDetector, *mExtractor);
 	}
 
-
 	trainItems();
 
 	//Matching descriptor vectors using FLANN matcher
 	std::vector<cv::DMatch> matches;
 	//mMatcher->match(mDescriptors(mExploreItems), mDescriptors(mTrainItems), matches);
-	
-
 }
 
 void SMainWindow::loadExploreItems()
 {
-	mExploreItems.append(ImageItem(QString("..\\swift-build\\TestData\\special_1.jpg")));		
+	mExploreItems.append(ImageItem(QString("..\\swift-build\\TestData\\special_1.jpg")));
 }
 
 void SMainWindow::loadTrainItems()
@@ -76,7 +74,6 @@ void SMainWindow::trainItems()
 	}
 }
 
-
 void SMainWindow::initialize()
 {
 	/// QStringList of file format filters.
@@ -93,15 +90,14 @@ void SMainWindow::initialize()
 /// Destructor of the main window
 SMainWindow::~SMainWindow()
 {
-
 }
 
-/// \brief 
+/// \brief
 ///
-/// 
+///
 ///
 /// \return Nothing
-/// \sa 
+/// \sa
 void SMainWindow::createActions()
 {
 	/// "Open" Action
@@ -122,12 +118,12 @@ void SMainWindow::createActions()
 	connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
 }
 
-/// \brief 
+/// \brief
 ///
-/// 
+///
 ///
 /// \return Nothing
-/// \sa 
+/// \sa
 void SMainWindow::createMenus()
 {
 	/// "File" Menu
@@ -147,23 +143,22 @@ void SMainWindow::createMenus()
 	helpMenu->addAction(aboutAct);
 }
 
-/// \brief 
+/// \brief
 ///
-/// 
+///
 ///
 /// \return Nothing
-/// \sa 
+/// \sa
 void SMainWindow::createToolBars()
 {
-
 }
 
-/// \brief 
+/// \brief
 ///
-/// 
+///
 ///
 /// \return Nothing
-/// \sa 
+/// \sa
 void SMainWindow::createWidgets()
 {
 	//////////////////////////////////////////////////////////////////////////
@@ -190,15 +185,14 @@ void SMainWindow::createWidgets()
 	dockBeta->setWidget(dockContentsBeta);
 	this->addDockWidget(Qt::RightDockWidgetArea, dockBeta);
 	viewMenu->addAction(dockBeta->toggleViewAction());
-
 }
 
-/// \brief 
+/// \brief
 ///
-/// 
+///
 ///
 /// \return Nothing
-/// \sa 
+/// \sa
 void SMainWindow::createStatusBar()
 {
 	statusBar()->showMessage(tr("Ready"));
@@ -239,11 +233,8 @@ void SMainWindow::open()
 		}
 	}
 
-
 	//////////////////////////////////////////////////////////////////////////
 	// LOADING OF THE FILES
-
-
 
 	mAllImagePaths += mNewImagePaths; ///< add the new input to the "paths" member
 }

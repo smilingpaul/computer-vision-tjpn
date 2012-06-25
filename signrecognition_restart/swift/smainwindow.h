@@ -1,11 +1,12 @@
 /// \file smainwindow.h
 ///
-/// 
+///
 #ifndef SMAINWINDOW_H
 #define SMAINWINDOW_H
 
 #include <QtGui/QMainWindow>
 #include "imageitem.h"
+#include "featureprovider.h"
 
 class QAction;
 class QMenu;
@@ -15,7 +16,6 @@ class SMainWindow : public QMainWindow
 	Q_OBJECT;
 
 signals:
-
 
 public:
 	SMainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
@@ -30,9 +30,7 @@ public:
 	cv::DescriptorExtractor* mExtractor;
 	cv::DescriptorMatcher* mMatcher;
 
-
 public slots:
-
 
 private:
 	void initialize();
@@ -46,16 +44,10 @@ private:
 	void loadTrainItems();
 	//void trainItems(QList<ImageItem> &list, cv::DescriptorMatcher &matcher);
 	void trainItems();
-	
 
 	QStringList mFormatFilters;
 	QStringList mAllImagePaths;
 	QStringList mNewImagePaths;
-
-
-
-
-
 
 	//////////////////////////////////////////////////////////////////////////
 	// QActions
@@ -74,7 +66,7 @@ private:
 
 	//////////////////////////////////////////////////////////////////////////
 	// QWidgets
-	
+
 	// dock area alpha
 	QDockWidget *dockAlpha;
 	QWidget *dockContentsAlpha;
@@ -82,6 +74,8 @@ private:
 	// dock area beta
 	QDockWidget *dockBeta;
 	QWidget *dockContentsBeta;
+
+	FeatureProvider provider;
 
 private slots:
 	void open();
