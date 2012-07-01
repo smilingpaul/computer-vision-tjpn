@@ -1,13 +1,16 @@
 #ifndef FEATUREPROVIDER_H
 #define FEATUREPROVIDER_H
 
+#include <QtCore/QObject>
 #include <opencv2/nonfree/nonfree.hpp>
 #include <opencv2/features2d/features2d.hpp>
 
-class FeatureProvider
+class FeatureProvider : public QObject
 {
+	Q_OBJECT
+
 public:
-	FeatureProvider();
+	FeatureProvider(QObject *parent = 0);
 	~FeatureProvider();
 
 	cv::FeatureDetector* provideDetector();
@@ -15,11 +18,6 @@ public:
 
 	//// BONUS
 	//cv::DescriptorMatcher* provideMatcher();
-
-	void defaults();
-
-	void setCurrent(int detector = -1, int extractor = -1);
-	void setCurrent(QString detector = QString(), QString extractor = QString());
 
 	template<typename T> void insert(QString key, T input);
 	template<typename T> void insert(QString prefix, QString key, T input);
@@ -31,10 +29,21 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 
+	QStringList getDetectorList();
+	QStringList getExtractorList();
 	QString getCurrentDetector();
 	QString getCurrentExtractor();
 	int getCurrentDetectorIndex();
 	int getCurrentExtractorIndex();
+
+signals:
+
+public slots:
+
+	void defaults();
+
+	void setCurrent(int detector = -1, int extractor = -1);
+	void setCurrent(QString detector, QString extractor);
 
 private:
 	void initialize();

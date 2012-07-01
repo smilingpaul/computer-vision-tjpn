@@ -7,6 +7,7 @@
 ///
 SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
+	, mProvider(new FeatureProvider())
 {
 	initialize();
 
@@ -24,8 +25,6 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 
 	/// Creates the Status Bar at the bottom of the Window
 	createStatusBar();
-
-	provider = FeatureProvider();
 
 	loadExploreItems();
 
@@ -185,6 +184,55 @@ void SMainWindow::createWidgets()
 	dockBeta->setWidget(dockContentsBeta);
 	this->addDockWidget(Qt::RightDockWidgetArea, dockBeta);
 	viewMenu->addAction(dockBeta->toggleViewAction());
+
+	//////////////////////////////////////////////////////////////////////////
+	/// Dock Beta
+
+	/// Grid Layout
+	betaFormLayout = new QFormLayout(dockContentsBeta);
+	betaFormLayout->setObjectName("betaFormLayout");
+	betaFormLayout->setSpacing(6);
+	betaFormLayout->setSizeConstraint(QLayout::SetDefaultConstraint);
+
+	/// Label "Detector"
+	betaLabelDetector = new QLabel(dockContentsBeta);
+	betaLabelDetector->setObjectName("betaLabelDetector");
+	betaLabelDetector->setText(tr("Detector"));
+
+	/// ComboBox "Detector"
+	betaComboBoxDetector = new QComboBox(dockContentsBeta);
+	betaComboBoxDetector->setObjectName("betaComboBoxDetector");
+	betaComboBoxDetector->addItems(mProvider->getDetectorList());
+	connect(
+		betaComboBoxDetector
+		, SIGNAL(currentIndexChanged(betaComboBoxDetector->currentIndex()))
+		, mProvider
+		, SLOT(setCurrent(betaComboBoxDetector->currentIndex(),-1))
+	);
+
+	/// Label "Extractor"
+	betaLabelExtractor = new QLabel(dockContentsBeta);
+	betaLabelExtractor->setObjectName("betaLabelExtractor");
+	betaLabelExtractor->setText(tr("Extractor"));
+
+	/// ComboBox "Extractor"
+	betaComboBoxExtractor = new QComboBox(dockContentsBeta);
+	betaComboBoxExtractor->setObjectName("betaComboBoxExtractor");
+	betaComboBoxExtractor->addItems(mProvider->getExtractorList());
+	connect(
+		betaComboBoxExtractor
+		, SIGNAL(currentIndexChanged(betaComboBoxExtractor->currentIndex()))
+		, mProvider
+		, SLOT(setCurrent(-1,betaComboBoxExtractor->currentIndex()))
+	);
+
+	/// Form Layout Layout =)
+	betaFormLayout->setWidget(0,QFormLayout::LabelRole,betaLabelDetector); ///< 0 Left
+	betaFormLayout->setWidget(0,QFormLayout::FieldRole,betaComboBoxDetector); ///< 0 Right
+	betaFormLayout->setWidget(1,QFormLayout::LabelRole,betaLabelExtractor); ///< 1 Left
+	betaFormLayout->setWidget(1,QFormLayout::FieldRole,betaComboBoxExtractor); ///< 1 Right
+
+	betaDynamicToolbox = new SDynamicToolbox(mProvider,dockContentsBeta);
 }
 
 /// \brief
