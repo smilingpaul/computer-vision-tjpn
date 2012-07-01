@@ -7,13 +7,14 @@
 #include <QtGui/QMainWindow>
 #include "imageitem.h"
 #include "featureprovider.h"
+#include "sdynamictoolbox.h"
 
 class QAction;
 class QMenu;
 
 class SMainWindow : public QMainWindow
 {
-	Q_OBJECT;
+	Q_OBJECT
 
 signals:
 
@@ -75,7 +76,18 @@ private:
 	QDockWidget *dockBeta;
 	QWidget *dockContentsBeta;
 
-	FeatureProvider provider;
+	// beta widgets
+	QFormLayout *betaFormLayout;
+
+	QLabel *betaLabelDetector;
+		QComboBox *betaComboBoxDetector;
+	QLabel *betaLabelExtractor;
+		QComboBox *betaComboBoxExtractor;
+
+	SDynamicToolbox *betaDynamicToolbox;
+	//////////////////////////////////////////////////////////////////////////
+
+	FeatureProvider *mProvider;
 
 private slots:
 	void open();

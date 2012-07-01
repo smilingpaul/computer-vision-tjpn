@@ -1,7 +1,8 @@
 #include "StdAfx.h"
 #include "featureprovider.h"
 
-FeatureProvider::FeatureProvider()
+FeatureProvider::FeatureProvider(QObject *parent)
+	: QObject(parent)
 {
 	initialize();
 }
@@ -149,14 +150,15 @@ cv::FeatureDetector* FeatureProvider::provideDetector()
 		break;
 	}
 
-	mCurrentDetectorChanged = false;
-
+	//////////////////////////////////////////////////////////////////////////
 	//// BONUS!!!
 	//cv::PyramidAdaptedFeatureDetector( const Ptr<FeatureDetector>& detector, int maxLevel=2 );
 	//
 	//cv::GridAdaptedFeatureDetector( const Ptr<FeatureDetector>& detector,
 	//	int maxTotalKeypoints=1000,
 	//	int gridRows=4, int gridCols=4 );
+
+	mCurrentDetectorChanged = false;
 
 	return mDetector;
 }
@@ -218,11 +220,12 @@ cv::DescriptorExtractor* FeatureProvider::provideExtractor()
 		break;
 	}
 
-	mCurrentExtractorChanged = false;
-
+	//////////////////////////////////////////////////////////////////////////
 	//// BONUS!!!!
 	//cv::BOWImgDescriptorExtractor( const Ptr<DescriptorExtractor>& dextractor,
 	//	const Ptr<DescriptorMatcher>& dmatcher );
+
+	mCurrentExtractorChanged = false;
 
 	return mExtractor;
 }
@@ -237,8 +240,16 @@ cv::DescriptorExtractor* FeatureProvider::provideExtractor()
 
 template<typename T> void FeatureProvider::insert(QString key, T input)
 {
-	mConfiguration.insert(mPrefix + ":" + key, QVariant::fromValue<T>(input));
-	mConfigurationType.insert(mPrefix + ":" + key, QString(typeid(input).name()));
+	key = mPrefix + ":" + key;
+
+	if (mDetectorList.contains(key))
+		mCurrentDetectorChanged = true;
+
+	if (mExtractorList.contains(key))
+		mCurrentExtractorChanged = true;
+
+	mConfiguration.insert(key, QVariant::fromValue<T>(input));
+	mConfigurationType.insert(key, QString(typeid(input).name()));
 }
 
 template<typename T> void FeatureProvider::insert(QString prefix, QString key, T input)
@@ -248,6 +259,9 @@ template<typename T> void FeatureProvider::insert(QString prefix, QString key, T
 
 	insert<T>(key,input);
 }
+
+//////////////////////////////////////////////////////////////////////////
+/// specialization if no template is given - just implemented for qt gui
 
 QVariant FeatureProvider::value(QString key)
 {
@@ -261,6 +275,8 @@ QVariant FeatureProvider::value(QString prefix, QString key)
 
 	return value(key);
 }
+
+//////////////////////////////////////////////////////////////////////////
 
 template<typename T> T FeatureProvider::value(QString key)
 {
@@ -333,11 +349,6 @@ void FeatureProvider::defaults()
 	insert<int>("suppressNonmaxSize",5);
 
 	insert<int>("BRIEF","bytes",32);
-
-	//////////////////////////////////////////////////////////////////////////
-
-	mCurrentDetectorChanged = true;
-	mCurrentExtractorChanged = true;
 }
 
 void FeatureProvider::setCurrent(int detector, int extractor)
@@ -371,7 +382,8 @@ void FeatureProvider::setCurrent(QString detector, QString extractor)
 }
 
 //////////////////////////////////////////////////////////////////////////
-
+QStringList FeatureProvider::getDetectorList() { return mDetectorList; }
+QStringList FeatureProvider::getExtractorList() { return mExtractorList; }
 QString FeatureProvider::getCurrentDetector() { return mCurrentDetector; }
 QString FeatureProvider::getCurrentExtractor() { return mCurrentExtractor; }
 int FeatureProvider::getCurrentDetectorIndex() { return mCurrentDetectorIndex; }
