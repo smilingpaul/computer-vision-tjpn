@@ -54,7 +54,6 @@ void ImageItem::train(cv::DescriptorMatcher &matcher)
 
 //////////////////////////////////////////////////////////////////////////
 
-cv::Mat ImageItem::getDescriptors()
-{
-	return mDescriptors;
-}
+cv::Mat ImageItem::getImage() { return mMat; }
+cv::Mat ImageItem::getDescriptors() { return mDescriptors; }
+cv::vector<cv::KeyPoint> ImageItem::getKeyPoints() { return mKeypoints; }
