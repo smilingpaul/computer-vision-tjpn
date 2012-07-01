@@ -1,0 +1,30 @@
+ID	Schild
+1	STOP-Schild
+2	Vorfahrt Achten
+3	Geschwindigkeit - 30 km/h
+4	Geschwindigkeit - 60 km/h
+5	Geschwindigkeit - 120 km/h
+6	Gefahrenzeichen (inklusive Richtzeichen 301 - Vorfahrt an nächster Kreuzung)
+
+ID;Bildname;x1;y1;x2;y2;Class-ID
+
+wobei x1, y1 die Koordinate links oben ist und x2, y2 die Koordinate rechts unten der Begrenzung des Schildes. Der Ursprung liegt in der linken oberen Ecke des Bildes. 
+
+Bilder, die keine relevanten Schilder beinhalten, werden auch nicht in der Datenbank erwähnt! (image07, image13, image24, image27)
+
+Statistik:
+Bilder: 30
+Schilder: 43
+------------
+1: 6
+2: 7 
+3: 5
+4: 6
+5: 7
+6: 12
+
+QUELLEN:
+-GOOGLE MAPS (http://maps.google.com)
+-The German Traffic Sign Recognition Benchmark (http://benchmark.ini.rub.de): J. Stallkamp et al: Man vs. computer: Benchmarking machine learning algorithms for traffic sign recognition, Neural Networks, Available online 20 February 2012 (vielen Dank an Jan Salmen, Ruhr-Uni Bochum)
+-Studentenbilder aus dem Kurs "Grundlagen der Computer Vision" SS2011
+
