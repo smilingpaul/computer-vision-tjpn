@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "smainwindow.h"
 
+#include "opencv2/core/core.hpp"
+#include "opencv2/features2d/features2d.hpp"
+#include "opencv2/highgui/highgui.hpp"
+
 /// \class SMainWindow
 /// \brief
 ///
@@ -26,13 +30,18 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	/// Creates the Status Bar at the bottom of the Window
 	createStatusBar();
 
+	//open the image(s) we want to explore and find our templates in
 	loadExploreItems();
 
+	//open the images we want to train <-- Sign Templates
 	loadTrainItems();
 
 	cv::SIFT sift = cv::SIFT();
+	//our Matcher
 	mMatcher = new cv::FlannBasedMatcher(new cv::flann::CompositeIndexParams(), new cv::flann::SearchParams());
+	//our Detector
 	mDetector = new cv::SiftFeatureDetector(sift);
+	//our Extractor
 	mExtractor = new cv::SiftDescriptorExtractor(sift);
 
 	for (int k = 0; k < mExploreItems.size(); k++)
@@ -50,6 +59,42 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	//Matching descriptor vectors using FLANN matcher
 	std::vector<cv::DMatch> matches;
 	//mMatcher->match(mDescriptors(mExploreItems), mDescriptors(mTrainItems), matches);
+	mMatcher->match(mExploreItems[0].getDescriptors(), matches);
+
+	double max_dist = 0; double min_dist = 100;
+
+	// Quick calculation of max and min distances between keypoints
+	for( int i = 0; i < mExploreItems[0].getDescriptors().rows; i++ )
+	 { double dist = matches[i].distance;
+		 if( dist < min_dist ) min_dist = dist;
+		 if( dist > max_dist ) max_dist = dist;
+	 }
+
+  //-- Draw only "good" matches (i.e. whose distance is less than 2*min_dist )
+  //-- PS.- radiusMatch can also be used here.
+  std::vector<cv::DMatch > good_matches;
+
+  for( int i = 0; i < mExploreItems[0].getDescriptors().rows; i++ )
+  { if( matches[i].distance < 2*min_dist )
+    { good_matches.push_back( matches[i]); }
+  }
+
+/*	cv::Mat img_matches;
+	cv::drawMatches(
+		 mExploreItems[0].getImage()
+		,mExploreItems[0].getKeyPoints()
+		,mTrainItems[0].getImage()
+		,mTrainItems[0].getKeyPoints()
+		,good_matches
+		,img_matches
+		,cv::Scalar::all(-1)
+		,cv::Scalar::all(-1)
+		,std::vector<char>()
+		, cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
+
+	//-- Show detected matches
+    cv::imshow( "Good Matches", img_matches );
+	*/
 }
 
 void SMainWindow::loadExploreItems()
@@ -62,7 +107,6 @@ void SMainWindow::loadTrainItems()
 	mTrainItems.append(ImageItem(QString("..\\swift-build\\TestData\\signs\\black_30.png")));
 	mTrainItems.append(ImageItem(QString("..\\swift-build\\TestData\\signs\\black_stop.png")));
 	mTrainItems.append(ImageItem(QString("..\\swift-build\\TestData\\signs\\black_yield.png")));
-	mTrainItems.append(ImageItem(QString("..\\swift-build\\TestData\\signs\\transp_danger.jpg")));
 }
 
 void SMainWindow::trainItems()
