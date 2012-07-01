@@ -51,3 +51,10 @@ void ImageItem::train(cv::DescriptorMatcher &matcher)
 	matcher.add(train);
 	matcher.train();
 }
+
+//////////////////////////////////////////////////////////////////////////
+
+cv::Mat ImageItem::getDescriptors()
+{
+	return mDescriptors;
+}
