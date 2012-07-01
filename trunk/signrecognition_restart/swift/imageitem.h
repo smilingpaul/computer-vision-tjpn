@@ -22,6 +22,7 @@ public:
 	void match(cv::DescriptorMatcher &matcher, QList<ImageItem> &list);
 	void match(cv::DescriptorMatcher &matcher, ImageItem &item);
 	
+	cv::Mat getDescriptors();
 
 private:
 	QString mPath;
