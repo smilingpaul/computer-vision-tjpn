@@ -22,7 +22,6 @@ void ImageItem::precalculation(cv::FeatureDetector &detector, cv::DescriptorExtr
 	calculateDescriptors(extractor);
 }
 
-
 void ImageItem::calculateKeypoints(cv::FeatureDetector &detector)
 {
 	detector.detect(mMat,mKeypoints);
@@ -56,4 +55,4 @@ void ImageItem::train(cv::DescriptorMatcher &matcher)
 
 cv::Mat ImageItem::getImage() { return mMat; }
 cv::Mat ImageItem::getDescriptors() { return mDescriptors; }
-cv::vector<cv::KeyPoint> ImageItem::getKeyPoints() { return mKeypoints; }
+std::vector<cv::KeyPoint> ImageItem::getKeyPoints() { return mKeypoints; }
