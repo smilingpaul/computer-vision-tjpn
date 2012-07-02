@@ -63,10 +63,13 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	trainItems();
 
 	//Matching descriptor vectors using FLANN matcher
-	std::vector<cv::DMatch> matches;
-	//mMatcher->match(mDescriptors(mExploreItems), mDescriptors(mTrainItems), matches);
-	mMatcher->match(mExploreItems[0].getDescriptors(), matches);
+	//std::vector<cv::DMatch> matches;
+	////mMatcher->match(mDescriptors(mExploreItems), mDescriptors(mTrainItems), matches);
+	//mMatcher->match(mExploreItems[0].getDescriptors(), matches);
 
+	matchItems();
+
+	/*
 	double max_dist = 0; double min_dist = 100;
 
 	// Quick calculation of max and min distances between keypoints
@@ -81,10 +84,11 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	std::vector<cv::DMatch> good_matches;
 
 	for( int i = 0; i < mExploreItems[0].getDescriptors().rows; i++ )
-	{ 
+	{
 		if(matches[i].distance < 2 * min_dist)
 			good_matches.push_back( matches[i] );
 	}
+	*/
 
 	cv::Mat img_matches;
 
@@ -93,29 +97,31 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 		,mExploreItems[0].getKeyPoints()
 		,mTrainItems[0].getImage()
 		,mTrainItems[0].getKeyPoints()
-		,good_matches
+		,mExploreItems[0].getMatchesByIndex(0)
 		,img_matches
 		,cv::Scalar::all(-1)
 		,cv::Scalar::all(-1)
 		,std::vector<char>()
-		,cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS
+		//,cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS
 	);
 
 	//-- Show detected matches
 	cv::imshow( "Good Matches", img_matches );
-	
 }
 
 void SMainWindow::loadExploreItems()
 {
-	mExploreItems.append(ImageItem(QString("..\\swift-build\\TestData\\special_1.jpg")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\special_1.jpg")));
 }
 
 void SMainWindow::loadTrainItems()
 {
-	//mTrainItems.append(ImageItem(QString("..\\swift-build\\TestData\\signs\\black_30.png")));
-	mTrainItems.append(ImageItem(QString("..\\swift-build\\TestData\\signs\\black_stop.png")));
-	//mTrainItems.append(ImageItem(QString("..\\swift-build\\TestData\\signs\\black_yield.png")));
+	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_30.png")));
+	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_60.png")));
+	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_120.png")));
+	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_danger.png")));
+	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_stop.png")));
+	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_yield.png")));
 }
 
 void SMainWindow::trainItems()
@@ -123,6 +129,14 @@ void SMainWindow::trainItems()
 	for (unsigned int i = 0; i < mTrainItems.size(); i++)
 	{
 		mTrainItems[i].train(*mMatcher);
+	}
+}
+
+void SMainWindow::matchItems()
+{
+	for (unsigned int i = 0; i < mExploreItems.size(); i++)
+	{
+		mExploreItems[i].match(*mMatcher);
 	}
 }
 
@@ -144,7 +158,6 @@ void SMainWindow::loadEvaluationDatabase(QString path)
 		line = textstream.readLine();
 	}
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -335,7 +348,7 @@ void SMainWindow::open()
 	mNewImagePaths = QFileDialog::getOpenFileNames(
 		this,
 		tr("Open File(s)"),
-		QDir::currentPath().append("/TestData"),
+		QDir::currentPath().append("\\TestData"),
 		mFormatFilters.join(";;"),
 		&mFormatFilters[0],
 		nullptr
@@ -374,4 +387,3 @@ void SMainWindow::about()
 	QMessageBox::about(this, tr("About Swift"),
 		tr("This is <b>Swift</b> by Patrick Nierath and Tim B. Jagla."));
 }
-
