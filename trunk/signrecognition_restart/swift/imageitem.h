@@ -15,6 +15,7 @@ public:
 	virtual ~ImageItem();
 
 	void precalculation(cv::FeatureDetector &detector, cv::DescriptorExtractor &extractor);
+	void computeBOW(cv::BOWImgDescriptorExtractor &extractor);
 
 	cv::Mat getImage();
 	cv::Mat getDescriptors();
@@ -25,6 +26,9 @@ protected:
 	cv::Mat mMat;
 	std::vector<cv::KeyPoint> mKeyPoints;
 	cv::Mat mDescriptors;
+	cv::Mat mBOWDescriptors;
+	std::vector<std::vector<int>> mBOWPointIndicesOfClusters;
+	cv::Mat mVocabulary;
 
 private:
 	void calculateKeypoints(cv::FeatureDetector &detector);

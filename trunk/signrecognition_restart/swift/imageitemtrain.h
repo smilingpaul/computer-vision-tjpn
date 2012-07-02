@@ -7,9 +7,11 @@ public:
 	~ImageItemTrain();
 
 	void train(cv::DescriptorMatcher &matcher);
+	void trainBOW(cv::BOWKMeansTrainer &trainer);
 
 	int getTrainIndex();
 
 private:
 	int mTrainIndex;
+
 };

@@ -16,6 +16,20 @@ ImageItem::~ImageItem()
 {
 }
 
+void ImageItem::computeBOW(cv::BOWImgDescriptorExtractor &extractor)
+{
+	cv::Mat tmp = extractor.getVocabulary();
+	extractor.setVocabulary(mVocabulary);
+
+	extractor.compute(
+		mMat
+		, mKeyPoints
+		, mDescriptors
+		, &mBOWPointIndicesOfClusters
+		, &mBOWDescriptors
+		);
+}
+
 void ImageItem::precalculation(cv::FeatureDetector &detector, cv::DescriptorExtractor &extractor)
 {
 	calculateKeypoints(detector);

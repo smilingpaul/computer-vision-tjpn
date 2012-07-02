@@ -13,6 +13,11 @@ ImageItemTrain::~ImageItemTrain()
 {
 }
 
+void ImageItemTrain::trainBOW(cv::BOWKMeansTrainer &trainer)
+{
+	trainer.add(mDescriptors);
+}
+
 void ImageItemTrain::train(cv::DescriptorMatcher &matcher)
 {
 	std::vector<cv::Mat> train;

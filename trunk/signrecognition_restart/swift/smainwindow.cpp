@@ -43,13 +43,13 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	//////////////////////////////////////////////////////////////////////////
 
 	cv::SIFT sift = cv::SIFT();
-	//our Matcher
 	mMatcher = new cv::FlannBasedMatcher();
 	//mMatcher = new cv::BFMatcher(cv::NORM_L2,false);
-	//our Detector
 	mDetector = new cv::SiftFeatureDetector(sift);
-	//our Extractor
 	mExtractor = new cv::SiftDescriptorExtractor(sift);
+	mBOWTrainer = new cv::BOWKMeansTrainer(10);
+	mBFMatcher = new cv::BFMatcher(cv::NORM_L2);
+
 
 	for (int k = 0; k < mExploreItems.size(); k++)
 	{
@@ -64,6 +64,8 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	trainItems();
 
 	matchItems();
+
+	computeBOW();
 
 	for (unsigned int i = 0; i < mTrainItems.size(); i++)
 	{
@@ -86,31 +88,71 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 			cv::imshow( "Matches with "+i, img_matches );
 	}
 
+	for (unsigned int i = 0; i < mExploreItems.size(); i++)
+		mExploreItems[i].evaluate();
+
+	evaluate();
+
 }
 
 void SMainWindow::loadExploreItems()
 {
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\can.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\stop_1.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image01.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image02.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image03.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image04.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image05.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image06.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image07.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image08.png")));	
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image09.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image10.png")));
+
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image11.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image12.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image13.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image14.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image15.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image16.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image17.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image18.png")));	
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image19.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image20.png")));
+
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image21.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image22.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image23.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image24.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image25.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image26.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image27.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image28.png")));	
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image29.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image30.png")));
+
 }
 
 void SMainWindow::loadTrainItems()
 {
-	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\can.png")));
-	//mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_stop.png")));
-	//mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_yield.png")));
-	//mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_30.png")));
-	//mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_60.png")));
-	//mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_120.png")));
-	//mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_danger.png")));
+	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_stop.png")));
+	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_yield.png")));
+	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_30.png")));
+	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_60.png")));
+	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_120.png")));
+	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_danger.png")));
 }
 
 void SMainWindow::trainItems()
 {
+	//cv::Mat trainDescriptors(1,mExtractor->descriptorSize(),mExtractor->descriptorType());
 	for (unsigned int i = 0; i < mTrainItems.size(); i++)
 	{
 		mTrainItems[i].train(*mMatcher);
+		//trainDescriptors.push_back(mTrainItems[i].getDescriptors());
+		mBOWTrainer->add(mTrainItems[i].getDescriptors());
 	}
+
+	mVocabulary = mBOWTrainer->cluster();
 }
 
 void SMainWindow::matchItems()
@@ -119,6 +161,16 @@ void SMainWindow::matchItems()
 	{
 		mExploreItems[i].match(*mMatcher);
 	}
+
+	mBFMatcher->add(mMatcher->getTrainDescriptors());
+	mBFMatcher->train();
+
+	mBOWExtractor = new cv::BOWImgDescriptorExtractor(mExtractor,mBFMatcher);
+	mBOWExtractor->setVocabulary(mVocabulary);
+}
+
+void SMainWindow::computeBOW()
+{
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -142,24 +194,73 @@ void SMainWindow::loadEvaluationDatabase(QString path)
 
 void SMainWindow::evaluate()
 {
-	mNames << "Stop Sign"
-		<< "Yield Sign"
-		<< "Speed Limit 30 Sign"
-		<< "Speed Limit 60 Sign"
-		<< "Speed Limit 120 Sign"
-		<< "Danger Sign";
+	mNames << "STOP-Schild"
+		<< "Vorfahrt Achten"
+		<< "Geschwindigkeit - 30 km/h"
+		<< "Geschwindigkeit - 60 km/h"
+		<< "Geschwindigkeit - 120 km/h"
+		<< "Gefahrenzeichen";
 
 
 	// mOfficialEvaluationData[0] ist ein String aus "1;image01.jpg;1446;560;1542;648;3"
 	//                                               ID;Bildname   ;x1  ;y1 ;x2  ;y2 ;Class-ID
 	// QStringList list = mOfficialEvaluationData[0].split(";")
 
-	
+	//std::vector<cv::Point2i> pointsToEvaluate;
 
-	for (unsigned int i = 0; i < mExploreItems.size(); i++)
+	for (unsigned int k = 0; k < mExploreItems.size(); k++)
 	{
+		for (unsigned int j = 0; j < mTrainItems.size(); j++)
+		{
+			
+			
+			if (mExploreItems[k].getFinalPointsByIndex(j).size() > 0)
+			{
+				QString explorenr_string, explorename_string, x_string, y_string, trainname_string;
 
+				// evaluation image name / number...
+				int nr = k+1;
+				explorenr_string = QString("%1").arg(nr,2);
+				explorename_string = explorename_string.append("image").append(explorenr_string).append(".png");
+
+				// ...position of the point...
+				int x = mExploreItems[k].getFinalPointsByIndex(j)[0].x;
+				x_string = x_string.setNum(x);
+				int y = mExploreItems[k].getFinalPointsByIndex(j)[0].y;
+				y_string = y_string.setNum(y);
+
+				// ... with train item
+				trainname_string = mNames[j];
+
+				mOwnEvaluationData.append(QString("%1 matcht mit %2 am Punkt P(%3|%4)").arg(explorename_string,trainname_string,x_string,y_string));
+			}
+
+
+
+		}
+		// my breakpoint int
+		int i = 0;
 	}
+
+	QFile fOut("..\\swift-build\\log.txt");
+	
+	if (fOut.open(QFile::WriteOnly | QFile::Text))
+	{
+		QTextStream s(&fOut);
+
+		for (int i = 0; i < mOwnEvaluationData.size(); i++)
+		{
+			s << mOwnEvaluationData[i] << '\n';
+		}
+	}
+	fOut.close();
+
+
+
+	//for (unsigned int i = 0; i < mOfficial; i++)
+	//{
+
+	//}
 
 
 
