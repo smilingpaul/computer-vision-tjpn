@@ -8,33 +8,25 @@
 #include <opencv2/nonfree/nonfree.hpp>
 #include <opencv2/features2d/features2d.hpp>
 
-
 class ImageItem
 {
 public:
 	ImageItem(QString &path);
-	~ImageItem();
+	virtual ~ImageItem();
 
 	void precalculation(cv::FeatureDetector &detector, cv::DescriptorExtractor &extractor);
 
-	void train(cv::DescriptorMatcher &matcher);
-	
-	void match(cv::DescriptorMatcher &matcher, QList<ImageItem> &list);
-	void match(cv::DescriptorMatcher &matcher, ImageItem &item);
-	
 	cv::Mat getImage();
 	cv::Mat getDescriptors();
 	std::vector<cv::KeyPoint> getKeyPoints();
 
-private:
+protected:
 	QString mPath;
 	cv::Mat mMat;
-	std::vector<cv::KeyPoint> mKeypoints;
+	std::vector<cv::KeyPoint> mKeyPoints;
 	cv::Mat mDescriptors;
 
-	std::vector<std::vector<cv::DMatch>> mMatches; ///< one vector for each train image
-	std::vector<int> mMatchesIndex;
-
+private:
 	void calculateKeypoints(cv::FeatureDetector &detector);
 	void calculateDescriptors(cv::DescriptorExtractor &extractor);
 };

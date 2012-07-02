@@ -5,7 +5,10 @@
 #define SMAINWINDOW_H
 
 #include <QtGui/QMainWindow>
-#include "imageitem.h"
+
+#include "imageitemtrain.h"
+#include "imageitemexplore.h"
+
 #include "featureprovider.h"
 #include "sdynamictoolbox.h"
 
@@ -22,10 +25,8 @@ public:
 	SMainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
 	~SMainWindow();
 
-	//QList<ImageItem> mExploreList;
-	//lists for images to explore and the train images (signs)
-	QList<ImageItem> mExploreItems;
-	QList<ImageItem> mTrainItems;
+	QList<ImageItemExplore> mExploreItems;
+	QList<ImageItemTrain> mTrainItems;
 
 	cv::FeatureDetector* mDetector;
 	cv::DescriptorExtractor* mExtractor;
@@ -34,24 +35,23 @@ public:
 public slots:
 
 private:
+	// <NOT THE MOST BEAUTIFUL KIND OF CODE>
+	//////////////////////////////////////////////////////////////////////////
+	void loadExploreItems();
+	void loadTrainItems();
+	void trainItems();
+	void matchItems();
+	//////////////////////////////////////////////////////////////////////////
+	void loadEvaluationDatabase(QString path);
+	//////////////////////////////////////////////////////////////////////////
+	// </NOT THE MOST BEAUTIFUL KIND OF CODE>
+
 	void initialize();
 	void createActions();
 	void createMenus();
 	void createToolBars();
 	void createWidgets();
 	void createStatusBar();
-
-	//////////////////////////////////////////////////////////////////////////
-	void loadExploreItems();
-	void loadTrainItems();
-	//void trainItems(QList<ImageItem> &list, cv::DescriptorMatcher &matcher);
-	void trainItems();
-	//////////////////////////////////////////////////////////////////////////
-	void loadEvaluationDatabase(QString path);
-	//////////////////////////////////////////////////////////////////////////
-
-
-
 
 	QStringList mFormatFilters;
 	QStringList mAllImagePaths;
@@ -92,6 +92,7 @@ private:
 		QComboBox *betaComboBoxExtractor;
 
 	SDynamicToolbox *betaDynamicToolbox;
+
 	//////////////////////////////////////////////////////////////////////////
 
 	FeatureProvider *mProvider;

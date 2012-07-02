@@ -83,6 +83,12 @@
     <ClCompile Include="GeneratedFiles\Release\moc_sdynamictoolbox.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="imageitemexplore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="imageitemtrain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -95,6 +101,12 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="imageitem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imageitemexplore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imageitemtrain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

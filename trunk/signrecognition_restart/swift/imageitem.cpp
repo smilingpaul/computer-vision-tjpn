@@ -13,7 +13,6 @@ ImageItem::ImageItem(QString &path)
 
 ImageItem::~ImageItem()
 {
-
 }
 
 void ImageItem::precalculation(cv::FeatureDetector &detector, cv::DescriptorExtractor &extractor)
@@ -24,35 +23,16 @@ void ImageItem::precalculation(cv::FeatureDetector &detector, cv::DescriptorExtr
 
 void ImageItem::calculateKeypoints(cv::FeatureDetector &detector)
 {
-	detector.detect(mMat,mKeypoints);
+	detector.detect(mMat,mKeyPoints);
 }
 
 void ImageItem::calculateDescriptors(cv::DescriptorExtractor &extractor)
 {
-	extractor.compute(mMat,mKeypoints,mDescriptors);
-}
-
-void ImageItem::match(cv::DescriptorMatcher &matcher, QList<ImageItem> &list)
-{
-
-}
-
-void ImageItem::match(cv::DescriptorMatcher &matcher, ImageItem &item)
-{
-
-}
-
-void ImageItem::train(cv::DescriptorMatcher &matcher)
-{
-	std::vector<cv::Mat> train;
-	train.push_back(mDescriptors);
-
-	matcher.add(train);
-	matcher.train();
+	extractor.compute(mMat,mKeyPoints,mDescriptors);
 }
 
 //////////////////////////////////////////////////////////////////////////
 
 cv::Mat ImageItem::getImage() { return mMat; }
 cv::Mat ImageItem::getDescriptors() { return mDescriptors; }
-std::vector<cv::KeyPoint> ImageItem::getKeyPoints() { return mKeypoints; }
+std::vector<cv::KeyPoint> ImageItem::getKeyPoints() { return mKeyPoints; }
