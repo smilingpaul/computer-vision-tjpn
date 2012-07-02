@@ -9,6 +9,7 @@ ImageItem::ImageItem(QString &path)
 	//=0 the loaded image is forced to be grayscale
 	//<0 the loaded image will be loaded as-is (note that in the current implementation the alpha channel, if any, is stripped from the output image, e.g. 4-channel RGBA image will be loaded as RGB if flags >= 0 ).
 	mMat = cv::imread(path.toStdString(), 1);
+
 }
 
 ImageItem::~ImageItem()

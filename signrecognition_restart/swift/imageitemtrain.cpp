@@ -3,6 +3,10 @@
 
 ImageItemTrain::ImageItemTrain(QString &path) : ImageItem(path)
 {
+	cv::Mat tmp1 = mMat;
+	cv::Mat tmp2;
+	cv::GaussianBlur(tmp1,tmp2,cv::Size(), (double)0.5, (double)0.5);
+	resize(tmp2, mMat, cv::Size(), (double)2, (double)2, cv::INTER_LINEAR);
 }
 
 ImageItemTrain::~ImageItemTrain()

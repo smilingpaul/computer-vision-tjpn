@@ -44,7 +44,8 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 
 	cv::SIFT sift = cv::SIFT();
 	//our Matcher
-	mMatcher = new cv::FlannBasedMatcher(new cv::flann::CompositeIndexParams(), new cv::flann::SearchParams());
+	mMatcher = new cv::FlannBasedMatcher();
+	//mMatcher = new cv::BFMatcher(cv::NORM_L2,false);
 	//our Detector
 	mDetector = new cv::SiftFeatureDetector(sift);
 	//our Extractor
@@ -62,35 +63,7 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 
 	trainItems();
 
-	//Matching descriptor vectors using FLANN matcher
-	//std::vector<cv::DMatch> matches;
-	////mMatcher->match(mDescriptors(mExploreItems), mDescriptors(mTrainItems), matches);
-	//mMatcher->match(mExploreItems[0].getDescriptors(), matches);
-
 	matchItems();
-
-	/*
-	double max_dist = 0; double min_dist = 100;
-
-	// Quick calculation of max and min distances between keypoints
-	for( int i = 0; i < mExploreItems[0].getDescriptors().rows; i++ )
-	 { double dist = matches[i].distance;
-		 if( dist < min_dist ) min_dist = dist;
-		 if( dist > max_dist ) max_dist = dist;
-	 }
-
-	//-- Draw only "good" matches (i.e. whose distance is less than 2*min_dist )
-	//-- PS.- radiusMatch can also be used here.
-	std::vector<cv::DMatch> good_matches;
-
-	for( int i = 0; i < mExploreItems[0].getDescriptors().rows; i++ )
-	{
-		if(matches[i].distance < 2 * min_dist)
-			good_matches.push_back( matches[i] );
-	}
-	*/
-
-
 
 	for (unsigned int i = 0; i < mTrainItems.size(); i++)
 	{
@@ -117,17 +90,19 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 
 void SMainWindow::loadExploreItems()
 {
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\special_1.jpg")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\can.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\stop_1.png")));
 }
 
 void SMainWindow::loadTrainItems()
 {
-	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_stop.png")));
-	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_yield.png")));
-	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_30.png")));
-	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_60.png")));
-	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_120.png")));
-	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_danger.png")));
+	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\can.png")));
+	//mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_stop.png")));
+	//mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_yield.png")));
+	//mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_30.png")));
+	//mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_60.png")));
+	//mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_120.png")));
+	//mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_danger.png")));
 }
 
 void SMainWindow::trainItems()
@@ -173,6 +148,13 @@ void SMainWindow::evaluate()
 		<< "Speed Limit 60 Sign"
 		<< "Speed Limit 120 Sign"
 		<< "Danger Sign";
+
+
+	// mOfficialEvaluationData[0] ist ein String aus "1;image01.jpg;1446;560;1542;648;3"
+	//                                               ID;Bildname   ;x1  ;y1 ;x2  ;y2 ;Class-ID
+	// QStringList list = mOfficialEvaluationData[0].split(";")
+
+	
 
 	for (unsigned int i = 0; i < mExploreItems.size(); i++)
 	{
