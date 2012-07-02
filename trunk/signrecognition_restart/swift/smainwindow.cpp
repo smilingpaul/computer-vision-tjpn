@@ -90,23 +90,29 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	}
 	*/
 
-	cv::Mat img_matches;
 
-	cv::drawMatches(
-		mExploreItems[0].getImage()
-		,mExploreItems[0].getKeyPoints()
-		,mTrainItems[0].getImage()
-		,mTrainItems[0].getKeyPoints()
-		,mExploreItems[0].getMatchesByIndex(0)
-		,img_matches
-		,cv::Scalar::all(-1)
-		,cv::Scalar::all(-1)
-		,std::vector<char>()
-		//,cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS
-	);
 
-	//-- Show detected matches
-	cv::imshow( "Good Matches", img_matches );
+	for (unsigned int i = 0; i < mTrainItems.size(); i++)
+	{
+		cv::Mat img_matches;
+
+		cv::drawMatches(
+			mExploreItems[0].getImage()
+			,mExploreItems[0].getKeyPoints()
+			,mTrainItems[i].getImage()
+			,mTrainItems[i].getKeyPoints()
+			,mExploreItems[0].getGoodMatchesByIndex(i)
+			,img_matches
+			,cv::Scalar::all(-1)
+			,cv::Scalar::all(-1)
+			,std::vector<char>()
+			,cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS
+			);
+
+			//-- Show detected matches
+			cv::imshow( "Matches with "+i, img_matches );
+	}
+
 }
 
 void SMainWindow::loadExploreItems()

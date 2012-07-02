@@ -10,8 +10,10 @@ public:
 
 	std::vector<cv::DMatch> getMatches();
 	std::vector<cv::DMatch> getMatchesByIndex(int index);
+	std::vector<cv::DMatch> getGoodMatchesByIndex(int index);
 
 private:
 	std::vector<cv::DMatch> mMatches;
 	std::vector<std::vector<cv::DMatch>> mMatchesByIndex; ///< one vector for each train image
+	std::vector<std::vector<cv::DMatch>> mGoodMatchesByIndex; 
 };
