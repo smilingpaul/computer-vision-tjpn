@@ -24,12 +24,12 @@ public:
 	
 	cv::Mat getImage();
 	cv::Mat getDescriptors();
-	cv::vector<cv::KeyPoint> getKeyPoints();
+	std::vector<cv::KeyPoint> getKeyPoints();
 
 private:
 	QString mPath;
 	cv::Mat mMat;
-	cv::vector<cv::KeyPoint> mKeypoints;
+	std::vector<cv::KeyPoint> mKeypoints;
 	cv::Mat mDescriptors;
 
 	std::vector<std::vector<cv::DMatch>> mMatches; ///< one vector for each train image

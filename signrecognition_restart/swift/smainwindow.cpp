@@ -36,6 +36,12 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	//open the images we want to train <-- Sign Templates
 	loadTrainItems();
 
+	//////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////
+	loadEvaluationDatabase("..\\swift-build\\TestData\\evaluation\\eval_database.txt");
+	//////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////
+
 	cv::SIFT sift = cv::SIFT();
 	//our Matcher
 	mMatcher = new cv::FlannBasedMatcher(new cv::flann::CompositeIndexParams(), new cv::flann::SearchParams());
@@ -70,18 +76,20 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 		 if( dist > max_dist ) max_dist = dist;
 	 }
 
-  //-- Draw only "good" matches (i.e. whose distance is less than 2*min_dist )
-  //-- PS.- radiusMatch can also be used here.
-  std::vector<cv::DMatch > good_matches;
+	//-- Draw only "good" matches (i.e. whose distance is less than 2*min_dist )
+	//-- PS.- radiusMatch can also be used here.
+	std::vector<cv::DMatch> good_matches;
 
-  for( int i = 0; i < mExploreItems[0].getDescriptors().rows; i++ )
-  { if( matches[i].distance < 2*min_dist )
-    { good_matches.push_back( matches[i]); }
-  }
+	for( int i = 0; i < mExploreItems[0].getDescriptors().rows; i++ )
+	{ 
+		if(matches[i].distance < 2 * min_dist)
+			good_matches.push_back( matches[i] );
+	}
 
-/*	cv::Mat img_matches;
+	cv::Mat img_matches;
+
 	cv::drawMatches(
-		 mExploreItems[0].getImage()
+		mExploreItems[0].getImage()
 		,mExploreItems[0].getKeyPoints()
 		,mTrainItems[0].getImage()
 		,mTrainItems[0].getKeyPoints()
@@ -90,11 +98,12 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 		,cv::Scalar::all(-1)
 		,cv::Scalar::all(-1)
 		,std::vector<char>()
-		, cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
+		,cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS
+	);
 
 	//-- Show detected matches
-    cv::imshow( "Good Matches", img_matches );
-	*/
+	cv::imshow( "Good Matches", img_matches );
+	
 }
 
 void SMainWindow::loadExploreItems()
@@ -104,9 +113,9 @@ void SMainWindow::loadExploreItems()
 
 void SMainWindow::loadTrainItems()
 {
-	mTrainItems.append(ImageItem(QString("..\\swift-build\\TestData\\signs\\black_30.png")));
+	//mTrainItems.append(ImageItem(QString("..\\swift-build\\TestData\\signs\\black_30.png")));
 	mTrainItems.append(ImageItem(QString("..\\swift-build\\TestData\\signs\\black_stop.png")));
-	mTrainItems.append(ImageItem(QString("..\\swift-build\\TestData\\signs\\black_yield.png")));
+	//mTrainItems.append(ImageItem(QString("..\\swift-build\\TestData\\signs\\black_yield.png")));
 }
 
 void SMainWindow::trainItems()
@@ -116,6 +125,29 @@ void SMainWindow::trainItems()
 		mTrainItems[i].train(*mMatcher);
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// Evaluation Area
+
+void SMainWindow::loadEvaluationDatabase(QString path)
+{
+	QFile file(path);
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+		return;
+
+	QTextStream textstream(&file);
+	QString line = textstream.readLine();
+	while (!line.isNull()) {
+		mOfficialEvaluationData.append(line);
+		//process_line(line);
+		line = textstream.readLine();
+	}
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 
 void SMainWindow::initialize()
 {
@@ -342,3 +374,4 @@ void SMainWindow::about()
 	QMessageBox::about(this, tr("About Swift"),
 		tr("This is <b>Swift</b> by Patrick Nierath and Tim B. Jagla."));
 }
+

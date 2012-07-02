@@ -41,10 +41,17 @@ private:
 	void createWidgets();
 	void createStatusBar();
 
+	//////////////////////////////////////////////////////////////////////////
 	void loadExploreItems();
 	void loadTrainItems();
 	//void trainItems(QList<ImageItem> &list, cv::DescriptorMatcher &matcher);
 	void trainItems();
+	//////////////////////////////////////////////////////////////////////////
+	void loadEvaluationDatabase(QString path);
+	//////////////////////////////////////////////////////////////////////////
+
+
+
 
 	QStringList mFormatFilters;
 	QStringList mAllImagePaths;
@@ -88,6 +95,9 @@ private:
 	//////////////////////////////////////////////////////////////////////////
 
 	FeatureProvider *mProvider;
+
+	QList<QString> mOwnEvaluationData;
+	QList<QString> mOfficialEvaluationData;
 
 private slots:
 	void open();

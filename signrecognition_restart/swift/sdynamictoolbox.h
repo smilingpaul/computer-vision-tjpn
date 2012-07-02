@@ -15,6 +15,8 @@ public:
 private:
 	FeatureProvider *mProvider;
 
+	QVBoxLayout *toolboxVerticalLayout;
+
 	void generateFormLayout(QString prefix);
 };
 
