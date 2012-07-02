@@ -1,0 +1,5 @@
+image 1.png matcht mit STOP-Schild am Punkt P(914|2036)
+image 1.png matcht mit Geschwindigkeit - 30 km/h am Punkt P(1069|1191)
+image 1.png matcht mit Geschwindigkeit - 60 km/h am Punkt P(1604|1879)
+image 1.png matcht mit Geschwindigkeit - 120 km/h am Punkt P(1206|1578)
+image 1.png matcht mit Gefahrenzeichen am Punkt P(1272|766)

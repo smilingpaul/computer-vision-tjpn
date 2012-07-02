@@ -9,6 +9,20 @@ ImageItemExplore::~ImageItemExplore()
 {
 }
 
+void ImageItemExplore::evaluate()
+{
+	for (unsigned int i = 0; i < mGoodMatchesByIndex.size(); i++)
+	{
+		mFinalPoints.push_back(std::vector<cv::Point2f>());
+
+		for (unsigned int k = 0; k < mGoodMatchesByIndex[i].size(); k++)
+		{
+			mFinalPoints[i].push_back(mKeyPoints[mGoodMatchesByIndex[i][k].queryIdx].pt);
+		}
+
+	}
+}
+
 void ImageItemExplore::knnmatch(cv::DescriptorMatcher &matcher)
 {
 	mMatchesByIndex.clear();
@@ -79,3 +93,4 @@ void ImageItemExplore::match(cv::DescriptorMatcher &matcher)
 std::vector<cv::DMatch> ImageItemExplore::getMatches() { return mMatches; }
 std::vector<cv::DMatch> ImageItemExplore::getMatchesByIndex(int index) { return mMatchesByIndex[index]; }
 std::vector<cv::DMatch> ImageItemExplore::getGoodMatchesByIndex(int index) { return mGoodMatchesByIndex[index]; }
+std::vector<cv::Point2f> ImageItemExplore::getFinalPointsByIndex(int index) { return mFinalPoints[index]; }

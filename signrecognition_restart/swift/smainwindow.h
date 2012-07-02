@@ -31,6 +31,10 @@ public:
 	cv::FeatureDetector* mDetector;
 	cv::DescriptorExtractor* mExtractor;
 	cv::DescriptorMatcher* mMatcher;
+	cv::BOWKMeansTrainer *mBOWTrainer;
+	cv::BOWImgDescriptorExtractor *mBOWExtractor;
+	cv::BFMatcher *mBFMatcher;
+	cv::Mat mVocabulary;
 
 public slots:
 
@@ -44,6 +48,7 @@ private:
 	//////////////////////////////////////////////////////////////////////////
 	void loadEvaluationDatabase(QString path);
 	void evaluate();
+	void computeBOW();
 	//////////////////////////////////////////////////////////////////////////
 	// </NOT THE MOST BEAUTIFUL KIND OF CODE>
 
