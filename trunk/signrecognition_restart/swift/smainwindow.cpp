@@ -122,12 +122,12 @@ void SMainWindow::loadExploreItems()
 
 void SMainWindow::loadTrainItems()
 {
+	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_stop.png")));
+	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_yield.png")));
 	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_30.png")));
 	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_60.png")));
 	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_120.png")));
 	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_danger.png")));
-	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_stop.png")));
-	mTrainItems.append(ImageItemTrain(QString("..\\swift-build\\TestData\\signs\\black_yield.png")));
 }
 
 void SMainWindow::trainItems()
@@ -165,6 +165,23 @@ void SMainWindow::loadEvaluationDatabase(QString path)
 	}
 }
 
+void SMainWindow::evaluate()
+{
+	mNames << "Stop Sign"
+		<< "Yield Sign"
+		<< "Speed Limit 30 Sign"
+		<< "Speed Limit 60 Sign"
+		<< "Speed Limit 120 Sign"
+		<< "Danger Sign";
+
+	for (unsigned int i = 0; i < mExploreItems.size(); i++)
+	{
+
+	}
+
+
+
+}
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
