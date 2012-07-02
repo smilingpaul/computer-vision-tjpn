@@ -15,5 +15,5 @@ public:
 private:
 	std::vector<cv::DMatch> mMatches;
 	std::vector<std::vector<cv::DMatch>> mMatchesByIndex; ///< one vector for each train image
-	std::vector<std::vector<cv::DMatch>> mGoodMatchesByIndex; 
+	std::vector<std::vector<cv::DMatch>> mGoodMatchesByIndex; ///< one vector for each train image
 };

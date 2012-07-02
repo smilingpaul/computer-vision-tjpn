@@ -43,6 +43,7 @@ private:
 	void matchItems();
 	//////////////////////////////////////////////////////////////////////////
 	void loadEvaluationDatabase(QString path);
+	void evaluate();
 	//////////////////////////////////////////////////////////////////////////
 	// </NOT THE MOST BEAUTIFUL KIND OF CODE>
 
@@ -97,8 +98,9 @@ private:
 
 	FeatureProvider *mProvider;
 
-	QList<QString> mOwnEvaluationData;
-	QList<QString> mOfficialEvaluationData;
+	QStringList mNames;
+	QStringList mOwnEvaluationData;
+	QStringList mOfficialEvaluationData;
 
 private slots:
 	void open();

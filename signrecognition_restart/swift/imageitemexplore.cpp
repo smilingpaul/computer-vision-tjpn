@@ -27,7 +27,7 @@ void ImageItemExplore::match(cv::DescriptorMatcher &matcher)
 		mMatchesByIndex[mMatches[i].imgIdx].push_back(mMatches[i]);
 	}
 
-	matcher.knnMatch(mDescriptors,mMatchesByIndex,1);
+	//matcher.knnMatch(mDescriptors,mMatchesByIndex,1);
 	//matcher.radiusMatch(mDescriptors,mMatchesByIndex,200);
 
 	// iterate through the vector collection
