@@ -9,10 +9,8 @@ ImageItemExplore::~ImageItemExplore()
 {
 }
 
-void ImageItemExplore::match(cv::DescriptorMatcher &matcher)
+void ImageItemExplore::knnmatch(cv::DescriptorMatcher &matcher)
 {
-	matcher.match(mDescriptors, mMatches);
-
 	mMatchesByIndex.clear();
 	mGoodMatchesByIndex.clear();
 
@@ -22,13 +20,44 @@ void ImageItemExplore::match(cv::DescriptorMatcher &matcher)
 		mGoodMatchesByIndex.push_back(std::vector<cv::DMatch>());
 	}
 
+	//////////////////////////////////////////////////////////////////////////
+
+	std::vector<std::vector<cv::DMatch>> tmp;
+	std::vector<cv::DMatch> tmpGood;
+
+	matcher.knnMatch(mDescriptors,tmp,2);
+
+	for (unsigned int i = 0; i < tmp.size(); i++)
+	{
+		if (tmp[i][0].distance < 0.6 * tmp[i][1].distance)
+			tmpGood.push_back(tmp[i][0]);
+	}
+
+	for (unsigned int i = 0; i < tmpGood.size(); i++)
+	{
+		mGoodMatchesByIndex[tmpGood[i].imgIdx].push_back(tmpGood[i]);
+	}
+}
+
+void ImageItemExplore::match(cv::DescriptorMatcher &matcher)
+{
+	mMatchesByIndex.clear();
+	mGoodMatchesByIndex.clear();
+
+	for (unsigned int i = 0; i < matcher.getTrainDescriptors().size(); i++)
+	{
+		mMatchesByIndex.push_back(std::vector<cv::DMatch>());
+		mGoodMatchesByIndex.push_back(std::vector<cv::DMatch>());
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+
+	matcher.match(mDescriptors, mMatches);
+
 	for (unsigned int i = 0; i < mMatches.size(); i++)
 	{
 		mMatchesByIndex[mMatches[i].imgIdx].push_back(mMatches[i]);
 	}
-
-	//matcher.knnMatch(mDescriptors,mMatchesByIndex,1);
-	//matcher.radiusMatch(mDescriptors,mMatchesByIndex,200);
 
 	// iterate through the vector collection
 	for (unsigned int i = 0; i < mMatchesByIndex.size(); i++)
@@ -36,6 +65,7 @@ void ImageItemExplore::match(cv::DescriptorMatcher &matcher)
 		// iterate through one vector
 		for (unsigned int j = 0; j < mMatchesByIndex[i].size(); j++)
 		{
+			// simulates a radius match
 			if (mMatchesByIndex[i][j].distance < 200)
 				mGoodMatchesByIndex[i].push_back(mMatchesByIndex[i][j]);
 		}

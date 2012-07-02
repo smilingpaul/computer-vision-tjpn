@@ -7,6 +7,7 @@ public:
 	~ImageItemExplore();
 
 	void match(cv::DescriptorMatcher &matcher);
+	void knnmatch(cv::DescriptorMatcher &matcher);
 
 	std::vector<cv::DMatch> getMatches();
 	std::vector<cv::DMatch> getMatchesByIndex(int index);
