@@ -50,7 +50,6 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 	mBOWTrainer = new cv::BOWKMeansTrainer(10);
 	mBFMatcher = new cv::BFMatcher(cv::NORM_L2);
 
-
 	for (int k = 0; k < mExploreItems.size(); k++)
 	{
 		mExploreItems[k].precalculation(*mDetector, *mExtractor);
@@ -67,69 +66,72 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 
 	computeBOW();
 
-	for (unsigned int i = 0; i < mTrainItems.size(); i++)
+	for (unsigned int j = 0; j < mExploreItems.size(); j++)
 	{
-		cv::Mat img_matches;
+		for (unsigned int i = 0; i < mTrainItems.size(); i++)
+		{
+			cv::Mat img_matches;
 
-		cv::drawMatches(
-			mExploreItems[0].getImage()
-			,mExploreItems[0].getKeyPoints()
-			,mTrainItems[i].getImage()
-			,mTrainItems[i].getKeyPoints()
-			,mExploreItems[0].getGoodMatchesByIndex(i)
-			,img_matches
-			,cv::Scalar::all(-1)
-			,cv::Scalar::all(-1)
-			,std::vector<char>()
-			,cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS
-			);
+			cv::drawMatches(
+				mExploreItems[j].getImage()
+				,mExploreItems[j].getKeyPoints()
+				,mTrainItems[i].getImage()
+				,mTrainItems[i].getKeyPoints()
+				,mExploreItems[j].getGoodMatchesByIndex(i)
+				,img_matches
+				,cv::Scalar::all(-1)
+				,cv::Scalar::all(-1)
+				,std::vector<char>()
+				//,cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS
+				);
 
 			//-- Show detected matches
-			cv::imshow( "Matches with "+i, img_matches );
+			QString window = QString("Matches from Explore[%1] with Train[%2]").arg(j,i);
+			std::string w = window.toStdString();
+			cv::imshow( w , img_matches );
+		}
 	}
 
 	for (unsigned int i = 0; i < mExploreItems.size(); i++)
 		mExploreItems[i].evaluate();
 
 	evaluate();
-
 }
 
 void SMainWindow::loadExploreItems()
 {
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image01.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image02.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image03.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image04.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image05.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image06.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image07.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image08.png")));	
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image09.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image01.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image02.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image03.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image04.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image05.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image06.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image07.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image08.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image09.png")));
 	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image10.png")));
 
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image11.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image12.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image13.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image14.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image15.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image16.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image17.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image18.png")));	
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image19.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image20.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image11.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image12.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image13.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image14.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image15.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image16.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image17.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image18.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image19.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image20.png")));
 
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image21.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image22.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image23.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image24.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image25.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image26.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image27.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image28.png")));	
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image29.png")));
-	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image30.png")));
-
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image21.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image22.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image23.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image24.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image25.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image26.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image27.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image28.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image29.png")));
+	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image30.png")));
 }
 
 void SMainWindow::loadTrainItems()
@@ -201,7 +203,6 @@ void SMainWindow::evaluate()
 		<< "Geschwindigkeit - 120 km/h"
 		<< "Gefahrenzeichen";
 
-
 	// mOfficialEvaluationData[0] ist ein String aus "1;image01.jpg;1446;560;1542;648;3"
 	//                                               ID;Bildname   ;x1  ;y1 ;x2  ;y2 ;Class-ID
 	// QStringList list = mOfficialEvaluationData[0].split(";")
@@ -212,8 +213,6 @@ void SMainWindow::evaluate()
 	{
 		for (unsigned int j = 0; j < mTrainItems.size(); j++)
 		{
-			
-			
 			if (mExploreItems[k].getFinalPointsByIndex(j).size() > 0)
 			{
 				QString explorenr_string, explorename_string, x_string, y_string, trainname_string;
@@ -234,16 +233,13 @@ void SMainWindow::evaluate()
 
 				mOwnEvaluationData.append(QString("%1 matcht mit %2 am Punkt P(%3|%4)").arg(explorename_string,trainname_string,x_string,y_string));
 			}
-
-
-
 		}
 		// my breakpoint int
 		int i = 0;
 	}
 
 	QFile fOut("..\\swift-build\\log.txt");
-	
+
 	if (fOut.open(QFile::WriteOnly | QFile::Text))
 	{
 		QTextStream s(&fOut);
@@ -255,15 +251,9 @@ void SMainWindow::evaluate()
 	}
 	fOut.close();
 
-
-
 	//for (unsigned int i = 0; i < mOfficial; i++)
 	//{
-
 	//}
-
-
-
 }
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
