@@ -100,38 +100,38 @@ SMainWindow::SMainWindow(QWidget *parent, Qt::WFlags flags)
 
 void SMainWindow::loadExploreItems()
 {
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image01.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image02.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image03.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image04.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image05.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image06.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image07.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image08.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image09.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image01.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image02.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image03.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image04.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image05.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image06.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image07.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image08.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image09.png")));
 	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image10.png")));
 
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image11.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image12.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image13.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image14.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image15.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image16.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image17.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image18.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image19.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image20.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image11.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image12.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image13.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image14.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image15.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image16.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image17.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image18.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image19.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image20.png")));
 
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image21.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image22.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image23.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image24.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image25.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image26.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image27.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image28.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image29.png")));
-	//mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image30.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image21.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image22.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image23.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image24.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image25.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image26.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image27.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image28.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image29.png")));
+	mExploreItems.append(ImageItemExplore(QString("..\\swift-build\\TestData\\evaluation\\image30.png")));
 }
 
 void SMainWindow::loadTrainItems()
